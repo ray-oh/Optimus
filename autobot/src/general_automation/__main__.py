@@ -2,7 +2,7 @@
 # coding: utf-8
 
 """
-Module:         generalAutomationScript.py
+Module:         general_automation/_main_.py
 Description:    RPA automation with Excel front end
 Created:        30 Jul 2022
 

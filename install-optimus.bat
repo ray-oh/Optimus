@@ -1,6 +1,7 @@
 @echo off
 
-if [%1]==[] goto usage
+if [%1]==[] goto install_autobot 
+rem usage
 echo %1
 @echo off
 @echo ================ UNPACK PACKAGE ==========================
@@ -24,6 +25,7 @@ robocopy .\tmp . /XD __pycache__ Lib venv /XF install-optimus.bat /e /copy:DAT /
 rmdir tmp /S /Q
 :END0
 
+:install_autobot
 @echo ================ INSTALL AUTOBOT ==========================
 cd autobot
 setlocal
