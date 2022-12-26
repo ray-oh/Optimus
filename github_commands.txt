@@ -1,0 +1,10 @@
+$ git remote add origin https://github.com/ray-oh/optimus.git
+
+$ git branch -m "optimus2.0_w_workflow"
+
+git reset
+$ git add -A
+$ git status
+$ git commit -a
+$ git push -u origin optimus2.0_w_workflow
+

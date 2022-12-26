@@ -1,0 +1,1 @@
+.\src\Qres\Qres.exe /x:1920 /y:1080

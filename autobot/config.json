@@ -1,0 +1,11 @@
+{
+    "startfile": ".\\main.xlsm",
+    "startcode": "main",
+    "startsheet": "main",
+    "logPrint": true,
+    "logPrintLevel": 30,
+    "defaultLogLevel": "DEBUG",
+    "srcLog": "D:\\OneDrive-Sync\\Christian Dior Couture\\APAC Helpdesk - Report\\serviceNow\\log\\generalAutomation.log",
+    "config": ".\\config.json",
+    "settings": 1
+}
