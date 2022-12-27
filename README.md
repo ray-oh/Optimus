@@ -9,6 +9,7 @@ git clone from this repo
 install-bat to setup the libraries
 runrpa to use
 
+startOrion.bat
 
 
 
