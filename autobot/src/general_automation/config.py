@@ -10,7 +10,7 @@ EX_OK = 0
 
 from datetime import datetime, timedelta
 
-from run import PREFECT_DEPLOYMENT_RUN, TEST1VAR, TEST2VAR
+from run import PREFECT_DEPLOYMENT_RUN #, TEST1VAR, TEST2VAR
 from sys_variables import newVariables
 
 yesterday = datetime.today() - timedelta(days=1)

@@ -940,15 +940,20 @@ def _runInBackground():
 
 #@task
 def _initilizeRPA():
+    logger = get_run_logger()
     #if not browserDisable:
     #r.init()
     instantiatedRPA = r.init(visual_automation = True)
     #logg('Initialize RPA', result = instantiatedRPA, level = 'info')
+    logger.info(f"Initialize RPA = {instantiatedRPA}")
+
 
 #@task
 def _closeRPA():
+    logger = get_run_logger()
     #if not browserDisable:
     instantiatedRPA = r.close()    
+    logger.info(f"Close RPA = {instantiatedRPA}")
     #logg('Close RPA ', result = instantiatedRPA, level = 'info')
 
 #@task

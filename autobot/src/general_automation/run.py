@@ -23,6 +23,9 @@ initialize seting:  run -i 1 -pd D:\optimus_1.2
 """
 
 # In[1]:
+# Deployment flow will run run.py including header section
+print("running run.py module start section")
+
 from pathlib import Path, PureWindowsPath
 import sys, os
 from datetime import datetime
@@ -37,29 +40,12 @@ else:
     PREFECT_DEPLOYMENT_RUN = False
     newVariables['DRUN']=False
 
-TEST1VAR = 231
-TEST2VAR = PREFECT_DEPLOYMENT_RUN
+HEADER = "RUN.PY HEADER " + str(PREFECT_DEPLOYMENT_RUN)
 
-#from prefect import flow #, task
-#from prefect.task_runners import SequentialTaskRunner
-#from prefect import flow, get_run_logger #, task, 
 from prefect import task, flow, get_run_logger, context
 from prefect.task_runners import SequentialTaskRunner
 
-
-#from prefect.filesystems import LocalFileSystem
-#local_file_system_block = LocalFileSystem.load("bumblebee")
-#print(f"Run __file__: {Path(__file__).name.__str__()} PERFECT_DEPLOYMENT_RUN {PREFECT_DEPLOYMENT_RUN}  __name__ {__name__}")
-
-#@flow(name='autobot-mainflow',
-#      description='some description')
-#@flow(task_runner=SequentialTaskRunner())
-#@task(timeout_seconds=1)
-#retries=1, 
-#@task(name="main", retry_delay_seconds=5, tags=["test"])
 def main_flow(startfile, startsheet, startcode, background, program_dir):
-    #global config.STARTFILE
-    #, config.STARTCODE, config.STARTSHEET
     """ main flow to run RPA """
     print('Starting RPA flow. File:', startfile, ' | Sheet code:', startsheet, startcode, ' | Background:', background, ' | Time:', datetime.now().strftime('%m/%d/%Y, %H:%M:%S'))
     from auto_utility_file import runInBackground
@@ -67,7 +53,6 @@ def main_flow(startfile, startsheet, startcode, background, program_dir):
     #import rpa as r
 
     from auto_helper_lib import try_catch, readExcelConfig, dfKey_value, dfObjList
-    #from auto_utility_logging import logg
     from auto_core_lib import runCodelist #, trial
     # default: excel file from config.json, firstSheetModeule = main
     dfmain = try_catch(readExcelConfig(startsheet))
@@ -80,7 +65,7 @@ def main_flow(startfile, startsheet, startcode, background, program_dir):
     main_code = dfObjList(dfmain, startcode)
 
     logger = get_run_logger()
-    logger.info(f"----- run main sheet ----- main_code = {main_code}")
+    logger.info(f"DEBUG ----- run main sheet ----- main_code = {main_code}")
 
     from auto_core_lib import runCodelist
     try_catch(runCodelist(dfmain, main_code))
@@ -88,37 +73,25 @@ def main_flow(startfile, startsheet, startcode, background, program_dir):
     import rpa as r
     if not browserDisable and not instantiatedRPA:
         instantiatedRPA = r.close()    
-        logger.info(f"'Close RPA ', result = {instantiatedRPA}, level = 'info'")
+        logger.info(f"'DEBUG Close RPA ', result = {instantiatedRPA}, level = 'info'")
 
-    logger.info(f"Complete RPA flow:{startcode}")
+    logger.info(f"DEBUG Complete RPA flow:{startcode}")
 
     return
 
 
-#config.FLOW_NAME
-'''      ,
-      timeout_seconds=300)
-      retries=3,
-      retry_delay_seconds=5,
-      task_runner=SequentialTaskRunner)
-      # config.FLOW_DESCRIPTION '''      
 @flow(name='launch-autobot', 
       description='launch autobot rpa flow', version='2022.10.27')
-      #, timeout_seconds=3)
-      #, retries=1)
 def run(file = '', flowrun = 1, deploymentname = ''):
     ''' Deployment run or normal run or deploy to prefect '''
+    print("running run flow")
     logger = get_run_logger()
-    #logger.info(f"CONTEXT1 {context.get_run_context().flow_run.parameters['file']}")
-    #logger.info(f"CONTEXT2 {context.get_run_context().flow_run.parameters}")
-    #logger.info(f"CONTEXT3 {context.get_run_context().flow_run}")    
-    #logger.info(f"CONTEXT {context.get_run_context().flow_run.parameters['file']}  {context.get_run_context().flow_run.parameters} {context.get_run_context().flow_run}")   
     startTime = datetime.now()
     logger.info(f"flowExecute file {file}, flowrun {flowrun}, start {startTime.strftime('%m/%d/%Y, %H:%M:%S')}")
     current_DIR = Path('.').resolve().absolute().__str__()
     OPTIMUS_DIR = os.getenv('OPTIMUS_DIR')  #D:\Optimus-Prefect-Test1
     # deployment run or normal run or deploy to prefect
-    logger.info(f"Run type: Deployment_run={PREFECT_DEPLOYMENT_RUN} {TEST1VAR}  {TEST2VAR}, OPTIMUS_DIR={OPTIMUS_DIR}, __file__={__file__}")
+    logger.info(f"Run type: Deployment_run={PREFECT_DEPLOYMENT_RUN} {HEADER}, OPTIMUS_DIR={OPTIMUS_DIR}, __file__={__file__}")
     logger.info(f"__file__: {__file__} | file parameter: {file} | flowrun {flowrun} | deploymentname {deploymentname}")
     # module paths
     MODULE_PATH_file = Path(__file__).parents[0].resolve().absolute().__str__()
@@ -165,9 +138,7 @@ def run(file = '', flowrun = 1, deploymentname = ''):
         raise ValueError(f"Software Error: {e}")
 
     endTime = getDuration(startTime, datetime.now())
-    print('Completed RPA flow. File:', config.STARTFILE, ' | Sheet:', config.STARTCODE, ' | Time:', datetime.now().strftime('%m/%d/%Y, %H:%M:%S'), ' | ', endTime)
     logger.info(f"Completed RPA flow. File: {config.STARTFILE} | Sheet: {config.STARTCODE} | Time: {datetime.now().strftime('%m/%d/%Y, %H:%M:%S')} | {endTime}")
-    #sys.exit(config.EX_OK) # code 0, all ok
     return result
 
 #if __name__ == '__prefect_loader__':   # deployment run
@@ -176,6 +147,3 @@ def run(file = '', flowrun = 1, deploymentname = ''):
 if __name__ == "__main__":
     print('main ...')
     result = run()
-
-    #run()
-
