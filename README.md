@@ -5,6 +5,13 @@ RPA solution with Excel front end
 Optimus RPA Package
 
 INSTALLATION
+git clone from this repo
+install-bat to setup the libraries
+runrpa to use
+
+
+
+
 - Requires: install-optimus.bat and a optimus_package*.zip file.
 - optimus_package is in continuous release and new releases are versioned in YYYYMMDD format.
   It is advisable you use the latest version available.  Check the release notes on what is included in the version.
