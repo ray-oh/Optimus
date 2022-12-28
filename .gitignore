@@ -135,4 +135,6 @@ optimus_package*.zip
 /autobot/settings*.bak
 /temp
 /deployment
-/scripts
+/scripts/*/output
+/scripts/*test*
+/scripts/*main*
