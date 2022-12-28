@@ -47,7 +47,9 @@ from prefect.task_runners import SequentialTaskRunner
 
 def main_flow(startfile, startsheet, startcode, background, program_dir):
     """ main flow to run RPA """
-    print('Starting RPA flow. File:', startfile, ' | Sheet code:', startsheet, startcode, ' | Background:', background, ' | Time:', datetime.now().strftime('%m/%d/%Y, %H:%M:%S'))
+    logger = get_run_logger()
+
+    logger.info(f"Starting RPA flow. File: {startfile} | Sheet code: {startsheet}, {startcode} | Background: {background} | Time: {datetime.now().strftime('%m/%d/%Y, %H:%M:%S')}")
     from auto_utility_file import runInBackground
     if int(background) == 1 : runInBackground(program_dir)
     #import rpa as r
@@ -64,7 +66,6 @@ def main_flow(startfile, startsheet, startcode, background, program_dir):
     # run the main code block
     main_code = dfObjList(dfmain, startcode)
 
-    logger = get_run_logger()
     logger.info(f"DEBUG ----- run main sheet ----- main_code = {main_code}")
 
     from auto_core_lib import runCodelist
@@ -82,7 +83,7 @@ def main_flow(startfile, startsheet, startcode, background, program_dir):
 
 @flow(name='launch-autobot', 
       description='launch autobot rpa flow', version='2022.10.27')
-def run(file = '', flowrun = 1, deploymentname = ''):
+def run(file = '', flowrun = 1, deploymentname = '', PROGRAM_DIR = '', startcode = '', startsheet = '', background = ''):
     ''' Deployment run or normal run or deploy to prefect '''
     print("running run flow")
     logger = get_run_logger()
@@ -101,32 +102,40 @@ def run(file = '', flowrun = 1, deploymentname = ''):
     logger.info(f"Module: {MODULE_PATH_file} {MODULE_PATH_lib}")
     #logger.info(f"sys path: {sys.path}")
 
-    import config
-    from auto_utility_dates import getDuration
-    #from auto_utility_file import runInBackground
-    if file == '': file = config.FLOW_NAME
-    logger.info(f"OPTIMUS_DIR: {os.getenv('OPTIMUS_DIR')} | SETTINGS_PATH {config.SETTINGS_PATH} | FLOW_NAME {config.FLOW_NAME}")
-    logger.info(f"Current Directory: {current_DIR} CWD_DIR: {config.CWD_DIR} | __file__ {__file__} | __name__ {__name__}")
+    # if not deployment run i.e. normal run
+    print(f"Context ... {context.get_run_context().flow_run.deployment_id}")
+    if context.get_run_context().flow_run.deployment_id == None:
+        import config
+        #from auto_utility_dates import getDuration
+        #from auto_utility_file import runInBackground
+        if file == '': file = config.FLOW_NAME
+        if startsheet == '': startsheet = config.STARTSHEET
+        if startcode == '': startcode=config.STARTCODE
+        if background == '': background=config.BACKGROUND
+        if PROGRAM_DIR == '': PROGRAM_DIR = config.PROGRAM_DIR
 
-    from auto_initialize import checkFileValid
+        logger.info(f"OPTIMUS_DIR: {os.getenv('OPTIMUS_DIR')} | SETTINGS_PATH {config.SETTINGS_PATH} | FLOW_NAME {config.FLOW_NAME}")
+        logger.info(f"Current Directory: {current_DIR} CWD_DIR: {config.CWD_DIR} | __file__ {__file__} | __name__ {__name__}")
+
+        from auto_initialize import checkFileValid
+        
+        #if PREFECT_DEPLOYMENT_RUN:
+        #    config.STARTFILE = file
     
-    #if PREFECT_DEPLOYMENT_RUN:
-    #    config.STARTFILE = file
-   
-    if not checkFileValid(Path(config.STARTFILE)):
-        raise ValueError(f"Start File Error {config.STARTFILE}")
+        if not checkFileValid(Path(config.STARTFILE)):
+            raise ValueError(f"Start File Error {config.STARTFILE}")
 
-    flowname = Path(config.STARTFILE).stem.__str__() + "-" + config.STARTSHEET + "-" + config.STARTCODE
-    logger.info(f"STARTFILE:{config.STARTFILE} {flowname}")
-    logger.info("Version: 22.10.26.1")
+        flowname = Path(config.STARTFILE).stem.__str__() + "-" + config.STARTSHEET + "-" + config.STARTCODE
+        logger.info(f"STARTFILE:{config.STARTFILE} {flowname}")
+        logger.info("Version: 22.10.26.1")
 
     try:
         #print('Command:',file)
         logger.info(f"Current directory {Path('.').resolve().absolute().__str__()}")
         #result = main_flow.with_options(name=flowname, retries=1)(startfile=file, startsheet=config.STARTSHEET, startcode=config.STARTCODE, \
         #    background=config.BACKGROUND, program_dir=config.PROGRAM_DIR)
-        result = main_flow(startfile=file, startsheet=config.STARTSHEET, startcode=config.STARTCODE, \
-            background=config.BACKGROUND, program_dir=config.PROGRAM_DIR)
+        result = main_flow(startfile=file, startsheet=startsheet, startcode=startcode, \
+            background=background, program_dir=PROGRAM_DIR)
 
     #except:
     except Exception as e: 
@@ -137,8 +146,10 @@ def run(file = '', flowrun = 1, deploymentname = ''):
             print("kiil process:",killprocess("excel"))
         raise ValueError(f"Software Error: {e}")
 
+    from auto_utility_dates import getDuration
     endTime = getDuration(startTime, datetime.now())
-    logger.info(f"Completed RPA flow. File: {config.STARTFILE} | Sheet: {config.STARTCODE} | Time: {datetime.now().strftime('%m/%d/%Y, %H:%M:%S')} | {endTime}")
+    # logger.info(f"Completed RPA flow. File: {config.STARTFILE} | Sheet: {config.STARTCODE} | Time: {datetime.now().strftime('%m/%d/%Y, %H:%M:%S')} | {endTime}")
+    logger.info(f"Completed RPA flow. File: {file} | Sheet: {startsheet} {startcode} | Time: {datetime.now().strftime('%m/%d/%Y, %H:%M:%S')} | {endTime}")
     return result
 
 #if __name__ == '__prefect_loader__':   # deployment run

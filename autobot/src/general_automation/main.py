@@ -47,7 +47,7 @@ def main():
         if not checkFileValid(Path(SETTINGS_PATH)):
             SETTINGS_PATH = Path(CWD_DIR + "/settings.ini").resolve().absolute().__str__()
             COMMANDS_PATH = Path(CWD_DIR + "/commands.xlsx").resolve().absolute().__str__()
-    #print('CURRENT DIR:', CWD_DIR, '| OPTIMUS_DIR: ', os.getenv('OPTIMUS_DIR'), '| SETTINGS_PATH',SETTINGS_PATH) # os.environ['OPTIMUS_DIR']
+    print('CURRENT DIR:', CWD_DIR, '| OPTIMUS_DIR: ', os.getenv('OPTIMUS_DIR'), '| SETTINGS_PATH',SETTINGS_PATH) # os.environ['OPTIMUS_DIR']
     #checkSettingsPath(SETTINGS_PATH)
     if not checkFileValid(Path(SETTINGS_PATH)):
         raise ValueError(f"Software Error: settings.ini")
@@ -101,11 +101,15 @@ def main():
         #deploymentname = config.FLOW_NAME + "-"+ str(computername)
         deploymentname = program_args['startfile'] + "-"+ str(computername)
         #parametervalue = {"commandStr": Path(config.PROGRAM_DIR + '/runRPA.bat -f ' + Path(config.STARTFILE).name.__str__()).absolute().__str__()}
-        parametervalue = {"file": program_args['startfile'] +".xlsm", "flowrun": 1, "deploymentname": deploymentname} 
+        parametervalue = {"file": program_args['startfile'] +".xlsm", "flowrun": 1, "deploymentname": deploymentname, \
+            "PROGRAM_DIR": Path(AUTOBOT_DIR).parents[0].resolve().absolute().__str__(), \
+            "startcode": program_args['startcode'], \
+            "startsheet": program_args['startsheet'], \
+            "background": str(1)} 
 
         from deployment import workflowDeployment
         workflowDeployment(deploymentname, parametervalue)
-        
+        '''
         # save settings
         DEPLOYMENTNAME = deploymentname
         PROGRAM_DIR = Path(AUTOBOT_DIR).parents[0].resolve().absolute().__str__()
@@ -150,6 +154,7 @@ def main():
         with open(SETTINGS_PATH, 'w') as configfile:
             configObj.write(configfile)
         print('Settings updated and saved:', SETTINGS_PATH, ' Backup:',SETTINGS_PATH_BAK)
+        '''
 
         '''
         [diorOrder-CDAPHKGRPA03]
@@ -186,6 +191,7 @@ def main():
         #parametervalue = {"commandStr": Path(config.PROGRAM_DIR + '/runRPA.bat -f ' + Path(config.STARTFILE).name.__str__()).absolute().__str__()}
         #parametervalue = {"file": program_args['startfile'] +".xlsm", "flowrun": 1, "deploymentname": deploymentname} 
         #result = run.with_options(name=deploymentname, timeout_seconds = timeout, retries = 1)()
+        print(f"Retries .... {program_args['retries']}")
         retries = int(program_args['retries'])
         with tags("production", "test"):
             #run()  # has tags: a, b

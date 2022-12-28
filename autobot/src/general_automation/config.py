@@ -51,12 +51,6 @@ from pathlib import Path, PureWindowsPath
 from prefect import task, flow, get_run_logger, context
 logger = get_run_logger()
 #logger.info(f"CONTEXT {context.get_run_context().flow_run.parameters['file']}  {context.get_run_context().flow_run.parameters} {context.get_run_context().flow_run}")
-#if context.get_run_context().flow_run.deployment_id == None:
-#    logger.info(f"deployment id is None")
-#else:
-#    logger.info(f"deployment id is {context.get_run_context().flow_run.deployment_id}")
-
-#logger.info(f"{TEST1VAR} {TEST2VAR} {newVariables['DRUN']} PREFECT_DEPLOYMENT_RUN {PREFECT_DEPLOYMENT_RUN} __name__ {__name__}")
 
 if context.get_run_context().flow_run.deployment_id == None:
     logger.info(f"NORMAL RUN")
@@ -118,15 +112,19 @@ if context.get_run_context().flow_run.deployment_id == None:
 
 #elif PREFECT_DEPLOYMENT_RUN:    
 else:
-    logger.info(f"DEPLOYMENT RUN")
+    logger.info(f"DEBUG config.py - DEPLOYMENT RUN")
+    logger.info(f"Context parameters ... {context.get_run_context().flow_run.parameters} {context.get_run_context().flow_run.parameters['PROGRAM_DIR']}")
 
     import os
-    SETTINGS_PATH = Path(os.environ['OPTIMUS_DIR'] + "/autobot/settings.ini").resolve().absolute().__str__()
+    #SETTINGS_PATH = Path(os.environ['OPTIMUS_DIR'] + "/autobot/settings.ini").resolve().absolute().__str__()
+    SETTINGS_PATH = Path(context.get_run_context().flow_run.parameters['PROGRAM_DIR'] + "/autobot/settings.ini").resolve().absolute().__str__()    
     #COMMANDS_PATH = Path(os.environ['OPTIMUS_DIR'] + "/autobot/commands.xlsx").resolve().absolute().__str__()
 
     #checkSettingsPath(SETTINGS_PATH)
     if not checkFileValid(Path(SETTINGS_PATH)):
         raise ValueError(f"Software Error: settings.ini")
+    logger.info(f"DEBUG SETTINGS_PATH {SETTINGS_PATH}")
+
     configObj, program_args = initializeFromSettings(SETTINGS_PATH)
     #print('configObj:',configObj)
     #print('program_args:',program_args)
@@ -136,6 +134,7 @@ else:
     # declaring SYSTEM CONSTANTS from intialization step
     #optionsStatic = (option for option in configObj.options('settings') if option not in configObj.options('flag'))
     configSection = context.get_run_context().flow_run.parameters['deploymentname']
+    logger.info(f"configSection {configSection}")
     options = (option for option in configObj.options(configSection)) #if option not in configObj.options('flag'))
     for option in options:
         optionValue = configObj[configSection][option]
@@ -143,8 +142,23 @@ else:
         #logger.info(f"{option.upper()} = configObj[configSection]['{option.upper()}']")        
         exec(f"{option.upper()} = configObj[configSection]['{option.upper()}']")
 
+    logger.info(f"DEBUG configSection options {STARTFILE}, {SCRIPTS_DIR}, {OUTPUT_PATH}, {IMAGE_PATH}, {LOG_PATH}, {ADDON_PATH}, {SRCLOGFILE}")
+
+    # overwrite from settings file with default parameter values
+    PROGRAM_DIR = Path(context.get_run_context().flow_run.parameters['PROGRAM_DIR']).resolve().absolute().__str__()
+    STARTFILE = context.get_run_context().flow_run.parameters['file']
+    SCRIPTS_DIR = Path(context.get_run_context().flow_run.parameters['PROGRAM_DIR'] + "/scripts").resolve().absolute().__str__()
+    OUTPUT_PATH = '/output'
+    IMAGE_PATH = '/rpa'
+    LOG_PATH = '/log'
+    ADDON_PATH = '/addon'
+    SRCLOGFILE = 'generalAutomation.log'
+
+    logger.info(f"DEBUG overwrite configSection options {STARTFILE}, {SCRIPTS_DIR}, {OUTPUT_PATH}, {IMAGE_PATH}, {LOG_PATH}, {ADDON_PATH}, {SRCLOGFILE}")
+
     # normal 0, flow execute 1, flow deploy 2
     logger.info(f"FLOW RUN, {FLOWRUN}")
+    
 
 
 #print(PROGRAM_DIR, AUTOBOT_DIR, SCRIPTS_DIR)
@@ -160,12 +174,13 @@ from pathlib import Path, PureWindowsPath
 import socket
 hostname = str(socket.gethostname())
 #print(hostname)
-# declare CONSTANTS for prefect flow
+# declare CONSTANTS for prefect flow - FLOW_NAME, FLOW_DESCRIPTION, TASK_NAME, TASK_DESCRIPTION, TAG_NAME, DEPLOYMENT_NAME, PARAMETER_VALUE, COMPUTERNAME
 options = (option for option in configObj.options('prefect'))  # if option not in configObj.options('flag'))
 for option in options:
     optionValue = configObj['prefect'][option]
     #print(f"{option.upper()} = '{optionValue}'")
     #print(f"{option.upper()} = configObj['settings']['{option.upper()}']")        
+    #logger.info(f"DEBUG option prefect values {option.upper()} = configObj['settings']['{option.upper()}']")
     exec(f"{option.upper()} = configObj['prefect']['{option.upper()}']")
 FLOW_NAME = Path(STARTFILE).name.__str__().rsplit('.',1)[0] + "-"+ hostname
 logger.info(f"FLOW_NAME: {FLOW_NAME}")
@@ -187,6 +202,7 @@ if INITIALIZATION==1:
 STARTFILE = checkStartFile(STARTFILE, Path(PROGRAM_DIR) / "scripts") 
 logger.info(f"STARTFILE {STARTFILE}")
 
+# setup working directories for script file
 SCRIPT_NAME, ASSETS_DIR, OUTPUT_DIR, IMAGE_DIR, LOG_DIR, ADDON_DIR, SRCLOG = \
     setup_assetDirectories(STARTFILE, SCRIPTS_DIR, OUTPUT_PATH, IMAGE_PATH, LOG_PATH, ADDON_PATH, SRCLOGFILE)
 logger.info(f"'SCRIPT_NAME', {SCRIPT_NAME}, \
