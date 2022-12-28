@@ -53,13 +53,13 @@ logger = get_run_logger()
 #logger.info(f"CONTEXT {context.get_run_context().flow_run.parameters['file']}  {context.get_run_context().flow_run.parameters} {context.get_run_context().flow_run}")
 
 if context.get_run_context().flow_run.deployment_id == None:
-    logger.info(f"DEBUG config.py NORMAL RUN")
+    #logger.info(f"DEBUG config.py NORMAL RUN")
 
     #if not PREFECT_DEPLOYMENT_RUN:
     CWD_DIR = checkWorkDirectory('.')  # directory of run.bat in /autobot
     AUTOBOT_DIR = CWD_DIR
 
-    logger.info(f"DEBUG config.py Config __file__: {Path(__file__).name.__str__()} CWD_DIR: {CWD_DIR}")
+    #logger.info(f"DEBUG config.py Config __file__: {Path(__file__).name.__str__()} CWD_DIR: {CWD_DIR}")
 
     # get program dir from windows environment
     import os
@@ -74,7 +74,7 @@ if context.get_run_context().flow_run.deployment_id == None:
         if not checkFileValid(Path(SETTINGS_PATH)):
             SETTINGS_PATH = Path(CWD_DIR + "/settings.ini").resolve().absolute().__str__()
             COMMANDS_PATH = Path(CWD_DIR + "/commands.xlsx").resolve().absolute().__str__()
-    logger.info(f"DEBUG config.py CURRENT DIR:', {CWD_DIR}, '| OPTIMUS_DIR: ', {os.getenv('OPTIMUS_DIR')}, '| SETTINGS_PATH',{SETTINGS_PATH}") # os.environ['OPTIMUS_DIR']
+    #logger.info(f"DEBUG config.py CURRENT DIR:', {CWD_DIR}, '| OPTIMUS_DIR: ', {os.getenv('OPTIMUS_DIR')}, '| SETTINGS_PATH',{SETTINGS_PATH}") # os.environ['OPTIMUS_DIR']
 
     #checkSettingsPath(SETTINGS_PATH)
     if not checkFileValid(Path(SETTINGS_PATH)):
@@ -109,17 +109,17 @@ if context.get_run_context().flow_run.deployment_id == None:
     #print(STARTFILE, STARTCODE, STARTSHEET, LOGPRINT, LOGPRINTLEVEL, DEFAULTLOGLEVEL, SRCLOGFILE, CONFIGFILE, SETTINGS, BACKGROUND)
 
     # normal 0, flow execute 1, flow deploy 2
-    logger.info(f"'FLOW RUN', {FLOWRUN}")
-    logger.info(f"DEBUG configObj options {PROGRAM_DIR} {STARTFILE}, {SCRIPTS_DIR}, {OUTPUT_PATH}, {IMAGE_PATH}, {LOG_PATH}, {ADDON_PATH}, {SRCLOGFILE}")
+    #logger.info(f"'FLOW RUN', {FLOWRUN}")
+    #logger.info(f"DEBUG configObj options {PROGRAM_DIR} {STARTFILE}, {SCRIPTS_DIR}, {OUTPUT_PATH}, {IMAGE_PATH}, {LOG_PATH}, {ADDON_PATH}, {SRCLOGFILE}")
 
     # overwrite optimus_dir env with current directory if manual run
     PROGRAM_DIR = Path(CWD_DIR).parent.absolute().__str__()
-    logger.info(f"DEBUG program_dir {PROGRAM_DIR}")
+    #logger.info(f"DEBUG program_dir {PROGRAM_DIR}")
 
 #elif PREFECT_DEPLOYMENT_RUN:    
 else:
-    logger.info(f"DEBUG config.py - DEPLOYMENT RUN")
-    logger.info(f"Context parameters ... {context.get_run_context().flow_run.parameters} {context.get_run_context().flow_run.parameters['PROGRAM_DIR']}")
+    #logger.info(f"DEBUG config.py - DEPLOYMENT RUN")
+    #logger.info(f"Context parameters ... {context.get_run_context().flow_run.parameters} {context.get_run_context().flow_run.parameters['PROGRAM_DIR']}")
 
     import os
     #SETTINGS_PATH = Path(os.environ['OPTIMUS_DIR'] + "/autobot/settings.ini").resolve().absolute().__str__()
@@ -129,18 +129,18 @@ else:
     #checkSettingsPath(SETTINGS_PATH)
     if not checkFileValid(Path(SETTINGS_PATH)):
         raise ValueError(f"Software Error: settings.ini")
-    logger.info(f"DEBUG SETTINGS_PATH {SETTINGS_PATH}")
+    #logger.info(f"DEBUG SETTINGS_PATH {SETTINGS_PATH}")
 
     configObj, program_args = initializeFromSettings(SETTINGS_PATH)
     #print('configObj:',configObj)
     #print('program_args:',program_args)
-    logger.info(f"SETTINGS_PATH {SETTINGS_PATH} configObj: {configObj} | program_args: {program_args}") # | flowrun {flowrun} | deploymentname {deploymentname}")
+    #logger.info(f"SETTINGS_PATH {SETTINGS_PATH} configObj: {configObj} | program_args: {program_args}") # | flowrun {flowrun} | deploymentname {deploymentname}")
 
     # INSTANTIATE configObj
     # declaring SYSTEM CONSTANTS from intialization step
     #optionsStatic = (option for option in configObj.options('settings') if option not in configObj.options('flag'))
     configSection = context.get_run_context().flow_run.parameters['deploymentname']
-    logger.info(f"configSection {configSection}")
+    #logger.info(f"configSection {configSection}")
     options = (option for option in configObj.options(configSection)) #if option not in configObj.options('flag'))
     for option in options:
         optionValue = configObj[configSection][option]
@@ -148,7 +148,7 @@ else:
         #logger.info(f"{option.upper()} = configObj[configSection]['{option.upper()}']")        
         exec(f"{option.upper()} = configObj[configSection]['{option.upper()}']")
 
-    logger.info(f"DEBUG configSection options {STARTFILE}, {SCRIPTS_DIR}, {OUTPUT_PATH}, {IMAGE_PATH}, {LOG_PATH}, {ADDON_PATH}, {SRCLOGFILE}")
+    #logger.info(f"DEBUG configSection options {STARTFILE}, {SCRIPTS_DIR}, {OUTPUT_PATH}, {IMAGE_PATH}, {LOG_PATH}, {ADDON_PATH}, {SRCLOGFILE}")
 
     # overwrite from settings file with default parameter values
     PROGRAM_DIR = Path(context.get_run_context().flow_run.parameters['PROGRAM_DIR']).resolve().absolute().__str__()
@@ -160,10 +160,10 @@ else:
     ADDON_PATH = '/addon'
     SRCLOGFILE = 'generalAutomation.log'
 
-    logger.info(f"DEBUG overwrite configSection options {STARTFILE}, {SCRIPTS_DIR}, {OUTPUT_PATH}, {IMAGE_PATH}, {LOG_PATH}, {ADDON_PATH}, {SRCLOGFILE}")
+    #logger.info(f"DEBUG overwrite configSection options {STARTFILE}, {SCRIPTS_DIR}, {OUTPUT_PATH}, {IMAGE_PATH}, {LOG_PATH}, {ADDON_PATH}, {SRCLOGFILE}")
 
     # normal 0, flow execute 1, flow deploy 2
-    logger.info(f"FLOW RUN, {FLOWRUN}")
+    #logger.info(f"FLOW RUN, {FLOWRUN}")
     
 
 
@@ -189,7 +189,7 @@ for option in options:
     #logger.info(f"DEBUG option prefect values {option.upper()} = configObj['settings']['{option.upper()}']")
     exec(f"{option.upper()} = configObj['prefect']['{option.upper()}']")
 FLOW_NAME = Path(STARTFILE).name.__str__().rsplit('.',1)[0] + "-"+ hostname
-logger.info(f"FLOW_NAME: {FLOW_NAME}")
+#logger.info(f"FLOW_NAME: {FLOW_NAME}")
 TASK_NAME = FLOW_NAME
 TAG_NAME = "TEST"
 
@@ -206,11 +206,12 @@ if INITIALIZATION==1:
     sys.exit(EX_OK) # code 0, all ok
 
 STARTFILE = checkStartFile(STARTFILE, Path(PROGRAM_DIR) / "scripts") 
-logger.info(f"DEBUG config.py STARTFILE {STARTFILE}")
+#logger.info(f"DEBUG config.py STARTFILE {STARTFILE}")
 
 # setup working directories for script file
 SCRIPT_NAME, ASSETS_DIR, OUTPUT_DIR, IMAGE_DIR, LOG_DIR, ADDON_DIR, SRCLOG = \
     setup_assetDirectories(STARTFILE, SCRIPTS_DIR, OUTPUT_PATH, IMAGE_PATH, LOG_PATH, ADDON_PATH, SRCLOGFILE)
+'''
 logger.info(f"'SCRIPT_NAME', {SCRIPT_NAME}, \
             'PROGRAM_DIR', {PROGRAM_DIR}, \
             'ASSETS_DIR', {ASSETS_DIR}, \
@@ -219,12 +220,12 @@ logger.info(f"'SCRIPT_NAME', {SCRIPT_NAME}, \
                         'LOG_DIR',{LOG_DIR}, \
                             'ADDON_DIR',{ADDON_DIR}, \
                                 'SRCLOG',{SRCLOG}")
-
+'''
 # change working directory to Assets directory - downloads etc will be in that folder
 if FLOWRUN != 2: CWD_DIR = changeWorkingDirectory(ASSETS_DIR)
 #print(SCRIPTS_DIR, ASSETS_DIR)
 
 checkSaveSettings(SETTINGS, SETTINGS_PATH, configObj)
 
-logger.info('DEBUG config.py SETTINGS CONFIGURATION completed ...')
+logger.info('CONFIGURATION SETTINGS completed ...')
 

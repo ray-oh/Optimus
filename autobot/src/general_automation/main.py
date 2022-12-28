@@ -23,7 +23,7 @@ import time
 from run import run
 
 def main():
-    print("running main option")
+    #print("running main option")
     #if __name__ == "__main__":    
     #print(__name__)
     from auto_initialize import checkWorkDirectory
@@ -47,7 +47,7 @@ def main():
         if not checkFileValid(Path(SETTINGS_PATH)):
             SETTINGS_PATH = Path(CWD_DIR + "/settings.ini").resolve().absolute().__str__()
             COMMANDS_PATH = Path(CWD_DIR + "/commands.xlsx").resolve().absolute().__str__()
-    print('CURRENT DIR:', CWD_DIR, '| OPTIMUS_DIR: ', os.getenv('OPTIMUS_DIR'), '| SETTINGS_PATH',SETTINGS_PATH) # os.environ['OPTIMUS_DIR']
+    #print('CURRENT DIR:', CWD_DIR, '| OPTIMUS_DIR: ', os.getenv('OPTIMUS_DIR'), '| SETTINGS_PATH',SETTINGS_PATH) # os.environ['OPTIMUS_DIR']
     #checkSettingsPath(SETTINGS_PATH)
     if not checkFileValid(Path(SETTINGS_PATH)):
         raise ValueError(f"Software Error: settings.ini")
@@ -184,14 +184,14 @@ def main():
 
     # running from runrpa.bat
     else:
-        print("running from runrpa.bat")
+        #print("running from runrpa.bat")
         #result = run()
         deploymentname = program_args['startfile'] #+ "-"+ str(computername)  "launch-" + 
         timeout = 60*50 #3 * 60  # 1 hour = 60 min x 60 sec
         #parametervalue = {"commandStr": Path(config.PROGRAM_DIR + '/runRPA.bat -f ' + Path(config.STARTFILE).name.__str__()).absolute().__str__()}
         #parametervalue = {"file": program_args['startfile'] +".xlsm", "flowrun": 1, "deploymentname": deploymentname} 
         #result = run.with_options(name=deploymentname, timeout_seconds = timeout, retries = 1)()
-        print(f"Retries .... {program_args['retries']}")
+        #print(f"Retries .... {program_args['retries']}")
         retries = int(program_args['retries'])
         with tags("production", "test"):
             #run()  # has tags: a, b

@@ -164,7 +164,7 @@ def checkStartFile(STARTFILE: Path, SCRIPTS_DIR: Path):
 
 def checkFileValid(file : Path):
     if not file.is_file():
-        print('Invalid file or path: ', file.absolute())
+        print('Warning - Invalid file or path: ', file.absolute())
         return False
         #sys.exit(config.EX_CONFIG)     
     return True
