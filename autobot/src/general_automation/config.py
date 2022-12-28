@@ -53,13 +53,13 @@ logger = get_run_logger()
 #logger.info(f"CONTEXT {context.get_run_context().flow_run.parameters['file']}  {context.get_run_context().flow_run.parameters} {context.get_run_context().flow_run}")
 
 if context.get_run_context().flow_run.deployment_id == None:
-    logger.info(f"NORMAL RUN")
+    logger.info(f"DEBUG config.py NORMAL RUN")
 
     #if not PREFECT_DEPLOYMENT_RUN:
     CWD_DIR = checkWorkDirectory('.')  # directory of run.bat in /autobot
     AUTOBOT_DIR = CWD_DIR
 
-    logger.info(f"Config __file__: {Path(__file__).name.__str__()} CWD_DIR: {CWD_DIR}")
+    logger.info(f"DEBUG config.py Config __file__: {Path(__file__).name.__str__()} CWD_DIR: {CWD_DIR}")
 
     # get program dir from windows environment
     import os
@@ -74,7 +74,8 @@ if context.get_run_context().flow_run.deployment_id == None:
         if not checkFileValid(Path(SETTINGS_PATH)):
             SETTINGS_PATH = Path(CWD_DIR + "/settings.ini").resolve().absolute().__str__()
             COMMANDS_PATH = Path(CWD_DIR + "/commands.xlsx").resolve().absolute().__str__()
-    logger.info(f"'CURRENT DIR:', {CWD_DIR}, '| OPTIMUS_DIR: ', {os.getenv('OPTIMUS_DIR')}, '| SETTINGS_PATH',{SETTINGS_PATH}") # os.environ['OPTIMUS_DIR']
+    logger.info(f"DEBUG config.py CURRENT DIR:', {CWD_DIR}, '| OPTIMUS_DIR: ', {os.getenv('OPTIMUS_DIR')}, '| SETTINGS_PATH',{SETTINGS_PATH}") # os.environ['OPTIMUS_DIR']
+
     #checkSettingsPath(SETTINGS_PATH)
     if not checkFileValid(Path(SETTINGS_PATH)):
         raise ValueError(f"Software Error: settings.ini")
@@ -109,6 +110,11 @@ if context.get_run_context().flow_run.deployment_id == None:
 
     # normal 0, flow execute 1, flow deploy 2
     logger.info(f"'FLOW RUN', {FLOWRUN}")
+    logger.info(f"DEBUG configObj options {PROGRAM_DIR} {STARTFILE}, {SCRIPTS_DIR}, {OUTPUT_PATH}, {IMAGE_PATH}, {LOG_PATH}, {ADDON_PATH}, {SRCLOGFILE}")
+
+    # overwrite optimus_dir env with current directory if manual run
+    PROGRAM_DIR = Path(CWD_DIR).parent.absolute().__str__()
+    logger.info(f"DEBUG program_dir {PROGRAM_DIR}")
 
 #elif PREFECT_DEPLOYMENT_RUN:    
 else:
@@ -200,7 +206,7 @@ if INITIALIZATION==1:
     sys.exit(EX_OK) # code 0, all ok
 
 STARTFILE = checkStartFile(STARTFILE, Path(PROGRAM_DIR) / "scripts") 
-logger.info(f"STARTFILE {STARTFILE}")
+logger.info(f"DEBUG config.py STARTFILE {STARTFILE}")
 
 # setup working directories for script file
 SCRIPT_NAME, ASSETS_DIR, OUTPUT_DIR, IMAGE_DIR, LOG_DIR, ADDON_DIR, SRCLOG = \
@@ -220,5 +226,5 @@ if FLOWRUN != 2: CWD_DIR = changeWorkingDirectory(ASSETS_DIR)
 
 checkSaveSettings(SETTINGS, SETTINGS_PATH, configObj)
 
-logger.info('SETTINGS CONFIGURATION completed ...')
+logger.info('DEBUG config.py SETTINGS CONFIGURATION completed ...')
 
