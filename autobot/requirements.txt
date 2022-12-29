@@ -26,3 +26,4 @@ rpa==1.48.1
 six==1.16.0
 tagui==1.48.1
 xlwings==0.28.5
+matplotlib==3.6.2
