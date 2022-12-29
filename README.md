@@ -51,6 +51,7 @@ RPA solution with Excel front end
     - Prefect is chosen over other orhestration tools as the workflow engine.  [Comparison of Prefect vs Airbnb's Airflow and Spotify's Luigi](https://medium.datadriveninvestor.com/the-best-automation-workflow-management-tool-airbnb-airflow-vs-spotify-luigi-5f4c9832e9fd)
   - [PyPDF4](https://pypi.org/project/PyPDF4/): for PDF merging, splitting, cropping, encryption
   - [Pandas](https://pypi.org/project/pandas/): for data analysis
+    - [Matplotlib](https://pypi.org/project/matplotlib/): comprehensive library for creating static, animated, and interactive visualizations in Python
   - [Pillow](https://pypi.org/project/Pillow/): for image processing
   - [xlwings](https://www.xlwings.org/): for Excel automation 
   - it also leverages common windows COM components for Outlook integration, OneDrive Sync Client for OneDrive / Sharepoint / Teams integration.

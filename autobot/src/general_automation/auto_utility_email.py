@@ -221,6 +221,17 @@ class EmailsSender:
                         if file.is_file():
                             # file exists
                             mail.Attachments.Add(item.strip())
+        
+        from auto_initialize import checkFileValid
+        from pathlib import Path, PureWindowsPath
+        # if mail.HTMLBody is a valid file, replace mail.HTMLBody with the content of the file
+        # current directory is the folder of the script file
+        if checkFileValid(Path(mail.HTMLBody)):
+            html_file = Path(mail.HTMLBody).resolve().absolute().__str__()
+            with open(html_file, 'r') as f:
+                mail.HTMLBody = f.read()
+                f.close()
+
         if boolDisplay:
             mail.Display(True)
             #pass
