@@ -316,6 +316,7 @@ class EmailsSender:
         logger.info(f"Folder item count: {folderItems.Count}" )
         #for message in sentfolder.Items.Restrict(_sFilter_):
         subjectList = []
+        logMaillist = ""
         for message in folderItems:
             sub = message
             timeReceived = message.ReceivedTime #datetime-object
@@ -324,8 +325,10 @@ class EmailsSender:
             #    print("%s :: %s" % (str(timeReceived), sub.Subject))
             if not str(sub.Subject) in subjectList:
                 #print("%s :: %s" % (str(timeReceived), sub.Subject))
-                logger.info(f"{tzInfo2Naive(sub.ReceivedTime)}::{sub.Subject}")
+                logMaillist = logMaillist + f"{tzInfo2Naive(sub.ReceivedTime)}::{sub.Subject}\n"
                 subjectList = subjectList + [str(sub.Subject)]
+        #logger.info(f"{tzInfo2Naive(sub.ReceivedTime)}::{sub.Subject}\n")
+        logger.info(logMaillist)
 
         return subjectList
 

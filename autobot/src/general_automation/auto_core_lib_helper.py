@@ -1187,16 +1187,16 @@ def _email(codeValue, df):
             #logger.info(f"Rename cols: {json.loads(colsMapping)}")
             #logger.info(json.loads(colsMapping))
             objTableSet.rename(columns = json.loads(colsMapping), inplace = True)
-        mailfieldlst = ['To', 'CC', 'Subject', 'Body', 'HTMLBody', 'Attachment', 'boolDisplay', 'boolRun']
+        mailfieldlst = ['To', 'CC', 'Subject', 'Body', 'HTMLBody', 'Attachment', 'boolDisplay', 'boolRun', 'boolForce']
         objTableSet = objTableSet[objTableSet.columns.intersection(mailfieldlst)]  # select columns for mailing
         if result == True:  # is a table
             n = constants['iterationCount']
-            #logger.info('iterationCount' + str(n))
+            logger.info('iterationCount ' + str(n))
             objTableSet = objTableSet.iloc[n]  # fiter tableset for current iteration row
-            #logger.info(objTableSet)
-            #logger.info('columns')
+            logger.info(objTableSet)
+            logger.info('columns')
             emailObj = json.loads(objTableSet.to_json(orient="columns"))
-            #logger.info(emailObj)
+            logger.info(emailObj)
     #logger.info(type(emailObj)) # dictionary object
 
     # Send email
@@ -1213,6 +1213,7 @@ def _email(codeValue, df):
 
         boolRun = emailObj['boolRun'] if 'boolRun' in emailObj else True 
         boolDisplay = emailObj['boolDisplay'] if 'boolDisplay' in emailObj else False
+        boolForce = emailObj['boolForce'] if 'boolForce' in emailObj else False        
 
         if boolRun: 
             #logger.info(emailObj)
@@ -1220,11 +1221,11 @@ def _email(codeValue, df):
 
             from auto_utility_email import sentEmailSubjectList
             logger.info(f"#####>>>> sentEmailSubList, {len(sentEmailSubjectList)}")
-            if not Subject in sentEmailSubjectList:
+            if not Subject in sentEmailSubjectList or boolForce:
                 email_sender.send_email(boolDisplay=boolDisplay, boolRun=boolRun, EmailObj = emailObj)
                 logger.info('email SENT')
             else:
-                logger.info('email NOT SENT')
+                logger.info('email NOT SENT - already sent')
         else:
             logger.info('boolRun is FALSE')
         #result = email_sender.wait_send_complete()

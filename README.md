@@ -40,7 +40,13 @@ RPA solution with Excel front end
     - [Review of top 5 opensource RPA solutions including TagUI](https://techbeacon.com/enterprise-it/top-5-open-source-rpa-frameworks-how-choose)
 - Optimus also utilizes many other python packages for including:
   - [Jupyter](https://pypi.org/project/jupyter/): Native support for Jupyter Notebooks
+    - [Guide to setup Jupyter to use installed virtual env](https://janakiev.com/blog/jupyter-virtual-envs/)
+      - pip install ipykernel (included in installation libraries)
+      - python -m ipykernel --name=myenv (Run this command in venv. Replace myenv with any name for kernel in Jupyter.)
+      - jupyter kernelspec uninstall myenv (to remove the virtual env)
     - [Papermill](https://netflixtechblog.com/scheduling-notebooks-348e6c14cfd6): Parameterization and automation of Jupyter Notebooks
+    - [scrapbook](https://github.com/nteract/scrapbook): Persist and recall data and visual content in Jupyter notebook
+      - [Building jupyter notebook workflows with scrapbook](https://www.wrighters.io/building-jupyter-notebook-workflows-with-scrapbook/)
   - [Prefect](https://www.prefect.io/opensource/): Orchestration workflow engine
     - Prefect is chosen over other orhestration tools as the workflow engine.  [Comparison of Prefect vs Airbnb's Airflow and Spotify's Luigi](https://medium.datadriveninvestor.com/the-best-automation-workflow-management-tool-airbnb-airflow-vs-spotify-luigi-5f4c9832e9fd)
   - [PyPDF4](https://pypi.org/project/PyPDF4/): for PDF merging, splitting, cropping, encryption
