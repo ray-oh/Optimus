@@ -33,7 +33,7 @@ OPTIMUS also leverages the full power of python with its **flexible and extensib
     - Each new release can also be installed over a previous release as an upgrade.  
       Normally, an upgrade installation will not remove existing user files.  But it may overwrite existing scripts files with same name.
       Backup your scripts folder to avoid problems.
-    - Click here for the latest stable [installation package](.\installation).
+    - Click here for the latest stable [installation package](./installation).
 
 ### USAGE
 - Use runRPA.bat to launch RPA program.  Requires to specify an Excel script file.
