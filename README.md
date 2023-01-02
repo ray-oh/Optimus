@@ -1,11 +1,18 @@
-# optimus
-RPA solution with Excel front end
+# OPTIMUS
+RPA solution with Excel front end for creating flows.  
+Designed with the typical data analyst who is not technical savy but comfortable using Excel in mind.  
+The solution makes it really easy for beginners to develop your own flows, especially with templates.  
+Users can easily share and reuse modular Excel based scripts to speed up flow creation or create sophisticated automation flows.
 
 ## Optimus RPA Package
 - Optimus RPA solution is built from 2 core solutions
   - TagUI is the core RPA engine
-  - Prefect is the orchestration / workflow engine
-- And it also leverages many other python modules including pandas and jupyter notebooks for data analysis.
+  - Prefect is the orchestration / workflow engine  
+  
+Much easier to learn and develop than UiPath.  But without compromising on the power of a full RPA solution.  
+OPTIMUS leverages the full power of python with its flexible and extensible architecture
+- Incoporates other python libraries including pandas and jupyter notebooks support for data analysis and processing.
+- Enterprise level security by design with TagUI's decentralized architecture.  No sensitive user data is stored in the cloud.
 - Refer to DOCUMENTATION below for further information.
 
 ### INSTALLATION
@@ -38,6 +45,7 @@ RPA solution with Excel front end
     - [Official TagUI site](https://aisingapore.org/tagui/)
     - And [the python version of TagUI](https://github.com/tebelorg/RPA-Python)
     - [Review of top 5 opensource RPA solutions including TagUI](https://techbeacon.com/enterprise-it/top-5-open-source-rpa-frameworks-how-choose)
+    - TagUI by design does not deploy or save any user data on the cloud.  Passwords or credentials are not saved in the scripts, but cached in the browser or secret files on the user's local computer.
 - Optimus also utilizes many other python packages for including:
   - [Jupyter](https://pypi.org/project/jupyter/): Native support for Jupyter Notebooks
     - [Installing Jupyter Notebook](https://docs.jupyter.org/en/latest/install/notebook-classic.html)
@@ -57,6 +65,10 @@ RPA solution with Excel front end
   - [dataframe-image](https://pypi.org/project/dataframe-image/): to export dataframe output as image files
   - [xlwings](https://www.xlwings.org/): for Excel automation 
   - it also leverages common windows COM components for Outlook integration, OneDrive Sync Client for OneDrive / Sharepoint / Teams integration.
+  - OPTIMUS currently does not have a cloud enabled service option.  But it is possible deploy OPTIMUS on a cloud virtual machine to run the automation in unattended mode.
+    - It is also possible to federate an automation task across multiple deployments of OPTIMUS using OneDrive Sync Client or a shared network drive (if running within an enterprise network) to share data, status, and scripts.
+    - The current release of OPTIMUS does not provide this capability out of the box and requires some setup to achieve the federation.  Future releases may make this easier by leveraging the cloud enabled capabilities of Prefect workflow.
+
 
 ### PROGRAM TECHNICAL INFORMATION
 - Pre-requisites:
