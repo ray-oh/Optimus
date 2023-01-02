@@ -1,17 +1,17 @@
-# Email
-OPTIMUS currently supports email through OUTLOOK client running on the computer or server.
-It uses the installed windows COM files to automate email sending natively from OUTLOOK.  
-This is the preferred method for most enterprise deployments of OPTIMUS, as it does not require any further configuration or access for email sending, apart from the standard OUTLOOK already installed on the user's computer.  
+# ORCHESTRATION
+OPTIMUS uses PREFECT to support powerful workflow and monitoring capabilities for automation flows.  
+Examples of some of these features include
 
-## Formatting Email Body
-For simple email messages, you can format and template your email body in Excel directly.  
-For more complex email content structures, you can leverage Jinja templates.
-- [Primer on Jinja Templating](https://realpython.com/primer-on-jinja-templating/)
-
-Some useful guides on dealing with some common issues when setting up the HTML body of your email template  
-- [Displaying large images in the email HTML body](https://blog.edmdesigner.com/html-email-width-overcoming-the-600px-limitation/#:~:text=The%20de%20facto%20standard%20for%20HTML%20emails'%20width%20is%20600%20pixels.)
+## Workflow dashboard
+Clean modern dashboard to monitor all automation flows - success and failures.  
+Both manually triggered and scheduled unattended runs can be monitored from this single dashboard.  Unattended are distinguished from manual runs with the server/computer name on which the job is deployed to. E.g. cscKPI-CDAPHKGRPPA03(***flowname***-***servername)
 
 ![Automation Job Monitoring](https://user-images.githubusercontent.com/115925194/210244603-823f2ef1-c55e-4acd-8cc4-83a150254073.png)
 
+![Automation Job Monitoring](https://user-images.githubusercontent.com/115925194/210246777-0c4ce6f2-96ce-4949-8488-ce0c9e9421d2.png)
+
 ![Automation Job Log](https://user-images.githubusercontent.com/115925194/210245885-2357add2-0553-47fe-8fd4-d513a577cd80.png)
 
+![Scheduling](https://user-images.githubusercontent.com/115925194/210246976-8e048cda-69aa-48a4-8efd-dc8626497fce.png)
+
+![Unattended Deployments](https://user-images.githubusercontent.com/115925194/210247098-b976ce6a-ff27-4439-88ae-fa620b0a5eae.png)
