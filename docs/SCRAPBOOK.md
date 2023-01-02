@@ -32,6 +32,8 @@ https://stackoverflow.com/questions/41309722/error-no-such-function-json-each-in
 
 https://www.thecodeship.com/patterns/guide-to-python-function-decorators/
 
+Removing sensitive data from Github repo
+https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/removing-sensitive-data-from-a-repository
 
 Obsufication
 https://askubuntu.com/questions/153823/how-to-run-a-pyc-compiled-python-file
