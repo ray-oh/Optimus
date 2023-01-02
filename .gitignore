@@ -75,7 +75,7 @@ docs/_build/
 target/
 
 # Jupyter Notebook
-.ipynb_checkpoints
+# .ipynb_checkpoints
 
 # IPython
 profile_default/
@@ -138,3 +138,5 @@ optimus_package*.zip
 /scripts/*/output
 /scripts/*test*
 /scripts/*main*
+/scripts/sample_notebook/*
+*DClickReport*.ipynb

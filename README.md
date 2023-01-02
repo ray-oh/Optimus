@@ -40,7 +40,8 @@ RPA solution with Excel front end
     - [Review of top 5 opensource RPA solutions including TagUI](https://techbeacon.com/enterprise-it/top-5-open-source-rpa-frameworks-how-choose)
 - Optimus also utilizes many other python packages for including:
   - [Jupyter](https://pypi.org/project/jupyter/): Native support for Jupyter Notebooks
-    - [Guide to setup Jupyter to use installed virtual env](https://janakiev.com/blog/jupyter-virtual-envs/)
+    - [Installing Jupyter Notebook](https://docs.jupyter.org/en/latest/install/notebook-classic.html)
+    - [Setup Jupyter to use installed virtual env](https://janakiev.com/blog/jupyter-virtual-envs/)
       - pip install ipykernel (included in installation libraries)
       - python -m ipykernel --name=myenv (Run this command in venv. Replace myenv with any name for kernel in Jupyter.)
       - jupyter kernelspec uninstall myenv (to remove the virtual env)
@@ -53,6 +54,7 @@ RPA solution with Excel front end
   - [Pandas](https://pypi.org/project/pandas/): for data analysis
     - [Matplotlib](https://pypi.org/project/matplotlib/): comprehensive library for creating static, animated, and interactive visualizations in Python
   - [Pillow](https://pypi.org/project/Pillow/): for image processing
+  - [dataframe-image](https://pypi.org/project/dataframe-image/): to export dataframe output as image files
   - [xlwings](https://www.xlwings.org/): for Excel automation 
   - it also leverages common windows COM components for Outlook integration, OneDrive Sync Client for OneDrive / Sharepoint / Teams integration.
 

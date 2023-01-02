@@ -101,7 +101,33 @@ def _otherRunCode(df, code, codeID, codeValue, objVar):
     else:                       _click(code)        # normal left click
     return [], [], []
 
+# used by tagui to redirect console output to a variable
+def consoleOutput(runStatement):
+    from io import StringIO
+    import sys
+    old_stdout = sys.stdout # reference current console std out
+    buffer = StringIO()     
+    sys.stdout = buffer     # redirect std out to buffer
+    exec(runStatement)
+    buffer_output = buffer.getvalue()   # assign buffer to variable
+    sys.stdout = old_stdout   # reset std out
+    #sys.stdout = sys.__stdout__
+    return buffer_output
 
+from io import StringIO
+import sys
+def redirectConsole():
+    old_stdout = sys.stdout # reference current console std out
+    buffer = StringIO()     
+    sys.stdout = buffer     # redirect std out to buffer
+    return buffer, old_stdout
+
+def resetConsole(buffer, old_stdout):
+    buffer_output = buffer.getvalue()   # assign buffer to variable
+    sys.stdout = old_stdout   # reset std out
+    #sys.stdout = sys.__stdout__
+    return buffer_output
+    
 def _iterate(codeValue, df, objVar):
     '''  Defines iteration steps and appends to runcode list to handle loops over object list or tables.  Syntax: iterate: obj or table list, codelist to run '''
     logger = get_run_logger()
@@ -961,30 +987,44 @@ def _url(codeValue, df):
     logger = get_run_logger()
     key = codeValue.strip()
     #print('check key', key)
-    if key[:1]=='@':                # value given is a URL value
+
+    if isinstance(key, str) and key[:4]=='http':  # value given is a URL value
+        #logger.info(f"      Valid URL")
+        url_value = key
+    elif key[:1]=='@':                            # value given is a URL value with special prefix @
         url_value = key[1:]
-    else:
+    else:                                         # name of list (key value pair) expected
         #print('check df',df)
         url_value = dfKey_value(df, key)
-    #print('      ','URL:',key, url_value) #, type(url_value))
-    logger.info(f"'url: ', VARIABLE_TYPE = {type(url_value)}, key = {key}, url_value = {url_value}")
+        #print('      ','URL:',key, url_value) #, type(url_value))
+        logger.info(f"      DEBUG url: ', VARIABLE_TYPE = {type(url_value)}, key = {key}, url_value = {url_value}")
 
     import math
     #x = float('nan')
     #math.isnan(x)
 
     if url_value==None or url_value!=url_value:  #df key value returns empty value
-        logger.info(f"Not a valid key value pair. url_value = {url_value} key = {key}, level = 'warning'")            
+        logger.info(f"      Not a valid key value pair. url_value = {url_value} key = {key}, level = 'warning'")            
     elif not(isinstance(url_value, str)):
         url_value = url_value[0]
         #logg('IsInstanceOfStr', key = key, url_value = url_value)
     if isinstance(url_value, str) and url_value[:4]=='http':
-        logger.info(f"      Valid URL")
-        r.url(url_value)
+        #runStatement = \
+        #                '''
+        #                result = r.url(url_value) # true if run is successful
+        #                '''
+        #print(consoleOutput(runStatement))
+        buffer, old_stdout = redirectConsole()
+        result = r.url(url_value) # true if run is successful
+        consoleOutput = resetConsole(buffer, old_stdout)
+        if not result:
+            logger.info(f"      RPA ERROR: {consoleOutput}")
+        else:
+            #logger.info(f"      Valid URL")
+            pass
     else:
-        logger.info(f"Not http address, url_value = {url_value}, key = {key}, level = 'warning'")
+        logger.info(f"      ERROR: Not http address, url_value = {url_value}, key = {key}, level = 'warning'")
     constants['url'] = key          # set the URL key/name to a temp varaible with label url
-
 
 def _urls(codeValue, objVar):
     #logg('urls',codeValue = codeValue, objVar = objVar)

@@ -206,7 +206,7 @@ class EmailsSender:
                             file = Path(item.strip())
                             if file.is_file():
                                 # file exists
-                                mail.Attachments.Add(file.resolve().absolute().__str__())
+                                mail.Attachments.Add(item.strip())
             else:
                 if key=="To" and value is not None: mail.To = value #'To address'
                 if key=="CC" and value is not None: mail.CC = value #'To address'
@@ -220,8 +220,8 @@ class EmailsSender:
                         file = Path(item.strip())
                         if file.is_file():
                             # file exists
-                            mail.Attachments.Add(file.resolve().absolute().__str__())        
-
+                            mail.Attachments.Add(item.strip())
+        
         from auto_initialize import checkFileValid
         from pathlib import Path, PureWindowsPath
         # if mail.HTMLBody is a valid file, replace mail.HTMLBody with the content of the file
@@ -231,8 +231,6 @@ class EmailsSender:
             with open(html_file, 'r') as f:
                 mail.HTMLBody = f.read()
                 f.close()
-        #print(f"current dir {Path('.').resolve().absolute().__str__()}")
-        #print(f"mail.HTML {mail.HTMLBody}")
 
         if boolDisplay:
             mail.Display(True)

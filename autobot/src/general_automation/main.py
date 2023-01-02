@@ -187,6 +187,8 @@ def main():
         #print("running from runrpa.bat")
         #result = run()
         deploymentname = program_args['startfile'] #+ "-"+ str(computername)  "launch-" + 
+        #print(f"deploymentname .... {program_args['startfile']}   {program_args}")
+
         timeout = 60*50 #3 * 60  # 1 hour = 60 min x 60 sec
         #parametervalue = {"commandStr": Path(config.PROGRAM_DIR + '/runRPA.bat -f ' + Path(config.STARTFILE).name.__str__()).absolute().__str__()}
         #parametervalue = {"file": program_args['startfile'] +".xlsm", "flowrun": 1, "deploymentname": deploymentname} 

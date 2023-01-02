@@ -205,27 +205,33 @@ if INITIALIZATION==1:
     import sys
     sys.exit(EX_OK) # code 0, all ok
 
+# Return absolute path of start file in scripts folder
 STARTFILE = checkStartFile(STARTFILE, Path(PROGRAM_DIR) / "scripts") 
 #logger.info(f"DEBUG config.py STARTFILE {STARTFILE}")
 
-# setup working directories for script file
-SCRIPT_NAME, ASSETS_DIR, OUTPUT_DIR, IMAGE_DIR, LOG_DIR, ADDON_DIR, SRCLOG = \
-    setup_assetDirectories(STARTFILE, SCRIPTS_DIR, OUTPUT_PATH, IMAGE_PATH, LOG_PATH, ADDON_PATH, SRCLOGFILE)
-'''
-logger.info(f"'SCRIPT_NAME', {SCRIPT_NAME}, \
-            'PROGRAM_DIR', {PROGRAM_DIR}, \
-            'ASSETS_DIR', {ASSETS_DIR}, \
-                'OUTPUT_DIR',{OUTPUT_DIR}, \
-                    'IMAGE_DIR',{IMAGE_DIR}, \
-                        'LOG_DIR',{LOG_DIR}, \
-                            'ADDON_DIR',{ADDON_DIR}, \
-                                'SRCLOG',{SRCLOG}")
-'''
-# change working directory to Assets directory - downloads etc will be in that folder
-if FLOWRUN != 2: CWD_DIR = changeWorkingDirectory(ASSETS_DIR)
-#print(SCRIPTS_DIR, ASSETS_DIR)
+if not checkFileValid(Path(STARTFILE)):
+    logger.info(f"SCRIPT START FILE INVALID - Check file path: {Path(STARTFILE)}")            
+    raise ValueError(f"Start File Error {STARTFILE}")
+    exit
+else:
+    # setup working directories for script file if they don't exist
+    SCRIPT_NAME, ASSETS_DIR, OUTPUT_DIR, IMAGE_DIR, LOG_DIR, ADDON_DIR, SRCLOG = \
+        setup_assetDirectories(STARTFILE, SCRIPTS_DIR, OUTPUT_PATH, IMAGE_PATH, LOG_PATH, ADDON_PATH, SRCLOGFILE)
+    '''
+    logger.info(f"'SCRIPT_NAME', {SCRIPT_NAME}, \
+                'PROGRAM_DIR', {PROGRAM_DIR}, \
+                'ASSETS_DIR', {ASSETS_DIR}, \
+                    'OUTPUT_DIR',{OUTPUT_DIR}, \
+                        'IMAGE_DIR',{IMAGE_DIR}, \
+                            'LOG_DIR',{LOG_DIR}, \
+                                'ADDON_DIR',{ADDON_DIR}, \
+                                    'SRCLOG',{SRCLOG}")
+    '''
+    # change working directory to Assets directory - downloads etc will be in that folder
+    if FLOWRUN != 2: CWD_DIR = changeWorkingDirectory(ASSETS_DIR)
+    #print(SCRIPTS_DIR, ASSETS_DIR)
 
-checkSaveSettings(SETTINGS, SETTINGS_PATH, configObj)
+checkSaveSettings(SETTINGS, SETTINGS_PATH, configObj)  # save settings file if SETTINGS parameter = 1
 
 logger.info('CONFIGURATION SETTINGS completed ...')
 

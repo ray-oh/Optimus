@@ -120,9 +120,12 @@ def run(file = '', flowrun = 1, deploymentname = '', PROGRAM_DIR = '', startcode
         
         #if PREFECT_DEPLOYMENT_RUN:
         #    config.STARTFILE = file
-    
+
+        # Check if start file is valid - but this code probably not needed here as its included in CONFIG file executed by import config
         if not checkFileValid(Path(config.STARTFILE)):
+            logger.info(f"SCRIPT START FILE INVALID - Check file path: {Path(config.STARTFILE)}")            
             raise ValueError(f"Start File Error {config.STARTFILE}")
+            exit
 
         flowname = Path(config.STARTFILE).stem.__str__() + "-" + config.STARTSHEET + "-" + config.STARTCODE
         #logger.info(f"DEBUG run.py/run STARTFILE:{config.STARTFILE} {flowname}")
