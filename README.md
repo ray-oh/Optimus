@@ -1,7 +1,7 @@
 # OPTIMUS
-RPA solution with Excel front end for creating flows.  
+RPA solution with **Excel front end** for creating flows.  
 Designed with the typical data analyst who is not technical savy but comfortable using Excel in mind.  
-The solution makes it really easy for beginners to develop your own flows, especially with templates.  
+The solution makes it really **easy for beginners** to develop your own flows, especially with templates.  
 Users can easily share and reuse modular Excel based scripts to speed up flow creation or create sophisticated automation flows.
 
 ## Optimus RPA Package
@@ -10,7 +10,7 @@ Users can easily share and reuse modular Excel based scripts to speed up flow cr
   - Prefect is the orchestration / workflow engine  
   
 Much easier to learn and develop than UiPath.  But without compromising on the power of a full RPA solution.  
-OPTIMUS leverages the full power of python with its flexible and extensible architecture
+OPTIMUS leverages the full power of python with its **flexible and extensible architecture**
 - Incoporates other python libraries including pandas and jupyter notebooks support for data analysis and processing.
 - Enterprise level security by design with TagUI's decentralized architecture.  No sensitive user data is stored in the cloud.
 - Refer to DOCUMENTATION below for further information.
