@@ -45,6 +45,7 @@ Refer to the DOCUMENTATION section below for further information.
 
 - To launch the Prefect workflow engine, run startOrion.bat to launch the orion workflow server in background.
   - And open the [Prefect dashboard](http://127.0.0.1:4200) in your browser
+  - Refer to the documentation here for more details on [managing automation flows and deployments in the workflow dashboard](./docs/ORCHESTRATION.md).
 
 ### DOCUMENTATION
 OPTIMUS is based on TagUI for RPA automation.  Almost all of TagUI's features are ported and available in Optimus.  And some have also been enhanced.
