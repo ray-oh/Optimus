@@ -11,3 +11,4 @@ For more complex email content structures, you can leverage Jinja templates.
 Some useful guides on dealing with some common issues when setting up the HTML body of your email template  
 - [Displaying large images in the email HTML body](https://blog.edmdesigner.com/html-email-width-overcoming-the-600px-limitation/#:~:text=The%20de%20facto%20standard%20for%20HTML%20emails'%20width%20is%20600%20pixels.)
 
+![Automation Job Monitoring](https://user-images.githubusercontent.com/115925194/210244603-823f2ef1-c55e-4acd-8cc4-83a150254073.png)
