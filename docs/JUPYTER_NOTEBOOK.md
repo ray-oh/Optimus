@@ -1,24 +1,29 @@
-# ORCHESTRATION
-OPTIMUS uses PREFECT to support powerful workflow and monitoring capabilities for automation flows.  
-Examples of some of these features include
+# JUPYTER NOTEBOOK
+JUPYTER NOTEBOOK is an incredibly powerful and popular tool used by data analysts and scientist to interactively develop, analyze and present data.  
+Its simple web based user interface helps us to visualize analytics, run machine learning models, and explore new possibilities.
 
-## Workflow dashboard
-Clean modern dashboard to monitor all automation flows - success and failures.  
-Both manually triggered and scheduled unattended runs can be monitored from this single dashboard.  Unattended are distinguished from manual runs with the server/computer name on which the job is deployed to. E.g. cscKPI-CDAPHKGRPPA03(***flowname***-***servername)
+![jupyter notebook output](https://user-images.githubusercontent.com/115925194/210252820-21ec1123-b7f2-4e40-9189-6c574a29ab13.png)
 
-![Automation Job Monitoring](https://user-images.githubusercontent.com/115925194/210246777-0c4ce6f2-96ce-4949-8488-ce0c9e9421d2.png)
+OPTIMUS enhances the power of JUPYTER NOTEBOOKS for users from analysts to engineers by simplifying the integration of notebook analysis with the broader process of extracting and preparing data for analysis and exporting the results from notebooks to other processes.
 
-## Log of Automation Run
-Detailed logs of all automation run steps can be viewed in the job details of the dashboard
+![Simplifying different roles and tools](https://user-images.githubusercontent.com/115925194/210252907-a826fae2-7671-43a2-ac48-3c894086e432.png)
 
-![Automation Job Log](https://user-images.githubusercontent.com/115925194/210245885-2357add2-0553-47fe-8fd4-d513a577cd80.png)
 
-## Scheduling of Automation Jobs
-Automation flows can be scheduled from the dashboard.  Schedules are defined using [cron expressions](https://docs.prefect.io/concepts/schedules/)
+## Capabilities
+By leveraging and integrating Papermill - an opensource solution developed by NETFLIX - into the solution, OPTIMUS allows you to:
+- Directly run one or multiple notebooks with different parameter values from the automation script.  This allows the user to create resusable parameterized JUPYTER NOTEBOOKS, in effect turning the notebooks into reusable data processing and automation functions.
+- The Jupyter notebooks can be written in various languages (Python, Scala, SparkSQL, and R)
+- Data can be shared between cells via temporary tables.  Or across notebooks and with the automation script through the use of scrapbook.
+- Results from the notebook can be easily exported as Excel, csv or image files and used for further downstream automation, such as sharing on a cloud drive, generating a PDF document and/or sending a report to the user via email.
+- And using OPTIMUS, multiple notebooks can be chained and scheduled in a workflow to accomplish complex automation and data transformation tasks.
 
-![Scheduling](https://user-images.githubusercontent.com/115925194/210246976-8e048cda-69aa-48a4-8efd-dc8626497fce.png)
+Some examples of how NETFLIX has revolutonized the use and deployment of JUPYTER NOTEBOOKS for data analysis.
 
-## Unattended Deployments
-All automation runs can be deployed to run unattended on a server or computer.  [View and manage deployments](https://docs.prefect.io/ui/deployments/) from the dashboard console.
 
-![Unattended Deployments](https://user-images.githubusercontent.com/115925194/210247098-b976ce6a-ff27-4439-88ae-fa620b0a5eae.png)
+![image](https://user-images.githubusercontent.com/115925194/210252972-e67222ef-faaf-4160-acb3-f5d48b2bf4aa.png)
+
+
+![image](https://user-images.githubusercontent.com/115925194/210252959-91eb22dc-9add-4fa4-a4ee-9b3057e9b68a.png)
+
+
+![image](https://user-images.githubusercontent.com/115925194/210252919-7cf97006-401a-44a0-aece-1de983972a23.png)
