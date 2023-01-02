@@ -10,10 +10,11 @@ OPTIMUS enhances the power of JUPYTER NOTEBOOKS for users from analysts to engin
 
 
 ## Capabilities
-By leveraging and integrating Papermill - an opensource solution developed by NETFLIX - into the solution, OPTIMUS allows you to:
+By leveraging and integrating [Papermill](https://www.wrighters.io/parameters-jupyter-notebooks-with-papermill/) - an opensource solution developed by NETFLIX - into the solution, OPTIMUS allows you to:
 - Directly run one or multiple notebooks with different parameter values from the automation script.  This allows the user to create resusable parameterized JUPYTER NOTEBOOKS, in effect turning the notebooks into reusable data processing and automation functions.
-- The Jupyter notebooks can be written in various languages (Python, Scala, SparkSQL, and R)
-- Data can be shared between cells via temporary tables.  Or across notebooks and with the automation script through the use of scrapbook.
+- The Jupyter notebooks can be written in various languages (Python, Scala, SparkSQL, and R).  You are also not limited by the installed libraries in OPTIMUS as you can setup your own virtual environments with additional python libraries and [use Jupyter with your own custom virtual environment](https://towardsdatascience.com/creating-and-using-virtual-environment-on-jupyter-notebook-with-python-db3f5afdd56a)
+
+- Data can be shared between cells via temporary tables.  Or across notebooks and with the automation script through the use of [scrapbook](https://www.wrighters.io/building-jupyter-notebook-workflows-with-scrapbook/).
 - Results from the notebook can be easily exported as Excel, csv or image files and used for further downstream automation, such as sharing on a cloud drive, generating a PDF document and/or sending a report to the user via email.
 - And using OPTIMUS, multiple notebooks can be chained and scheduled in a workflow to accomplish complex automation and data transformation tasks.
 
@@ -27,3 +28,7 @@ Some examples of how NETFLIX has revolutonized the use and deployment of JUPYTER
 
 
 ![image](https://user-images.githubusercontent.com/115925194/210252919-7cf97006-401a-44a0-aece-1de983972a23.png)
+
+
+## Installing and setting up Jupyter Notebook
+[How to install Jupyter Notebook in Windows](https://www.geeksforgeeks.org/how-to-install-jupyter-notebook-in-windows/)
