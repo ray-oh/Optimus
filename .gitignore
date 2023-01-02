@@ -131,7 +131,7 @@ dmypy.json
 # Autobot Program exclusions
 /autobot/venv
 /prefect/venv
-optimus_package*.zip
+#optimus_package*.zip
 /autobot/settings*.bak
 /temp
 /deployment
