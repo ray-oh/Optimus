@@ -3,10 +3,11 @@ OPTIMUS uses PREFECT to support powerful workflow and monitoring capabilities fo
 Examples of some of these features include
 
 ## Workflow dashboard
-Clean modern dashboard to monitor all automation flows - success and failures.  
+Clean modern dashboard to monitor status of all automation flows e.g. late runs, successfully completed runs, or failed runs.
+
 ![Job status](https://user-images.githubusercontent.com/115925194/210257428-04b69f63-fda3-4152-96c8-9d3eb75309a8.png)
 
-Both manually triggered and scheduled unattended runs can be monitored from this single dashboard.  Unattended are distinguished from manual runs with the server/computer name on which the job is deployed to. E.g. cscKPI-CDAPHKGRPPA03(***flowname***-***servername)
+Both manually triggered and scheduled unattended runs can be monitored from this single dashboard.  Unattended are distinguished from manual runs with the server/computer name on which the job is deployed to. E.g. cscKPI-CDAPXXX03 where cscKPI is the ***flow name*** of the automation script file and CDAPXXX03 is the ***computer or server name***
 
 ![Standard Dashboard View](https://user-images.githubusercontent.com/115925194/210257439-43ee5fff-6249-49d1-a9fd-9fdfbaa98773.png)
 
@@ -18,7 +19,8 @@ Detailed logs of all automation run steps can be viewed in the job details of th
 ![Automation Job Log](https://user-images.githubusercontent.com/115925194/210245885-2357add2-0553-47fe-8fd4-d513a577cd80.png)
 
 ## Scheduling of Automation Jobs
-Automation flows can be scheduled from the dashboard.  Schedules are defined using [cron expressions](https://docs.prefect.io/concepts/schedules/)
+Automation jobs can be manually run from the command line.  Or deployed and scheduled in the workflow dashboard as an unattended run.  
+Schedules are defined using [cron expressions](https://docs.prefect.io/concepts/schedules/)
 
 ![Scheduling](https://user-images.githubusercontent.com/115925194/210246976-8e048cda-69aa-48a4-8efd-dc8626497fce.png)
 
