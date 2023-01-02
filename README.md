@@ -1,6 +1,6 @@
 # OPTIMUS
 RPA solution with Excel front end for creating flows.  
-Designed with the typical data analyst who is not technical savy but at comfortable using Excel in mind.  
+Designed with the typical data analyst who is not technical savy but comfortable using Excel in mind.  
 The solution makes it really easy for beginners to develop your own flows, especially with templates.  
 Users can easily share and reuse modular Excel based scripts to speed up flow creation or create sophisticated automation flows.
 
