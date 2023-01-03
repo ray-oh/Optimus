@@ -80,8 +80,11 @@ Pre-requisites:
 > OPTIMUS currently does not have a cloud enabled service option.  But it is possible deploy OPTIMUS on a cloud virtual machine to run the automation in unattended mode.
 >- It is also possible to federate an automation task across multiple deployments of OPTIMUS using OneDrive Sync Client or a shared network drive (if running within an enterprise network) to share data, status, and scripts.  
 >- The current release of OPTIMUS does not provide this capability out of the box and requires some setup to achieve the federation.  Future releases may make this easier by leveraging the cloud enabled capabilities of Prefect workflow.  
-- Python 3.9 and above, and < 3.11.  Recommend to install with Anaconda package which will also install Jupyter Notebook.
->- You can follow this guide for installing Jupyter separately from Python.  In future release, Jupyter Notebook will be included in the default installation package.  
+- Python
+> Version 3.10.9 (or any version < 3.11 and > 3.9) is the recommended ?version for use with OPTIMUS for compatibility with current libraries.   
+>- [Download Python 3.10.9](https://www.python.org/downloads/release/python-3109/)
+> For future release, we will keep the library list updated to make it compatible with latest python release or anaconda package.
+>- You can [follow this guide](https://docs.jupyter.org/en/latest/install/notebook-classic.html) for installing Jupyter separately from Python.  In future release, Jupyter Notebook will be included in the default installation package.  
 
 All other program libraries will be installed automatically by the installation package, including:
 - Autobot (RPA component) - based on TagUI and various addon python packages
