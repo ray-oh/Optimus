@@ -27,7 +27,13 @@ Schedules are defined using [cron expressions](https://docs.prefect.io/concepts/
 ## Unattended Deployments
 All automation runs can be deployed to run unattended on a server or computer.  [View and manage deployments](https://docs.prefect.io/ui/deployments/) from the dashboard console.  
 >
-> To deploy a flow / script: **runrpa -f <*flow/script name*> -o 2**  
-> For list of available parameters: **runrpa -h**  
+> To deploy a flow / script:  
+> ```
+> runrpa -f <flow/script name> -o 2
+> ```  
+> For list of available parameters:  
+> ```
+> runrpa -h
+> ```  
 >
 ![Unattended Deployments](https://user-images.githubusercontent.com/115925194/210247098-b976ce6a-ff27-4439-88ae-fa620b0a5eae.png)
