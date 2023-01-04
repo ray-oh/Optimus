@@ -21,6 +21,9 @@ And finally, as OPTIMUS is developed in Python - *the language for data analytic
 > ***Flexible and extensible architecture***. An example is the built in support for Jupyter Notebooks.  - Jupyter notebooks can be easily called and run from OPTIMUS with different parameters.  And can extend OPTIMUS capability through installation of additional python libraries for machine learning or data analysis.  
 And by design, OPTIMUS Excel front end is designed to easily allow modularisation and reuse of your automation flows.  Allowing creation of sophisticated and powerful automation flows.  
 
+***Typical data analytics and automation use case***
+![Typical data use case](https://user-images.githubusercontent.com/115925194/210479085-36019993-4048-47a5-a5ee-9baf6d3bffe9.png)
+
 Refer to the DOCUMENTATION section below for further information.  
 
 ### INSTALLATION
