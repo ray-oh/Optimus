@@ -109,20 +109,15 @@ All other program libraries will be installed automatically by the installation 
 
 ### RELEASE NOTES:
 
-20220710 - Optimus 1.1
-        Stable release
-        Package and installation scripts
-        Separate autobot and prefect installation folders
-        Separate scripts folder
+20220710 - Optimus 1.1.
+        Stable release.
+        Package and installation scripts.
+        Separate autobot and prefect installation folders.
+        Separate scripts folder.
 
-20221006 - Stable release
-        New features:
-        Installation scripts and package updates.
-        scripts (user files) folders separated from Autobot program folder.
+20221006 - Stable release. New features: Installation scripts and package updates. Scripts (user files) folders separated from Autobot program folder.
 
-20221018 - Updated installation scripts
-        Added python-minifier  https://pypi.org/project/python-minifier/
-        https://dflook.github.io/python-minifier/installation.html
+20221018 - Updated installation scripts. Added [python-minifier](https://pypi.org/project/python-minifier/) [github](https://dflook.github.io/python-minifier/installation.html).
 
 ### CONTACT
 Raymond Oh - for reporting of bugs, questions, requests etc
