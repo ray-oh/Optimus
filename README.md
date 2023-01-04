@@ -5,6 +5,7 @@ The solution makes it really **easy for beginners** to develop your own flows, e
 Users can easily share and reuse modular Excel based scripts to speed up flow creation or create sophisticated automation flows.
 
 ![Sample Optimus script](https://user-images.githubusercontent.com/115925194/210494451-2b3fc373-04a0-4a5e-860e-73921fd89340.png)
+[Demo of a basic script in Optimus ](https://youtu.be/WmOfK3Q2lHI)
 
 ## COMPARISON WITH OTHER RPA SOLUTIONS
 OPTIMUS differentiates itself from other RPA solutions including market leading commercial packages like UiPath in terms of its ease of use and extensibility.  
