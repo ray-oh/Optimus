@@ -51,10 +51,10 @@ Refer to the DOCUMENTATION section below for further technical information on th
     - Click here for the latest stable [installation package](./installation).  And run the installation batch file with the package directly in the root directory of the folder where you wish to install OPTIMUS.  We recommend to keep the name of the program folder as Optimus.
 
 ### USAGE
-- Use runRPA.bat to launch RPA program.  Requires to specify an Excel script file.
-- Example with Excel script file sample.xlsm :   >> runRPA -f sample  
+- Use `runRPA.bat` to launch RPA program.  Requires to specify an Excel script file.
+- Example with Excel script file sample.xlsm :   >> `runRPA -f sample`  
 - Sample script files "sample" available to test various RPA functionality
-- All excel script files are to be placed in \scripts
+- All excel script files are to be placed in `\scripts`
     And they can include RPA images (for Visual automation of your desktop and websites)
 
 - To launch the Prefect workflow engine, run startOrion.bat to launch the orion workflow server in background.
