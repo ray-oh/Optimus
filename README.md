@@ -3,9 +3,9 @@ RPA solution with **Excel front end** for creating flows.
 Designed with the typical data analyst who is not technical savy but comfortable using Excel in mind.  
 The solution makes it really **easy for beginners** to develop your own flows, especially with templates.  
 Users can easily share and reuse modular Excel based scripts to speed up flow creation or create sophisticated automation flows.
-
+![image](https://user-images.githubusercontent.com/115925194/210501100-910d4f94-10cd-428a-980a-c2984a7ed739.png)   
+[Demo of a basic script in Optimus](https://youtu.be/AqnQwkjb1n0)  
 ![Sample Optimus script](https://user-images.githubusercontent.com/115925194/210494451-2b3fc373-04a0-4a5e-860e-73921fd89340.png)
-[Demo of a basic script in Optimus](https://youtu.be/AqnQwkjb1n0)
 
 ## COMPARISON WITH OTHER RPA SOLUTIONS
 OPTIMUS differentiates itself from other RPA solutions including market leading commercial packages like UiPath in terms of its ease of use and extensibility.  
