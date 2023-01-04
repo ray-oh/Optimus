@@ -36,8 +36,15 @@ Some examples of how NETFLIX has revolutonized the use and deployment of JUPYTER
 ## Getting Started
 Its assumed that you have already some working knowledge of tools like Pandas and matplotlib to fully utilize the power of Jupyter Notebook for data analysis.
 Here are some useful guides to get started or to refresh your memory.
+
 ### Pandas
 [Quick Start guide on Jupyter Notebook and using Pandas](https://github.com/jvns/pandas-cookbook)
 [Pandas Cookbook from Py Data Org](https://pandas.pydata.org/docs/user_guide/cookbook.html)
+
+### Styling Gallery
+[Dataframe Styling using Pandas](https://mode.com/example-gallery/python_dataframe_styling/)
+[Style Pandas dataframe like a master](https://towardsdatascience.com/style-pandas-dataframe-like-a-master-6b02bf6468b0)
+
+
 ### Matplotlib
 [Matplotlib Intro from W3 schools](https://www.w3schools.com/python/matplotlib_intro.asp)
