@@ -3,6 +3,9 @@ RPA solution with **Excel front end** for creating flows.
 Designed with the typical data analyst who is not technical savy but comfortable using Excel in mind.  
 The solution makes it really **easy for beginners** to develop your own flows, especially with templates.  
 Users can easily share and reuse modular Excel based scripts to speed up flow creation or create sophisticated automation flows.
+![image](https://user-images.githubusercontent.com/115925194/210501100-910d4f94-10cd-428a-980a-c2984a7ed739.png)   
+[Demo of a basic script in Optimus](https://youtu.be/AqnQwkjb1n0)  
+![Sample Optimus script](https://user-images.githubusercontent.com/115925194/210494451-2b3fc373-04a0-4a5e-860e-73921fd89340.png)
 
 ## COMPARISON WITH OTHER RPA SOLUTIONS
 OPTIMUS differentiates itself from other RPA solutions including market leading commercial packages like UiPath in terms of its ease of use and extensibility.  
@@ -24,7 +27,15 @@ And by design, OPTIMUS Excel front end is designed to easily allow modularisatio
 ***Typical data analytics and automation use case***
 ![Typical data use case](https://user-images.githubusercontent.com/115925194/210479085-36019993-4048-47a5-a5ee-9baf6d3bffe9.png)
 
-Refer to the DOCUMENTATION section below for further information.  
+
+Some example use cases implemented with OPTIMUS in enterprise setting:
+> - ***Generate email reports*** out of a legacy reporting solution.  The legacy system did not support email out of the box and also did not support scheduled download of data. Optimus was used to automate of data from the system in Excel, and further processing data and formatting the report before sending as an email to users.
+> - ***Automate and extend functionality of legacy Excel macro files***.  These files were originally designed for manual run and had plenty of business logic embedded.  The original business developer for the macro has left, and it was risky and would take time to rewrite the entire solution on another platform.  As volume increased, the Excel would take many hours to run on the users laptop. Optimus was used to automate the refresh of the Excel macro with minimal modification to the original macro apart from exposing some key parameter fields.  Entire automation was deployed to a VM on the cloud.  And results from the macro were further transformed for downstream analysis.
+> - ***Extract incident and support request data from serviceNow***.  Optimus was used to combine the different datasets into a harmonized data set for monitoring both incident and request trends. The transformed dataset is passed to PowerBI for interactive visualization by users.
+> - Automate the monitoring of a website for downtime and failure.  Setting thresholds to trigger alert via email or telegram messaging.
+> - Periodically checking a competitor website for pricing updates, and extracting the data to Excel for further analysis.
+
+Refer to the DOCUMENTATION section below for further technical information on the solution.  
 
 ### INSTALLATION
 - 2 methods to install and use optimus RPA
@@ -83,6 +94,9 @@ Pre-requisites:
 > OPTIMUS currently does not have a cloud enabled service option.  But it is possible deploy OPTIMUS on a cloud virtual machine to run the automation in unattended mode.
 >- It is also possible to federate an automation task across multiple deployments of OPTIMUS using OneDrive Sync Client or a shared network drive (if running within an enterprise network) to share data, status, and scripts.  
 >- The current release of OPTIMUS does not provide this capability out of the box and requires some setup to achieve the federation.  Future releases may make this easier by leveraging the cloud enabled capabilities of Prefect workflow.  
+>***Typical cloud deployment architecture***
+>![Typical cloud deployment architecture](https://user-images.githubusercontent.com/115925194/210483008-d9d9687f-2602-4ded-bb3d-90d1c8cce8b4.png)
+
 - Python
 > Version 3.10.9 (or any version < 3.11 and > 3.9) is the recommended ?version for use with OPTIMUS for compatibility with current libraries.   
 >- [Download Python 3.10.9](https://www.python.org/downloads/release/python-3109/)
@@ -95,20 +109,15 @@ All other program libraries will be installed automatically by the installation 
 
 ### RELEASE NOTES:
 
-20220710 - Optimus 1.1
-        Stable release
-        Package and installation scripts
-        Separate autobot and prefect installation folders
-        Separate scripts folder
+20220710 - Optimus 1.1.
+        Stable release.
+        Package and installation scripts.
+        Separate autobot and prefect installation folders.
+        Separate scripts folder.
 
-20221006 - Stable release
-        New features:
-        Installation scripts and package updates.
-        scripts (user files) folders separated from Autobot program folder.
+20221006 - Stable release. New features: Installation scripts and package updates. Scripts (user files) folders separated from Autobot program folder.
 
-20221018 - Updated installation scripts
-        Added python-minifier  https://pypi.org/project/python-minifier/
-        https://dflook.github.io/python-minifier/installation.html
+20221018 - Updated installation scripts. Added [python-minifier](https://pypi.org/project/python-minifier/) [github](https://dflook.github.io/python-minifier/installation.html).
 
 ### CONTACT
 Raymond Oh - for reporting of bugs, questions, requests etc
