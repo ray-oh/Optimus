@@ -26,8 +26,9 @@ And by design, OPTIMUS Excel front end is designed to easily allow modularisatio
 
 
 Some example use cases implemented with OPTIMUS in enterprise setting:
-> - Generate email reports out of a legacy reporting solution that does not support email out of the box.
-> - Extract incident and support request data from serviceNow and combining the datasets to provide a holistic view of support ticket trends. The transformed dataset is passed to PowerBI for interactive visualization by users.
+> - ***Generate email reports*** out of a legacy reporting solution.  The legacy system did not support email out of the box and also did not support scheduled download of data. Optimus was used to automate of data from the system in Excel, and further processing data and formatting the report before sending as an email to users.
+> - ***Automate and extend functionality of legacy Excel macro files***.  These files were originally designed for manual run and had plenty of business logic embedded.  The original business developer for the macro has left, and it was risky and would take time to rewrite the entire solution on another platform.  As volume increased, the Excel would take many hours to run on the users laptop. Optimus was used to automate the refresh of the Excel macro with minimal modification to the original macro apart from exposing some key parameter fields.  Entire automation was deployed to a VM on the cloud.  And results from the macro were further transformed for downstream analysis.
+> - ***Extract incident and support request data from serviceNow***.  Optimus was used to combine the different datasets into a harmonized data set for monitoring both incident and request trends. The transformed dataset is passed to PowerBI for interactive visualization by users.
 > - Automate the monitoring of a website for downtime and failure.  Setting thresholds to trigger alert via email or telegram messaging.
 > - Periodically checking a competitor website for pricing updates, and extracting the data to Excel for further analysis.
 
