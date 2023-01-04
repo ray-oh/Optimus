@@ -30,5 +30,14 @@ Some examples of how NETFLIX has revolutonized the use and deployment of JUPYTER
 ![image](https://user-images.githubusercontent.com/115925194/210252919-7cf97006-401a-44a0-aece-1de983972a23.png)
 
 
-## Installing and setting up Jupyter Notebook
+## Installing Jupyter Notebook
 [How to install Jupyter Notebook in Windows](https://www.geeksforgeeks.org/how-to-install-jupyter-notebook-in-windows/)
+
+## Getting Started
+Its assumed that you have already some working knowledge of tools like Pandas and matplotlib to fully utilize the power of Jupyter Notebook for data analysis.
+Here are some useful guides to get started or to refresh your memory.
+### Pandas
+[Quick Start guide on Jupyter Notebook and using Pandas](https://github.com/jvns/pandas-cookbook)
+[Pandas Cookbook from Py Data Org](https://pandas.pydata.org/docs/user_guide/cookbook.html)
+### Matplotlib
+[Matplotlib Intro from W3 schools](https://www.w3schools.com/python/matplotlib_intro.asp)
