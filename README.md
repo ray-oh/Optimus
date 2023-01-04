@@ -24,7 +24,14 @@ And by design, OPTIMUS Excel front end is designed to easily allow modularisatio
 ***Typical data analytics and automation use case***
 ![Typical data use case](https://user-images.githubusercontent.com/115925194/210479085-36019993-4048-47a5-a5ee-9baf6d3bffe9.png)
 
-Refer to the DOCUMENTATION section below for further information.  
+
+Some example use cases implemented with OPTIMUS in enterprise setting:
+> - Generate email reports out of a legacy reporting solution that does not support email out of the box.
+> - Extract incident and support request data from serviceNow and combining the datasets to provide a holistic view of support ticket trends. The transformed dataset is passed to PowerBI for interactive visualization by users.
+> - Automate the monitoring of a website for downtime and failure.  Setting thresholds to trigger alert via email or telegram messaging.
+> - Periodically checking a competitor website for pricing updates, and extracting the data to Excel for further analysis.
+
+Refer to the DOCUMENTATION section below for further technical information on the solution.  
 
 ### INSTALLATION
 - 2 methods to install and use optimus RPA
@@ -83,6 +90,9 @@ Pre-requisites:
 > OPTIMUS currently does not have a cloud enabled service option.  But it is possible deploy OPTIMUS on a cloud virtual machine to run the automation in unattended mode.
 >- It is also possible to federate an automation task across multiple deployments of OPTIMUS using OneDrive Sync Client or a shared network drive (if running within an enterprise network) to share data, status, and scripts.  
 >- The current release of OPTIMUS does not provide this capability out of the box and requires some setup to achieve the federation.  Future releases may make this easier by leveraging the cloud enabled capabilities of Prefect workflow.  
+>***Typical cloud deployment architecture***
+>![Typical cloud deployment architecture](https://user-images.githubusercontent.com/115925194/210483008-d9d9687f-2602-4ded-bb3d-90d1c8cce8b4.png)
+
 - Python
 > Version 3.10.9 (or any version < 3.11 and > 3.9) is the recommended ?version for use with OPTIMUS for compatibility with current libraries.   
 >- [Download Python 3.10.9](https://www.python.org/downloads/release/python-3109/)
