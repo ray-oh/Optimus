@@ -141,3 +141,47 @@ How To: Run multiple Python scripts from a single primary script
 https://support.esri.com/en/technical-article/000010647
 
 https://stackoverflow.com/questions/3827567/how-to-get-the-path-of-the-batch-script-in-windows
+
+
+
+Python xlwings and Excel
+https://www.dataquest.io/blog/python-excel-xlwings-tutorial/
+
+
+Data and model versioning with DVC
+https://dvc.org/doc/start/data-management/data-versioning
+DVC and Prefect for maintainable flows
+https://towardsdatascience.com/create-a-maintainable-data-pipeline-with-prefect-and-dvc-1d691ea5bcea
+
+
+Studio
+Develop a command creation helper
+- search for supported keywords - like excel formula, with help, and support e.g. selection of parameters, like file name, screenshot and image file, selectors etc.
+
+NEW! SEARCHABLE 🔎 Drop Down Lists in Excel with ZERO Effort!
+https://www.youtube.com/watch?v=3Qh5nUmCVd8
+https://www.xelplus.com/searchable-drop-down-list/
+
+https://www.excel-easy.com/vba/userform.html
+
+Searchable Dropdown for VBA UserForms(Add in 30 Seconds)
+https://www.youtube.com/watch?v=gkLB-xu_JTU
+
+Office Scripts vs Excel VBA (Everything you need to know)
+https://www.youtube.com/watch?v=ohgwGMlAY8M
+
+Why Office Scripts Won't Replace VBA
+https://www.youtube.com/watch?v=MzSTu8OR87E
+
+Will Python Kill VBA in 2021?
+https://www.youtube.com/watch?v=Lh6FLhgPxbc
+
+
+How to Replace VBA with Python(Step-By-Step Tutorial)
+https://www.youtube.com/watch?v=6qo3ly3-_I8
+
+FlaUI is a .NET library which helps with automated UI testing of Windows applications (Win32, WinForms, WPF, Store Apps, ...).
+https://github.com/FlaUI/FlaUI
+
+https://pywinauto.readthedocs.io/en/latest/
+https://github.com/pywinauto/py_inspect

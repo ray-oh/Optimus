@@ -30,74 +30,74 @@ from auto_utility_email import EmailsSender
 def _otherRunCode(df, code, codeID, codeValue, objVar):   
     if False: pass
     # ------------------ code processing functions ------------------------------
-    elif codeID == 'rem':   pass                    # remarks - do nothing
-    elif codeID == 'print':  _print(codeValue)
-    elif codeID == 'log':  _log(codeValue)
-    elif codeID == 'exit':    _exit()
-    elif codeID == 'exitError':    _exitError(codeValue)                 # exit with an error code e.g. exitError:2
-    elif codeID == 'raiseError':    _raiseError(codeValue)                 # exit with an error code e.g. exitError:2
-    elif codeID == 'if': return _if(codeValue, df, objVar)
+    elif codeID.lower() == 'rem'.lower():   pass                    # remarks - do nothing
+    elif codeID.lower() == 'print'.lower():  _print(codeValue)
+    elif codeID.lower() == 'log':  _log(codeValue)
+    elif codeID.lower() == 'exit'.lower():    _exit()
+    elif codeID.lower() == 'exitError'.lower():    _exitError(codeValue)                 # exit with an error code e.g. exitError:2
+    elif codeID.lower() == 'raiseError'.lower():    _raiseError(codeValue)                 # exit with an error code e.g. exitError:2
+    elif codeID.lower() == 'if'.lower(): return _if(codeValue, df, objVar)
     elif code in df[(df.Type == 'list')]['Object'].dropna().values.tolist(): return _isCodeList(df, code, objVar)          #run Block of Code
-    elif codeID == 'runModule': return _runModule(codeValue, df, objVar)                  #runModule:sheet, excelfile
-    elif codeID == 'codeList': return _codeList(codeValue, df, objVar)
-    elif codeID == 'wait':  return _wait(codeValue, df, objVar)                        # wait:time_sec,identifier,run_code
-    elif codeID == 'waitDisappear': return _waitDisappear(codeValue, df, objVar)                        # waitDisappear:time_sec,identifier,run_code
-    elif codeID == 'iterate': return _iterate(codeValue, df, objVar)                    # iterate: objlists, runCodelist e.g. iterate: @url_pages : openPage
-    elif codeID == 'iterationCount': _iterationCount(codeValue, df, objVar)
-    elif codeID == 'test': _test(codeValue, df, objVar)
+    elif codeID.lower() == 'runModule'.lower(): return _runModule(codeValue, df, objVar)                  #runModule:sheet, excelfile
+    elif codeID.lower() == 'codeList'.lower(): return _codeList(codeValue, df, objVar)
+    elif codeID.lower() == 'wait'.lower():  return _wait(codeValue, df, objVar)                        # wait:time_sec,identifier,run_code
+    elif codeID.lower() == 'waitDisappear'.lower(): return _waitDisappear(codeValue, df, objVar)                        # waitDisappear:time_sec,identifier,run_code
+    elif codeID.lower() == 'iterate'.lower(): return _iterate(codeValue, df, objVar)                    # iterate: objlists, runCodelist e.g. iterate: @url_pages : openPage
+    elif codeID.lower() == 'iterationCount'.lower(): _iterationCount(codeValue, df, objVar)
+    elif codeID.lower() == 'test'.lower(): _test(codeValue, df, objVar)
 
     # ------------------ Custom functions ------------------------------
-    elif codeID == 'regexSearch':        _regexSearch(codeValue)                           # regexSearch:strPattern, strSearch, variable_name e.g. regexSearch:PACIFIC.ASIA.(..........),Last data was imported at,lastDataUpdate
-    elif codeID == 'createPDF':   _createPDF(codeValue, df)
+    elif codeID.lower() == 'regexSearch'.lower():        _regexSearch(codeValue)                           # regexSearch:strPattern, strSearch, variable_name e.g. regexSearch:PACIFIC.ASIA.(..........),Last data was imported at,lastDataUpdate
+    elif codeID.lower() == 'createPDF'.lower():   _createPDF(codeValue, df)
 
     #add_page_numbers(saveFile, pageTitles)
     #addContentPDF(pdf_path, pageTitles, file_extension = '_' + yesterdayYYYYMMDD + '.pdf')
     #addContentPDF:pageTitles,sourcePDF,targetPDF
-    elif codeID == 'addContentPDF':  _addContentPDF(codeValue, df)
-    elif codeID == 'cropImage':     _cropImage(codeValue, df)                              # cropImage:files, savefiles, left, top, right, bottom, boolPercentage = True/False
-    elif codeID == 'runExcelMacro':       _runExcelMacro(codeValue)                          # runExcelMacro:excel, macro
-    elif codeID == 'runPowerShellScript':       _runPowerShellScript(codeValue)                          # runExcelMacro:excel, macro
-    elif codeID == 'runBatchScript':       _runBatchScript(codeValue)                          # runExcelMacro:excel, macro
-    elif codeID == 'runJupyterNb':       _runJupyterNb(codeValue)                          # runJupyterNb:notebook_file, parameters
-    elif codeID == 'mergeFiles':    _mergeFiles(codeValue, df)                               # mergeFiles: fileList, keep, uniqueColumnsList, fileName, encoding 
-    elif codeID == 'dropNRowsExcel':   _dropNRowsExcel(codeValue)                                # merge files.  merge:newFile,oldFile,olderFile
-    elif codeID == 'DFpromoteHeader': _DFpromoteHeader(codeValue) # merge files.  merge:newFile,oldFile,olderFile
-    elif codeID == 'DFsaveToExcel':   _DFsaveToExcel(codeValue)  # merge files.  merge:newFile,oldFile,olderFile
-    elif codeID == 'DFreadExcel':     _DFreadExcel(codeValue) # read Excel to dataframe.  DFreadExcel:filename, variableDataFrameName
-    elif codeID == 'DFsort':      _DFsort(codeValue) # merge files.  merge:newFile,oldFile,olderFile
-    elif codeID == 'DFdropDuplicates':    _DFdropDuplicates(codeValue) # merge files.  merge:newFile,oldFile,olderFile
-    elif codeID == 'DFconcatenate':    _DFconcatenate(codeValue)    # merge files.  merge:newFile,oldFile,olderFile
-    elif codeID == 'DFcreate': _DFcreate(codeValue)
+    elif codeID.lower() == 'addContentPDF'.lower():  _addContentPDF(codeValue, df)
+    elif codeID.lower() == 'cropImage'.lower():     _cropImage(codeValue, df)                              # cropImage:files, savefiles, left, top, right, bottom, boolPercentage = True/False
+    elif codeID.lower() == 'runExcelMacro'.lower():       _runExcelMacro(codeValue)                          # runExcelMacro:excel, macro
+    elif codeID.lower() == 'runPowerShellScript'.lower():       _runPowerShellScript(codeValue)                          # runExcelMacro:excel, macro
+    elif codeID.lower() == 'runBatchScript'.lower():       _runBatchScript(codeValue)                          # runExcelMacro:excel, macro
+    elif codeID.lower() == 'runJupyterNb'.lower():       _runJupyterNb(codeValue)                          # runJupyterNb:notebook_file, parameters
+    elif codeID.lower() == 'mergeFiles'.lower():    _mergeFiles(codeValue, df)                               # mergeFiles: fileList, keep, uniqueColumnsList, fileName, encoding 
+    elif codeID.lower() == 'dropNRowsExcel'.lower():   _dropNRowsExcel(codeValue)                                # merge files.  merge:newFile,oldFile,olderFile
+    elif codeID.lower() == 'DFpromoteHeader'.lower(): _DFpromoteHeader(codeValue) # merge files.  merge:newFile,oldFile,olderFile
+    elif codeID.lower() == 'DFsaveToExcel'.lower():   _DFsaveToExcel(codeValue)  # merge files.  merge:newFile,oldFile,olderFile
+    elif codeID.lower() == 'DFreadExcel'.lower():     _DFreadExcel(codeValue) # read Excel to dataframe.  DFreadExcel:filename, variableDataFrameName
+    elif codeID.lower() == 'DFsort'.lower():      _DFsort(codeValue) # merge files.  merge:newFile,oldFile,olderFile
+    elif codeID.lower() == 'DFdropDuplicates'.lower():    _DFdropDuplicates(codeValue) # merge files.  merge:newFile,oldFile,olderFile
+    elif codeID.lower() == 'DFconcatenate'.lower():    _DFconcatenate(codeValue)    # merge files.  merge:newFile,oldFile,olderFile
+    elif codeID.lower() == 'DFcreate'.lower(): _DFcreate(codeValue)
     # ------------------ Browser / Windows functions ------------------------------
-    elif codeID == 'chromeZoom':  _chromeZoom(codeValue)
-    elif codeID == 'copyFile':   _copyFile(codeValue)       # copyFile:source,dest  e.g. copy file to one drive sync folder
-    elif codeID == 'moveFile':    _moveFile(codeValue)    # moveFile:source,dest  e.g. copy file to one drive sync folder
-    elif codeID == 'makeDir':     _makeDir(codeValue)     # makeDir:pathname
-    elif codeID == 'removeFile':  _removeFile(codeValue)        # removeFile:source,dest  e.g. copy file to one drive sync folder
-    elif codeID == 'renameRecentDownloadFile': _renameRecentDownloadFile(codeValue) # renameRecentDownloadFile:saveName,path,fileExtension,withinLastSec
+    elif codeID.lower() == 'chromeZoom'.lower():  _chromeZoom(codeValue)
+    elif codeID.lower() == 'copyFile'.lower():   _copyFile(codeValue)       # copyFile:source,dest  e.g. copy file to one drive sync folder
+    elif codeID.lower() == 'moveFile'.lower():    _moveFile(codeValue)    # moveFile:source,dest  e.g. copy file to one drive sync folder
+    elif codeID.lower() == 'makeDir'.lower():     _makeDir(codeValue)     # makeDir:pathname
+    elif codeID.lower() == 'removeFile'.lower():  _removeFile(codeValue)        # removeFile:source,dest  e.g. copy file to one drive sync folder
+    elif codeID.lower() == 'renameRecentDownloadFile'.lower(): _renameRecentDownloadFile(codeValue) # renameRecentDownloadFile:saveName,path,fileExtension,withinLastSec
 
     # ------------------ RPA functions ------------------------------
-    elif codeID == 'runInBackground':   _runInBackground()  # run automation in background mode without user attendance
-    elif codeID == 'initializeRPA': _initilizeRPA()
-    elif codeID == 'closeRPA':  _closeRPA()
-    elif codeID == 'url':       _url(codeValue, df)         # url:OKTA or url:<URL_Dclick_Pages:key> or url:@<URL_Dclick_Pages:@columnHeader>
-    elif codeID == 'urls':   _urls(codeValue, objVar)        # No longer required - can remove
-    elif codeID == 'read':      _read(codeValue)        # read:checkUserName=okta-signin-username
-    elif codeID == 'checkVariable': _checkVariable(codeValue)    # checkVariable:checkUserName
-    elif codeID == 'set':       _set(codeValue)             # set:checkUserName=value
-    elif codeID == 'increment':       _increment(codeValue)             # increment:counter, 1    
-    elif codeID == 'urlcontains': _urlcontains(codeValue)   # urlcontains:value_to_search,variable_result_true_false
-    elif codeID == 'keyboard':  _keyboard(codeValue)        # key press e.g. [home] [end] [insert] [f1] .. [f15] [shift] [ctrl] [alt] [win] [cmd] [enter] [space] [tab] [esc] [backspace] [delete] [clear]
-    elif codeID == 'rclick':    _rclick(codeValue)          # right click
-    elif codeID == 'present':   _present(codeID, codeValue) # right click
-    elif codeID == 'exist':     _exist(codeID, codeValue)   # Waits until the timeout for an element to exist and returns a JavaScript true or false
-    elif codeID == 'count':     _count(codeID, codeValue)   # right click
-    elif codeID == 'select':    _select(codeValue)  # Selects a dropdown option in a web input. select:dropdown,option
-    elif codeID == 'type':    _type(codeValue)  # type:identifier,value
-    elif codeID == 'snap':      _snap(codeValue)    # snap:page,saveFile   Snap entire web page
-    elif codeID == 'telegram':  _telegram(codeValue)
-    elif codeID == 'email':  _email(codeValue, df)
-    elif codeID == 'waitEmailComplete':  _waitEmailComplete(codeValue, df)
+    elif codeID.lower() == 'runInBackground'.lower():   _runInBackground()  # run automation in background mode without user attendance
+    elif codeID.lower() == 'initializeRPA'.lower(): _initilizeRPA()
+    elif codeID.lower() == 'closeRPA'.lower():  _closeRPA()
+    elif codeID.lower() == 'url'.lower():       _url(codeValue, df)         # url:OKTA or url:<URL_Dclick_Pages:key> or url:@<URL_Dclick_Pages:@columnHeader>
+    elif codeID.lower() == 'urls'.lower():   _urls(codeValue, objVar)        # No longer required - can remove
+    elif codeID.lower() == 'read'.lower():      _read(codeValue)        # read:checkUserName=okta-signin-username
+    elif codeID.lower() == 'checkVariable'.lower(): _checkVariable(codeValue)    # checkVariable:checkUserName
+    elif codeID.lower() == 'set'.lower():       _set(codeValue)             # set:checkUserName=value
+    elif codeID.lower() == 'increment'.lower():       _increment(codeValue)             # increment:counter, 1    
+    elif codeID.lower() == 'urlcontains'.lower(): _urlcontains(codeValue)   # urlcontains:value_to_search,variable_result_true_false
+    elif codeID.lower() == 'keyboard'.lower():  _keyboard(codeValue)        # key press e.g. [home] [end] [insert] [f1] .. [f15] [shift] [ctrl] [alt] [win] [cmd] [enter] [space] [tab] [esc] [backspace] [delete] [clear]
+    elif codeID.lower() == 'rclick'.lower():    _rclick(codeValue)          # right click
+    elif codeID.lower() == 'present'.lower():   _present(codeID, codeValue) # right click
+    elif codeID.lower() == 'exist'.lower():     _exist(codeID, codeValue)   # Waits until the timeout for an element to exist and returns a JavaScript true or false
+    elif codeID.lower() == 'count'.lower():     _count(codeID, codeValue)   # right click
+    elif codeID.lower() == 'select'.lower():    _select(codeValue)  # Selects a dropdown option in a web input. select:dropdown,option
+    elif codeID.lower() == 'type'.lower():    _type(codeValue)  # type:identifier,value
+    elif codeID.lower() == 'snap'.lower():      _snap(codeValue)    # snap:page,saveFile   Snap entire web page
+    elif codeID.lower() == 'telegram'.lower():  _telegram(codeValue)
+    elif codeID.lower() == 'email'.lower():  _email(codeValue, df)
+    elif codeID.lower() == 'waitEmailComplete'.lower():  _waitEmailComplete(codeValue, df)
     else:                       _click(code)        # normal left click
     return [], [], []
 
