@@ -35,7 +35,7 @@ src_file = Path.cwd() / 'mail.xlsx'
 #df.head()
 
 today = datetime.datetime.today().replace(hour=0, minute=0, second=0, microsecond=0) #.strftime('%Y-%m-%d')
-print(today.strftime('%d/%m/%Y %H:%M %p'))
+#print(today.strftime('%d/%m/%Y %H:%M %p'))
 
 #global sentEmailSubjectList
 sentEmailSubjectList = []
@@ -72,7 +72,7 @@ class EmailsSender:
         # get list of previous sent items
         #import datetime
         global today
-        print(today.strftime('%d/%m/%Y %H:%M %p'))
+        #print(today.strftime('%d/%m/%Y %H:%M %p'))
         global sentEmailSubjectList
         #print('>>>> sentEmailSubList',len(sentEmailSubjectList))
         if len(sentEmailSubjectList) == 0: sentEmailSubjectList = self.folderItemsList(ofolder=5,dateRange_StartOn=today)          #.sentFolderList()                
@@ -186,7 +186,7 @@ class EmailsSender:
             return  # skip send_email if boolRun is False
 
         for key,value in members.items():
-            logger.info("{}: {}".format(key,value))
+            #logger.info("{}: {}".format(key,value))
             if key == "EmailObj":
                 for item in value:
                     if item=="To" and value[item] is not None:
@@ -248,8 +248,8 @@ class EmailsSender:
         logger = get_run_logger()
         #olOutbox = self.outlook.GetNamespace("MAPI").GetDefaultFolder(4) #outlook.olFolderOutbox)
         #print('Count:', self.olOutbox.Items.Count)
-        logger.info('###################################################')
-        logger.info(f"Outbox sending in progress - outbox item count: {self.outlook.GetNamespace('MAPI').GetDefaultFolder(4).Items.Count}" )
+        #logger.info('   ###################################################')
+        logger.info(f"   Outbox sending in progress - outbox item count: {self.outlook.GetNamespace('MAPI').GetDefaultFolder(4).Items.Count}" )
         #logger.info(f"Outbox Items: {self.outlook.GetNamespace('MAPI').GetDefaultFolder(4).Items[1].Subject}" )
         import time
         for i in range(timeOut):
@@ -257,9 +257,9 @@ class EmailsSender:
             itemsInOutbox = self.outlook.GetNamespace("MAPI").GetDefaultFolder(4).Items.Count
             if itemsInOutbox == 0: return True #break
             time.sleep(1) # Sleep for 1 seconds           
-            logger.info(f"Timeout countdown {i} to {timeOut}.  Outbox item count: {itemsInOutbox}")
+            logger.info(f"   Timeout countdown {i} to {timeOut}.  Outbox item count: {itemsInOutbox}")
 
-        logger.info('Timeout:' + str(itemsInOutbox))
+        logger.info('   Timeout:' + str(itemsInOutbox))
         return False
     
     def sentFolderList(self):
@@ -326,22 +326,23 @@ class EmailsSender:
         #logger.info(_sFilter_)
         #https://learn.microsoft.com/en-us/office/vba/api/outlook.items.restrict
         folderItems = folder.Items.Restrict(_sFilter_)
-        logger.info(f"Folder item count: {folderItems.Count}" )
         #for message in sentfolder.Items.Restrict(_sFilter_):
         subjectList = []
         logMaillist = ""
-        for message in folderItems:
-            sub = message
-            timeReceived = message.ReceivedTime #datetime-object
-            timeReceived = tzInfo2Naive(timeReceived)
-            #if timeReceived > dateRange_StartOn and timeReceived < dateRange_UpTo:
-            #    print("%s :: %s" % (str(timeReceived), sub.Subject))
-            if not str(sub.Subject) in subjectList:
-                #print("%s :: %s" % (str(timeReceived), sub.Subject))
-                logMaillist = logMaillist + f"{tzInfo2Naive(sub.ReceivedTime)}::{sub.Subject}\n"
-                subjectList = subjectList + [str(sub.Subject)]
-        #logger.info(f"{tzInfo2Naive(sub.ReceivedTime)}::{sub.Subject}\n")
-        logger.info(logMaillist)
+        if folderItems.Count > 0:
+            for message in folderItems:
+                sub = message
+                timeReceived = message.ReceivedTime #datetime-object
+                timeReceived = tzInfo2Naive(timeReceived)
+                #if timeReceived > dateRange_StartOn and timeReceived < dateRange_UpTo:
+                #    print("%s :: %s" % (str(timeReceived), sub.Subject))
+                if not str(sub.Subject) in subjectList:
+                    #print("%s :: %s" % (str(timeReceived), sub.Subject))
+                    logMaillist = logMaillist + f"{tzInfo2Naive(sub.ReceivedTime)}::{sub.Subject}\n"
+                    subjectList = subjectList + [str(sub.Subject)]
+            #logger.info(f"{tzInfo2Naive(sub.ReceivedTime)}::{sub.Subject}\n")
+            logger.info(f"Folder item count: {folderItems.Count}, {logMaillist}" )
+            #logger.info(logMaillist)
 
         return subjectList
 
