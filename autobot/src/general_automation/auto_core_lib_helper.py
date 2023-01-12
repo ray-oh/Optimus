@@ -131,7 +131,7 @@ def resetConsole(buffer, old_stdout):
 def _iterate(codeValue, df, objVar):
     '''  Defines iteration steps and appends to runcode list to handle loops over object list or tables.  Syntax: iterate: obj or table list, codelist to run '''
     logger = get_run_logger()
-    logger.info(f">>>>ITERATION ==================== {codeValue}")
+    #logger.info(f">>>>ITERATION ==================== {codeValue}")
     objVar = codeValue.split(',',1)[0].strip()
     sub_code = codeValue.split(',',1)[1].strip()
     worksheetTable = False
@@ -190,7 +190,7 @@ def _iterate(codeValue, df, objVar):
             #logger.info(f"      objTableSet: {objTableSet.iloc[withHeader:, 0].values.tolist()}")
         else:
             objVarList = dfObjList(df, objVar, withHeader)
-        logger.info(f"      Iteration list: {objVar}, {objVarList}")
+        logger.info(f"      LOOP over {codeValue}.  {objVar}:{objVarList}")
         #print(f"      Iteration list: {objVar}, {objVarList}")
         #logg('******** runIterate objVar:', objVar = objVar) # e.g. URL_Dclick_Pages
         #logg('******** runIterate sub_code:', sub_code = sub_code) # e.g. openPages
@@ -214,7 +214,7 @@ def _iterate(codeValue, df, objVar):
             rtn_df = rtn_df + [df]
             rtn_obj = rtn_obj+ [objVarList[i]]
             i = i + 1
-        logger.info('_iterate complete iteration step preparations.  Next run steps.')
+        #logger.info('_iterate complete iteration step preparations.  Next run steps.')
         return rtn_code, rtn_df, rtn_obj
 
 
@@ -524,15 +524,15 @@ def _runJupyterNb(codeValue):
     nb_file = codeValue.split(',', 1)[0].strip()
     jsonString = codeValue.split(',', 1)[1].strip()
 
-    logger.info(f"runJupyterNb: nb_file = {nb_file}, jsonString = {jsonString}")
+    logger.info(f"       Run Jupyter Notebook = {nb_file}, Parameters = {jsonString}")
 
     from auto_initialize import checkWorkDirectory
     from pathlib import Path, PureWindowsPath
 
     CWD_DIR = checkWorkDirectory('.')
-    logger.info(f"curDIR = {CWD_DIR}")
+    #logger.info(f"curDIR = {CWD_DIR}")
 
-    print(jsonString)
+    #print(jsonString)
     import papermill as pm
 
     #file = r'C:\Users\roh\Downloads\d5c7a4f7-b9a7-4d1e-904e-ce7349e0f27c.xlsx'
@@ -544,7 +544,7 @@ def _runJupyterNb(codeValue):
     #jsonString = '{"file": "C:/Users/roh/Downloads/d5c7a4f7-b9a7-4d1e-904e-ce7349e0f27c.xlsx", "country": "All"}'
 
     paramDict = json.loads(jsonString)
-    logger.info(f"parameter dictionary = {paramDict}")    
+    #logger.info(f"parameter dictionary = {paramDict}")    
     #print(paramDict['file'])
     #print(paramDict['country'])
 
@@ -971,7 +971,7 @@ def _initilizeRPA():
     #r.init()
     instantiatedRPA = r.init(visual_automation = True)
     #logg('Initialize RPA', result = instantiatedRPA, level = 'info')
-    logger.info(f"Initialize RPA = {instantiatedRPA}")
+    logger.info(f"       Initialize RPA = {instantiatedRPA}")
 
 
 #@task
@@ -979,7 +979,7 @@ def _closeRPA():
     logger = get_run_logger()
     #if not browserDisable:
     instantiatedRPA = r.close()    
-    logger.info(f"Close RPA = {instantiatedRPA}")
+    logger.info(f"       Close RPA = {instantiatedRPA}")
     #logg('Close RPA ', result = instantiatedRPA, level = 'info')
 
 #@task
@@ -1074,7 +1074,7 @@ def _iterationCount(codeValue, df, objVar):
     #objVarListDesc = codeValue.split(',',1)[1].strip()
     constants['iterationCount'] = int(countValue)  
     logger = get_run_logger()
-    logger.info(f">>>>>>>>>>>>>>>>>>>> ITERATION:{int(countValue)+1}, objVar:{objVar} <<<<<<<<<<<<<<<<<")
+    logger.info(f">>>>>>>>>>>>>>>>>>>> ITERATION:{int(countValue)+1}, {objVar} <<<<<<<<<<<<<<<<<")
 
 
 def _urlcontains(codeValue):
@@ -1163,7 +1163,7 @@ def selectTable(codeValue: str, df):
         #objTableSet = objTableSet[1:] #take the data less the header row
         #objTableSet.set_axis(new_header, axis=1, inplace=True)
         #objTableSet.columns = new_header #set the header row as the df header
-        logger.info(objTableSet.head())
+        #logger.info(objTableSet.head())
         return True, objTableSet
     else:
         result, objTableSet = _isWorkSheetName(obj, excelfile=STARTFILE)
@@ -1214,7 +1214,7 @@ def _email(codeValue, df):
         logger.info(emailObj['To'])
 
     except ValueError as e:
-        logger.info(f"ValueError")
+        #logger.info(f"ValueError")
         # not a json format - i.e. assume its a table
         # raise ValueError(f"Raise Error: incorrect json format, {codeValue}")
         if len(codeValue.split(',')) > 1:
@@ -1231,10 +1231,10 @@ def _email(codeValue, df):
         objTableSet = objTableSet[objTableSet.columns.intersection(mailfieldlst)]  # select columns for mailing
         if result == True:  # is a table
             n = constants['iterationCount']
-            logger.info('iterationCount ' + str(n))
+            #logger.info('iterationCount ' + str(n))
             objTableSet = objTableSet.iloc[n]  # fiter tableset for current iteration row
-            logger.info(objTableSet)
-            logger.info('columns')
+            #logger.info(objTableSet)
+            #logger.info('columns')
             emailObj = json.loads(objTableSet.to_json(orient="columns"))
             logger.info(emailObj)
     #logger.info(type(emailObj)) # dictionary object
@@ -1260,7 +1260,7 @@ def _email(codeValue, df):
             email_sender = EmailsSender()
 
             from auto_utility_email import sentEmailSubjectList
-            logger.info(f"#####>>>> sentEmailSubList, {len(sentEmailSubjectList)}")
+            #logger.info(f"#####>>>> sentEmailSubList, {len(sentEmailSubjectList)}")
             if not Subject in sentEmailSubjectList or boolForce:
                 email_sender.send_email(boolDisplay=boolDisplay, boolRun=boolRun, EmailObj = emailObj)
                 logger.info('email SENT')
