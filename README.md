@@ -43,7 +43,11 @@ Refer to the DOCUMENTATION section below for further technical information on th
 1. Git clone this repo
     - From this Github page (https://github.com/ray-oh/Optimus.git) - click *Code* and *Download ZIP*  
       ![download the zipped package](https://user-images.githubusercontent.com/115925194/212074132-7e504cc0-d24c-4262-b9cf-e5734f7c827e.png)
-    - And then run `install.bat` to setup required libraries for TagUI, PREFECT, JUPYTER NOTEBOOK etc.
+    - Create a folder for your Optimus program.  And extract the content to the folder  
+      ![image](https://user-images.githubusercontent.com/115925194/212080421-f3b20b76-4f13-4dce-9950-6f6946b7d808.png)
+    - Multiple copies of Optimus program can be installed one a computer.  Typically, you could have one instance for PRODUCTION and another instance for TESTING / QUALITY ASSURANCE.  For the PRODUCTION instance, it is recommended to use the name `Optimus` for the program directory.  And for testing, you could give a name like `Optimus_QA`.  If you were setting the TEST/QA environment, it should look like the following with the zipped file content extracted:    
+      ![image](https://user-images.githubusercontent.com/115925194/212081617-9c9cb96f-8fd2-43c3-8c9a-b2133d78ed02.png)
+    - Finally, run the `install.bat` to setup required libraries for TagUI, PREFECT, JUPYTER NOTEBOOK etc.
 2. Install from zipped package file
     - Requires: `install.bat` and a `optimus_package*.zip` file.
     - optimus_package is in continuous release and new releases are versioned in YYYYMMDD format.
