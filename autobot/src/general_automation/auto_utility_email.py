@@ -319,10 +319,12 @@ class EmailsSender:
         def tzInfo2Naive(in_dtObj): #Convert the tzInfo of the datetime object to naive (none)
             return datetime.datetime(in_dtObj.year,in_dtObj.month,in_dtObj.day,in_dtObj.hour,in_dtObj.minute)
         #logger.info(type(folder.Items))
-        format = '%d/%m/%Y %H:%M %p'
+        #format = '%d/%m/%Y %H:%M %p'
+        format = '%m/%d/%Y %H:%M %p'        
         strDate = datetime.datetime.strftime(dateRange_StartOn, format)
         #Format("1/15/99 3:30pm", "ddddd h:nn AMPM")
-        _sFilter_ = "[LastModificationTime] > '" + strDate  + "'"
+        #_sFilter_ = "[LastModificationTime] > '" + strDate  + "'"
+        _sFilter_ = "[ReceivedTime] > '" + strDate  + "'"
         #logger.info(_sFilter_)
         #https://learn.microsoft.com/en-us/office/vba/api/outlook.items.restrict
         folderItems = folder.Items.Restrict(_sFilter_)
