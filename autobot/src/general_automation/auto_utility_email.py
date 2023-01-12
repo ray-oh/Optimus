@@ -182,7 +182,7 @@ class EmailsSender:
         mail = self.outlook.CreateItem(0)
 
         if not boolRun: 
-            logger.info(f"Skip run:{not boolRun}")
+            logger.info(f"   Skip run:{not boolRun}")
             return  # skip send_email if boolRun is False
 
         for key,value in members.items():
@@ -343,7 +343,7 @@ class EmailsSender:
                     logMaillist = logMaillist + f"{tzInfo2Naive(sub.ReceivedTime)}::{sub.Subject}\n"
                     subjectList = subjectList + [str(sub.Subject)]
             #logger.info(f"{tzInfo2Naive(sub.ReceivedTime)}::{sub.Subject}\n")
-            logger.info(f"Folder item count: {folderItems.Count}, {logMaillist}" )
+            logger.info(f"   Folder item count: {folderItems.Count}, {logMaillist}" )
             #logger.info(logMaillist)
 
         return subjectList

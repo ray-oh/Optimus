@@ -1154,7 +1154,7 @@ def selectTable(codeValue: str, df):
         #objTableSet.set_index("Type", inplace = True)
         objTableSet = objTableSet.reset_index(drop=True)    # remove index
         objTableSet = objTableSet.drop(['Type', 'Object'], axis=1)  # drop Type and Object column  
-        logger.info(objTableSet.head())
+        #logger.info(objTableSet.head())
         objTableSet.columns = objTableSet.iloc[0]   # promote 1st row to header
         objTableSet = objTableSet[1:] #take the data less the header row
         #objTableSet = objTableSet.drop(columns=[0])
@@ -1210,8 +1210,8 @@ def _email(codeValue, df):
     # parse codeValue:
     try:
         emailObj = json.loads(codeValue)    # if codeValue is a Json object
-        logger.info(emailObj)
-        logger.info(emailObj['To'])
+        #logger.info(emailObj)
+        #logger.info(emailObj['To'])
 
     except ValueError as e:
         #logger.info(f"ValueError")
@@ -1236,7 +1236,7 @@ def _email(codeValue, df):
             #logger.info(objTableSet)
             #logger.info('columns')
             emailObj = json.loads(objTableSet.to_json(orient="columns"))
-            logger.info(emailObj)
+            logger.info(f"   {emailObj}")
     #logger.info(type(emailObj)) # dictionary object
 
     # Send email
@@ -1263,11 +1263,11 @@ def _email(codeValue, df):
             #logger.info(f"#####>>>> sentEmailSubList, {len(sentEmailSubjectList)}")
             if not Subject in sentEmailSubjectList or boolForce:
                 email_sender.send_email(boolDisplay=boolDisplay, boolRun=boolRun, EmailObj = emailObj)
-                logger.info('email SENT')
+                logger.info('   email SENT')
             else:
-                logger.info('email NOT SENT - already sent')
+                logger.info('   email NOT SENT - already sent')
         else:
-            logger.info('boolRun is FALSE')
+            logger.info('   boolRun is FALSE')
         #result = email_sender.wait_send_complete()
     except ValueError as e:
         logger.info('error --', e)
