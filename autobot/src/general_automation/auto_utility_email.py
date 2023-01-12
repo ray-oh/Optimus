@@ -54,7 +54,7 @@ class EmailsSender:
             #logger.info("Initialize EmailsSender class")
             #raise AttributeError
             self.outlook = win32.gencache.EnsureDispatch('outlook.application')
-            logger.info("Launch COM object")
+            #logger.info("Launch COM object")
             #self.outlook = win32.Dispatch('outlook.application')      
         except AttributeError:
             # using gencache may have AttributeError - if so, delete gen_py in temp folder and relauch com object
@@ -74,9 +74,9 @@ class EmailsSender:
         global today
         print(today.strftime('%d/%m/%Y %H:%M %p'))
         global sentEmailSubjectList
-        print('>>>> sentEmailSubList',len(sentEmailSubjectList))
+        #print('>>>> sentEmailSubList',len(sentEmailSubjectList))
         if len(sentEmailSubjectList) == 0: sentEmailSubjectList = self.folderItemsList(ofolder=5,dateRange_StartOn=today)          #.sentFolderList()                
-        print('>>>> sentEmailSubList',len(sentEmailSubjectList))
+        #print('>>>> sentEmailSubList',len(sentEmailSubjectList))
 
         #from auto_core_lib_helper import _ifObjectExist
         #print(_ifObjectExist('sentEmailSubjectList'))
@@ -303,7 +303,7 @@ class EmailsSender:
 
     def folderItemsList(self, ofolder=5, dateRange_StartOn = datetime.datetime(2022, 11, 27, 0, 1)):
         logger = get_run_logger()
-        logger.info(f"Folder {ofolder}, item count: {self.outlook.GetNamespace('MAPI').GetDefaultFolder(ofolder).Items.Count}" )
+        #logger.info(f"Folder {ofolder}, item count: {self.outlook.GetNamespace('MAPI').GetDefaultFolder(ofolder).Items.Count}" )
 
         #import win32com.client as win32
         import datetime
@@ -318,12 +318,12 @@ class EmailsSender:
 
         def tzInfo2Naive(in_dtObj): #Convert the tzInfo of the datetime object to naive (none)
             return datetime.datetime(in_dtObj.year,in_dtObj.month,in_dtObj.day,in_dtObj.hour,in_dtObj.minute)
-        logger.info(type(folder.Items))
+        #logger.info(type(folder.Items))
         format = '%d/%m/%Y %H:%M %p'
         strDate = datetime.datetime.strftime(dateRange_StartOn, format)
         #Format("1/15/99 3:30pm", "ddddd h:nn AMPM")
         _sFilter_ = "[LastModificationTime] > '" + strDate  + "'"
-        logger.info(_sFilter_)
+        #logger.info(_sFilter_)
         #https://learn.microsoft.com/en-us/office/vba/api/outlook.items.restrict
         folderItems = folder.Items.Restrict(_sFilter_)
         logger.info(f"Folder item count: {folderItems.Count}" )

@@ -248,31 +248,31 @@ def updateConstants(df, code):
     import re
     matchConstants = re.findall( r'<(.*?)>', code) + re.findall( r'{{(.*?)}}', code)     # Output: ['cats', 'dogs']
     if not matchConstants: return code
-    logger.info(f"   updateConstants ...', code = {code}, matchConstants = {matchConstants}")
+    #logger.info(f"   updateConstants ...', code = {code}, matchConstants = {matchConstants}")
 
     for item in matchConstants:                
-        logger.info(f"    process item {item}")
+        #logger.info(f"    process item {item}")
         if item in df[(df.Object == 'constants')]['Key'].values.tolist(): #Constants defined by user in excel
             value = dfKey_value(df[(df.Object == 'constants')], item)
-            logger.info(f"   match constants >>> key: {item}, value: {str(value)}")            
+            #logger.info(f"   match constants >>> key: {item}, value: {str(value)}")            
             code = code.replace("<" + item + ">", str(value))  # replace templated values
             code = code.replace("{{" + item + "}}", str(value))  # replace templated values
         elif item in constants: #system constants e.g. ['yesterdayYYYYMMDD', 'yesterdayDDMMYYYY', 'todayDDMMYYYY', 'todayYYYYMMDD', 'iterationCount']:
             if item == 'iterationCount':
-                logger.info(f"   match iterationCount >>> count = {constants['iterationCount']}")                
+                #logger.info(f"   match iterationCount >>> count = {constants['iterationCount']}")                
                 value = constants['iterationCount']
                 #code = code.replace("<iterationCount>", str(constants['iterationCount']))  
                 code = code.replace("<" + item + ">", str(value))  # replace templated values
                 code = code.replace("{{" + item + "}}", str(value))  # replace templated values
             else:               
-                logger.info(f"   match system constants >>> key: {item}, value: {str(constants[item])}")                
+                #logger.info(f"   match system constants >>> key: {item}, value: {str(constants[item])}")                
                 value = constants[item]                
                 #code = code.replace("<" + item + ">", str(constants[item]))  
                 code = code.replace("<" + item + ">", str(value))  # replace templated values
                 code = code.replace("{{" + item + "}}", str(value))  # replace templated values
         elif item in variables.keys():  # variables defined by user in excel
             # or item in df[(df.Object == 'variables')]['Key'].values.tolist(): 
-            logger.info(f"   match variables >>> key: {item}, variables: {variables}")
+            #logger.info(f"   match variables >>> key: {item}, variables: {variables}")
             if item in variables.keys():
                 value = variables[item]
                 code = code.replace("<" + item + ">", str(value))
@@ -300,7 +300,7 @@ def updateConstants(df, code):
                 withHeader = 1
             else:
                 withHeader = 0
-            logger.info(f"   match obj >>> item: {item}, key: {obj}, attribute: {attribute}, iterationCount: {str(constants['iterationCount'])}")
+            #logger.info(f"   match obj >>> item: {item}, key: {obj}, attribute: {attribute}, iterationCount: {str(constants['iterationCount'])}")
             if obj in df[(df.Type == 'key')]['Object'].dropna().values.tolist():
                 # and attribute.lower() in ['key','value','0','1','2','3','4','5','6','7','8','9','10','11']:
                 #objLists = df[(df.Type == 'key') & ((df.Object == obj))][['Key','Value']].dropna().values.tolist()
@@ -336,7 +336,7 @@ def updateConstants(df, code):
                 if 'iterationCount' in constants:
                     #logger.info("A6")
                     value = objLists[constants['iterationCount']]
-                    logger.info(f"   replace <item> with value in code >>> item: {item}, value: {str(value)}, iterationCount: {str(constants['iterationCount'])}")
+                    #logger.info(f"   replace <item> with value in code >>> item: {item}, value: {str(value)}, iterationCount: {str(constants['iterationCount'])}")
                     code = code.replace("<" + item + ">", str(value))
                     code = code.replace("{{" + item + "}}", str(value))  # replace templated values
             elif obj in df[(df.Type == 'table')]['Object'].dropna().values.tolist():  # HANDLE Table Objects
@@ -351,7 +351,7 @@ def updateConstants(df, code):
                 if 'iterationCount' in constants:
                     #logger.info("A8")
                     value = objLists[constants['iterationCount']]
-                    logger.info(f"   replace <item> with value in code >>> item: {item}, value: {str(value)}, iterationCount: {str(constants['iterationCount'])}")
+                    #logger.info(f"   replace <item> with value in code >>> item: {item}, value: {str(value)}, iterationCount: {str(constants['iterationCount'])}")
                     code = code.replace("<" + item + ">", str(value))
                     code = code.replace("{{" + item + "}}", str(value))  # replace templated values
 
