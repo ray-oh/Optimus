@@ -1249,7 +1249,7 @@ def _email(codeValue, df):
         #HTMLBody = emailObj['HTMLBody']
         #Attachment = emailObj['Attachment']
         #email_sender.send_email(boolDisplay=False, To=To, Subject=Subject, HTMLBody=HTMLBody, Attachment=Attachment)
-        logger.info(f"******** Email To:{To} Subject:{Subject}")
+        #logger.info(f"******** Email To:{To} Subject:{Subject}")
 
         boolRun = emailObj['boolRun'] if 'boolRun' in emailObj else True 
         boolDisplay = emailObj['boolDisplay'] if 'boolDisplay' in emailObj else False
@@ -1290,12 +1290,12 @@ def _waitEmailComplete(codeValue, df):
     from auto_utility_email import today, sentEmailSubjectList
     #global today
     #global sentEmailSubjectList
-    print(today.strftime('%d/%m/%Y %H:%M %p'), sentEmailSubjectList)
+    #print(today.strftime('%d/%m/%Y %H:%M %p'), sentEmailSubjectList)
     #print(sentEmailSubjectList)
  
     #email_sender.refreshMail()
  
-    logger.info('Email complete' + str(result))
+    logger.info('   Email complete = ' + str(result))
 
 
 def etest():    
