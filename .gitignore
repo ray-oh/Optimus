@@ -140,3 +140,5 @@ dmypy.json
 /scripts/*main*
 /scripts/sample_notebook/*
 *DClickReport*.ipynb
+.vscode
+studio
