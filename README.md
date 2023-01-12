@@ -39,13 +39,15 @@ Some example use cases implemented with OPTIMUS in enterprise setting:
 Refer to the DOCUMENTATION section below for further technical information on the solution.  
 
 ### INSTALLATION
-- 2 methods to install and use optimus RPA
-  1. Git clone this repo
-     - run install-optimus.bat to setup required libraries
-  2. Install from zipped package file
-    - Requires: install-optimus.bat and a optimus_package*.zip file.
+2 methods to install and use optimus RPA:
+1. Git clone this repo
+    - From this Github page (https://github.com/ray-oh/Optimus.git) - click *Code* and *Download ZIP*  
+      ![download the zipped package](https://user-images.githubusercontent.com/115925194/212074132-7e504cc0-d24c-4262-b9cf-e5734f7c827e.png)
+    - And then run install.bat to setup required libraries for TagUI, PREFECT, JUPYTER NOTEBOOK etc.
+2. Install from zipped package file
+    - Requires: install.bat and a optimus_package*.zip file.
     - optimus_package is in continuous release and new releases are versioned in YYYYMMDD format.
-      It is advisable you use the latest version available.  Check the release notes on what is included in the version.
+      It is advisable you use the latest version available which should be in the *installation* folder.  Check the release notes on what is included in the version.
     - Each new release can also be installed over a previous release as an upgrade.  
       Normally, an upgrade installation will not remove existing user files.  But it may overwrite existing scripts files with same name.
       Backup your scripts folder to avoid problems.
