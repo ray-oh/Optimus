@@ -74,7 +74,7 @@ def main_flow(startfile, startsheet, startcode, background, program_dir):
     import rpa as r
     if not browserDisable and not instantiatedRPA:
         instantiatedRPA = r.close()    
-        logger.info(f"'DEBUG run.py/main_flow Close RPA ', result = {instantiatedRPA}, level = 'info'")
+        #logger.info(f"'DEBUG run.py/main_flow Close RPA ', result = {instantiatedRPA}, level = 'info'")
 
     #logger.info(f"DEBUG run.py/main_flow Complete RPA flow:{startcode}")
 

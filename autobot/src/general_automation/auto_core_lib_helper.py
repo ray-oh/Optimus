@@ -997,7 +997,8 @@ def _url(codeValue, df):
         #print('check df',df)
         url_value = dfKey_value(df, key)
         #print('      ','URL:',key, url_value) #, type(url_value))
-        logger.info(f"      DEBUG url: ', VARIABLE_TYPE = {type(url_value)}, key = {key}, url_value = {url_value}")
+        #logger.info(f"      DEBUG url: ', VARIABLE_TYPE = {type(url_value)}, key = {key}, url_value = {url_value}")
+        logger.info(f"      Open URL: {url_value}")
 
     import math
     #x = float('nan')
