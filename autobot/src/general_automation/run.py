@@ -141,11 +141,11 @@ def run(file = '', flowrun = 1, deploymentname = '', PROGRAM_DIR = '', startcode
 
     #except:
     except Exception as e: 
-        print('Exception', e, "Excel.Application.Workbooks", type(e), e.__str__(), e.__str__() == "Excel.Application.Workbooks")
+        #print('Exception', e, "Excel.Application.Workbooks", type(e), e.__str__(), e.__str__() == "Excel.Application.Workbooks")
         #print('Exception')
         #sys.exit(config.EX_SOFTWARE)
         if e.__str__() == "Excel.Application.Workbooks":
-            print("kiil process:",killprocess("excel"))
+            logger.info(f"kiil process: {killprocess('excel')}")
         raise ValueError(f"Software Error: {e}")
 
     from auto_utility_dates import getDuration

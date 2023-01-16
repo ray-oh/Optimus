@@ -1,0 +1,255 @@
+<style>table {
+    background-color: transparent;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    border:none;
+    border-collapse: collapse;
+    border-spacing:0;
+    color:black;
+    font-size:14px;
+    table-layout:fixed;
+    grid-column: 1;
+    grid-row: 1;
+    }
+
+thead {
+    border-bottom:1px solid black;
+    vertical-align:bottom;
+    }
+
+tr, th, td {
+    text-align:right;
+    vertical-align: middle;
+    padding:0.5em 0.5em;
+    line-height:normal;
+    white-space:normal;
+    max-width:none;
+    border:none;
+    }
+
+th {
+    font-weight:bold; 
+    text-align:left;
+    }
+
+tbody tr:nth-child(odd){
+    background:#f5f5f5;
+    }
+    :link{
+    text-decoration:underline;
+}
+
+div {
+    display: grid;
+    justify-content: center;
+}
+
+p {
+  grid-column: 1;
+  grid-row: 2;
+}</style><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Country</th>
+      <th>Store</th>
+      <th>Retail product L1</th>
+      <th>Retail product L2</th>
+      <th>Day Net Sales (kEUR) TY</th>
+      <th>Day Net Sales (kEUR) LY</th>
+      <th>Day Net Sales Variation</th>
+      <th>WTD Net Sales (kEUR) TY</th>
+      <th>WTD Net Sales (kEUR) LY</th>
+      <th>WTD Net Sales Variation</th>
+      <th>MTD Net Sales (kEUR) TY</th>
+      <th>MTD Net Sales (kEUR) LY</th>
+      <th>MTD Net Sales Variation</th>
+      <th>YTD Net Sales (kEUR) TY</th>
+      <th>YTD Net Sales (kEUR) LY</th>
+      <th>YTD Net Sales Variation</th>
+      <th>Day Units TY</th>
+      <th>Day Units LY</th>
+      <th>Day Units Variation</th>
+      <th>WTD Units TY</th>
+      <th>WTD Units LY</th>
+      <th>WTD Units Variation</th>
+      <th>MTD Units TY</th>
+      <th>MTD Units LY</th>
+      <th>MTD Units Variation</th>
+      <th>YTD Units TY</th>
+      <th>YTD Units LY</th>
+      <th>YTD Units Variation</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Macau</td>
+      <td>Macau Venetian Women</td>
+      <td>Women Universe</td>
+      <td>W Bags</td>
+      <td>212.990572</td>
+      <td>192.879626</td>
+      <td>0.104267</td>
+      <td>769.934123</td>
+      <td>746.504884</td>
+      <td>0.031385</td>
+      <td>2182.549777</td>
+      <td>2244.106632</td>
+      <td>-0.02743</td>
+      <td>2182.549777</td>
+      <td>2244.106632</td>
+      <td>-0.02743</td>
+      <td>48</td>
+      <td>55</td>
+      <td>-0.127273</td>
+      <td>182</td>
+      <td>202</td>
+      <td>-0.09901</td>
+      <td>518</td>
+      <td>593</td>
+      <td>-0.126476</td>
+      <td>518</td>
+      <td>593</td>
+      <td>-0.126476</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Thailand</td>
+      <td>Bangkok Siam Paragon</td>
+      <td>Women Universe</td>
+      <td>W Bags</td>
+      <td>161.570796</td>
+      <td>128.108630</td>
+      <td>0.261201</td>
+      <td>522.027246</td>
+      <td>504.854867</td>
+      <td>0.034014</td>
+      <td>1604.411967</td>
+      <td>1773.639766</td>
+      <td>-0.095413</td>
+      <td>1604.411967</td>
+      <td>1773.639766</td>
+      <td>-0.095413</td>
+      <td>37</td>
+      <td>42</td>
+      <td>-0.119048</td>
+      <td>124</td>
+      <td>155</td>
+      <td>-0.2</td>
+      <td>381</td>
+      <td>522</td>
+      <td>-0.270115</td>
+      <td>381</td>
+      <td>522</td>
+      <td>-0.270115</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Hong Kong</td>
+      <td>Hong Kong Canton Road</td>
+      <td>Women Universe</td>
+      <td>W Bags</td>
+      <td>94.438807</td>
+      <td>0.000000</td>
+      <td>-</td>
+      <td>472.394196</td>
+      <td>0.000000</td>
+      <td>-</td>
+      <td>1381.378332</td>
+      <td>0.000000</td>
+      <td>-</td>
+      <td>1381.378332</td>
+      <td>0.000000</td>
+      <td>-</td>
+      <td>24</td>
+      <td>0</td>
+      <td>-</td>
+      <td>105</td>
+      <td>0</td>
+      <td>-</td>
+      <td>318</td>
+      <td>0</td>
+      <td>-</td>
+      <td>318</td>
+      <td>0</td>
+      <td>-</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Malaysia</td>
+      <td>Kuala Lumpur Pavilion</td>
+      <td>Women Universe</td>
+      <td>W Bags</td>
+      <td>111.083926</td>
+      <td>119.608600</td>
+      <td>-0.071271</td>
+      <td>429.246270</td>
+      <td>391.193956</td>
+      <td>0.097272</td>
+      <td>1330.010632</td>
+      <td>1584.643087</td>
+      <td>-0.160688</td>
+      <td>1330.010632</td>
+      <td>1584.643087</td>
+      <td>-0.160688</td>
+      <td>22</td>
+      <td>31</td>
+      <td>-0.290323</td>
+      <td>86</td>
+      <td>102</td>
+      <td>-0.156863</td>
+      <td>282</td>
+      <td>400</td>
+      <td>-0.295</td>
+      <td>282</td>
+      <td>400</td>
+      <td>-0.295</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Korea</td>
+      <td>Seoul Shinsegae Kangnam Women</td>
+      <td>Women Universe</td>
+      <td>W Bags</td>
+      <td>112.625491</td>
+      <td>247.788495</td>
+      <td>-0.545477</td>
+      <td>389.214597</td>
+      <td>582.180394</td>
+      <td>-0.331454</td>
+      <td>1253.737950</td>
+      <td>1321.146873</td>
+      <td>-0.051023</td>
+      <td>1253.737950</td>
+      <td>1321.146873</td>
+      <td>-0.051023</td>
+      <td>27</td>
+      <td>66</td>
+      <td>-0.590909</td>
+      <td>89</td>
+      <td>164</td>
+      <td>-0.457317</td>
+      <td>296</td>
+      <td>383</td>
+      <td>-0.227154</td>
+      <td>296</td>
+      <td>383</td>
+      <td>-0.227154</td>
+    </tr>
+  </tbody>
+</table>
+</div>

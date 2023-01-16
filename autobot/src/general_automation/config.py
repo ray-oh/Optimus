@@ -138,6 +138,7 @@ else:
 
     # INSTANTIATE configObj
     # declaring SYSTEM CONSTANTS from intialization step
+    '''
     #optionsStatic = (option for option in configObj.options('settings') if option not in configObj.options('flag'))
     configSection = context.get_run_context().flow_run.parameters['deploymentname']
     #logger.info(f"configSection {configSection}")
@@ -147,7 +148,7 @@ else:
         #logger.info(f"{option.upper()} = '{optionValue}'")
         #logger.info(f"{option.upper()} = configObj[configSection]['{option.upper()}']")        
         exec(f"{option.upper()} = configObj[configSection]['{option.upper()}']")
-
+    '''
     #logger.info(f"DEBUG configSection options {STARTFILE}, {SCRIPTS_DIR}, {OUTPUT_PATH}, {IMAGE_PATH}, {LOG_PATH}, {ADDON_PATH}, {SRCLOGFILE}")
 
     # overwrite from settings file with default parameter values
@@ -180,6 +181,7 @@ from pathlib import Path, PureWindowsPath
 import socket
 hostname = str(socket.gethostname())
 #print(hostname)
+'''
 # declare CONSTANTS for prefect flow - FLOW_NAME, FLOW_DESCRIPTION, TASK_NAME, TASK_DESCRIPTION, TAG_NAME, DEPLOYMENT_NAME, PARAMETER_VALUE, COMPUTERNAME
 options = (option for option in configObj.options('prefect'))  # if option not in configObj.options('flag'))
 for option in options:
@@ -192,7 +194,8 @@ FLOW_NAME = Path(STARTFILE).name.__str__().rsplit('.',1)[0] + "-"+ hostname
 #logger.info(f"FLOW_NAME: {FLOW_NAME}")
 TASK_NAME = FLOW_NAME
 TAG_NAME = "TEST"
-
+'''
+'''
 #initalize upon installation
 if INITIALIZATION==1:
     print('Initializing package ....')
@@ -204,7 +207,7 @@ if INITIALIZATION==1:
     exit()
     import sys
     sys.exit(EX_OK) # code 0, all ok
-
+'''
 # Return absolute path of start file in scripts folder
 STARTFILE = checkStartFile(STARTFILE, Path(PROGRAM_DIR) / "scripts") 
 #logger.info(f"DEBUG config.py STARTFILE {STARTFILE}")
@@ -228,10 +231,11 @@ else:
                                     'SRCLOG',{SRCLOG}")
     '''
     # change working directory to Assets directory - downloads etc will be in that folder
-    if FLOWRUN != 2: CWD_DIR = changeWorkingDirectory(ASSETS_DIR)
+    #if FLOWRUN != 2: 
+    CWD_DIR = changeWorkingDirectory(ASSETS_DIR)
     #print(SCRIPTS_DIR, ASSETS_DIR)
 
-checkSaveSettings(SETTINGS, SETTINGS_PATH, configObj)  # save settings file if SETTINGS parameter = 1
+#checkSaveSettings(SETTINGS, SETTINGS_PATH, configObj)  # save settings file if SETTINGS parameter = 1
 
 logger.info('CONFIGURATION SETTINGS completed ...')
 

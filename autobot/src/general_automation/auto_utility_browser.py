@@ -10,7 +10,7 @@ Versions:
 20210216    Reorganize utility file
 """
 import config
-from auto_utility_logging import *
+#from auto_utility_logging import *
 from auto_utility_file import GetRecentCreatedFile
 import rpa as r
 from pathlib import Path, PureWindowsPath    
@@ -19,12 +19,12 @@ from pathlib import Path, PureWindowsPath
 def chromeZoom(factor):
     # zoom -75% = minus, zoom factor of 3 times
     #ahk.send_input('{Ctrl down}0{Ctrl up}')  # reset to 100%
-    logg('chromeZoom', factor = factor)
+    #logg('chromeZoom', factor = factor)
     try:
         int(factor)
     except ValueError:
         # not int
-        logg('Not int', factor = factor, level = 'error')
+        #logg('Not int', factor = factor, level = 'error')
         return
     #isNaN = pd.isna(factor)
     #if isNaN:
@@ -42,12 +42,12 @@ def chromeZoom(factor):
         zoom_plus_minus = '0'
     else:
         return
-    logg('zoom plus minus', zoom_plus_minus = zoom_plus_minus)
+    #logg('zoom plus minus', zoom_plus_minus = zoom_plus_minus)
     r.keyboard('[ctrl]0')
     for i in range(int(abs(factor))):
         #ahk.send_input('{Ctrl down}' + zoom_plus_minus + '{Ctrl up}')  # zoom -90%, -80%, -75%
         r.keyboard('[ctrl]' + zoom_plus_minus) 
-        logg('zoom', i = i)
+        #logg('zoom', i = i)
     return
 
 
@@ -114,20 +114,20 @@ def waitIdentifierExist(identifier, time_seconds = 10, interval = 5, snapPic = T
                     bImageFound = r.present(x)
                     if bImageFound:
                         elapsed_time = int(time.time() - start_time)
-                        logg('SUCCESS - found: ' + str(elapsed_time) + 's ' + x, level = 'info')
+                        #logg('SUCCESS - found: ' + str(elapsed_time) + 's ' + x, level = 'info')
                         print('SUCCESS', x, idx, 'elapsed time', str(elapsed_time), 's ')
                         return True, idx
                 #idx += 1
             #idx = 0
             elapsed_time = int(time.time() - start_time)
             if elapsed_time > time_seconds:
-                logg('FAIL - Not found: ' + str(elapsed_time) + 's ', level = 'info')
+                #logg('FAIL - Not found: ' + str(elapsed_time) + 's ', level = 'info')
                 print('FAIL', 'elapsed time', str(elapsed_time), 's ')
                 if snapPic:
                     snapImage()
                 return False, idx
             else:
-                logg('Checking Image: ' + str(elapsed_time) + 's ', level = 'info')
+                #logg('Checking Image: ' + str(elapsed_time) + 's ', level = 'info')
                 print('loop wait', 'elapsed time', str(elapsed_time), 's ')
                 r.wait(interval)
 
@@ -152,17 +152,17 @@ def waitIdentifierExist(identifier, time_seconds = 10, interval = 5, snapPic = T
                 bImageFound = r.present(identifier)
                 if bImageFound:
                     elapsed_time = int(time.time() - start_time)
-                    logg('SUCCESS - found: ' + str(elapsed_time) + 's ' + identifier, level = 'info')
+                    #logg('SUCCESS - found: ' + str(elapsed_time) + 's ' + identifier, level = 'info')
                     return True
 
             elapsed_time = int(time.time() - start_time)
             if elapsed_time > time_seconds:
-                logg('FAIL - Not found: ' + str(elapsed_time) + 's ' + identifier, level = 'info')
+                #logg('FAIL - Not found: ' + str(elapsed_time) + 's ' + identifier, level = 'info')
                 if snapPic:
                     snapImage()
                 return False
             else:
-                logg('Checking Image: ' + str(elapsed_time) + 's ' + identifier, level = 'info')
+                #logg('Checking Image: ' + str(elapsed_time) + 's ' + identifier, level = 'info')
                 r.wait(interval)
 
     return False
@@ -177,15 +177,15 @@ def waitIdentifierDisappear(identifier, time_seconds = 10, interval = 5, snapPic
         elapsed_time = int(time.time() - start_time)
         #r.hover(10+elapsed_time*5,500)
         if not bImageFound:
-            logg('SUCCESS - disappeared: ' + str(elapsed_time) + 's ' + identifier, level = 'info')
+            #logg('SUCCESS - disappeared: ' + str(elapsed_time) + 's ' + identifier, level = 'info')
             return True
         elif elapsed_time > time_seconds:
-            logg('FAIL - still exist: ' + str(elapsed_time) + 's ' + identifier, level = 'info')
+            #logg('FAIL - still exist: ' + str(elapsed_time) + 's ' + identifier, level = 'info')
             if snapPic:
                 snapImage()
             return False
         else:
-            logg('Checking Image: ' + str(elapsed_time) + 's ' + identifier, level = 'info')
+            #logg('Checking Image: ' + str(elapsed_time) + 's ' + identifier, level = 'info')
             r.wait(interval)
     return False
 

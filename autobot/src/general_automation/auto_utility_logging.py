@@ -25,6 +25,7 @@ logging.basicConfig(filename= config.SRCLOG ,  ##"./log/output.log"
     #format='%(asctime)s | %(name)s | %(levelname)s | %(message)s')
 logger = logging.getLogger(__name__)
 
+'''
 def logg(text,**kwargs):                    # kwargs is a dict of the keyword args passed to the function
     if("level" in kwargs):
         level = kwargs['level'].upper()     # CRITICAL	50, ERROR	40, WARNING	30, INFO	20, DEBUG	10
@@ -49,3 +50,4 @@ def logg(text,**kwargs):                    # kwargs is a dict of the keyword ar
     if level == 'WARNING': logging.warning(result)
     if level == 'ERROR': logging.error(result)    
     if level == 'CRTICAL': logging.critical(result)    
+'''

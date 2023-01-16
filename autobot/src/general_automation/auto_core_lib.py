@@ -24,7 +24,7 @@ from pathlib import Path, PureWindowsPath
 
 from auto_helper_lib import *
 from auto_utility_PDF_Image import *
-from auto_utility_logging import *
+#from auto_utility_logging import *
 #from auto_utility_file import GetRecentCreatedFile, runInBackground
 from auto_utility_browser import *
 from auto_utility_parsers import *
@@ -38,17 +38,17 @@ from auto_utility_parsers import *
 def runCodelist(df: pd.DataFrame, codeList: list, run_code_until: str = '', objVar: str = ''):    
     DFlist = [df] * len(codeList)
     objVarList = [objVar] * len(codeList)
-    #logger = get_run_logger()
+    logger = get_run_logger()
     #logger.info(f"RunCodeList checking ...:  {codeList} ")
     if run_code_until != '':
         codeList = codeList[:int(run_code_until)]
         print('******************************ERROR !!!!! **************************************')
-        logg('*** codeList sliced ****', codeList = codeList, level = 'WARNING')
+        logger.info(f"DEBUG *** codeList sliced ****', codeList = {codeList}, level = 'WARNING'")
     while len(codeList) > 0:
         x = codeList[0]
         df = DFlist[0]
         objVar = objVarList[0]
-        logger = get_run_logger()
+        #logger = get_run_logger()
         #logger.info(f">>>>>runCodelist ...:  {x} {df.__len__()} {objVar}")
 
         codeList.pop(0)
@@ -58,7 +58,7 @@ def runCodelist(df: pd.DataFrame, codeList: list, run_code_until: str = '', objV
         #logger.info(f">>>>>runCodelist ... popped :  {x} {df.__len__()} {objVar}")
          
         if isinstance(x, list):
-            logg('click', codeInCodeList = x[0])
+            logger.info(f"click', codeInCodeList = {x[0]}")
             #hoverClick(x[0], 2, 1, x[1], x[2]) # if a list is defined, call with offset x and y
         else:
             #try_catch(runCode(df, x, objVar), x)
@@ -66,7 +66,7 @@ def runCodelist(df: pd.DataFrame, codeList: list, run_code_until: str = '', objV
 
             additionalCodeList, additionalDFlist, additionalobjVarList = runCode(df, x, objVar)
 
-            logger = get_run_logger()
+            #logger = get_run_logger()
             if not (additionalCodeList == None or additionalCodeList == []):
                 #logger.info(f"additional CodeList:{additionalCodeList} DFlist: {additionalDFlist.__len__()} objVarList:{additionalobjVarList} ")
 
@@ -133,7 +133,7 @@ def runCode(df, code, objVar=''):
 #############################################################################################################################
 # obsolete code - not used below
 
-
+'''
 # run a sub_code iteratively over a objVar e.g. a URL list like iterate: URL_pages , codeList:<URL_runprocess:key>
 def temprunIterate(df, objVar, sub_code, withHeader=0):
     objVarList = dfObjList(df, objVar, withHeader)
@@ -150,6 +150,8 @@ def temprunIterate(df, objVar, sub_code, withHeader=0):
         runCode(df, sub_code, objVarList[i])
         i = i + 1
     return
+'''
+
 '''
             additionalCodeList = runCode(df, x, objVar)
             if additionalCodeList != None:
