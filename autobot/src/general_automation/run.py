@@ -107,7 +107,7 @@ def run(file = '', flowrun = 1, deploymentname = '', PROGRAM_DIR = '', startcode
         import config
         #from auto_utility_dates import getDuration
         #from auto_utility_file import runInBackground
-        if file == '': file = config.FLOW_NAME
+        if file == '': file = deploymentname + ".xlsm" #config.FLOW_NAME
         if startsheet == '': startsheet = config.STARTSHEET
         if startcode == '': startcode=config.STARTCODE
         if background == '': background=config.BACKGROUND
