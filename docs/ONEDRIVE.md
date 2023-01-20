@@ -21,3 +21,6 @@ Select *Manage Storage* to view and manage storage of ONE DRIVE space
 From *Choose Folders* - select which folders to view on local VM.  
 De-selecting the folder removes all local files stored on the VM but keeps the files on ONE DRIVE cloud.
 ![image](https://user-images.githubusercontent.com/115925194/213615093-0f2da478-e31c-4325-a370-7d6fd2ead968.png)
+  
+### References
+[Add and Sync Shared Folders to OneDrive](https://support.microsoft.com/en-us/office/add-and-sync-shared-folders-to-onedrive-for-home-8a63cd47-1526-4cd8-bd09-ee3f9bfc1504)
