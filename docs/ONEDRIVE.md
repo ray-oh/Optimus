@@ -23,4 +23,5 @@ De-selecting the folder removes all local files stored on the VM but keeps the f
 ![image](https://user-images.githubusercontent.com/115925194/213615093-0f2da478-e31c-4325-a370-7d6fd2ead968.png)
   
 ### References
-[Add and Sync Shared Folders to OneDrive](https://support.microsoft.com/en-us/office/add-and-sync-shared-folders-to-onedrive-for-home-8a63cd47-1526-4cd8-bd09-ee3f9bfc1504)
+[Add and Sync Shared Folders to OneDrive](https://support.microsoft.com/en-us/office/add-and-sync-shared-folders-to-onedrive-for-home-8a63cd47-1526-4cd8-bd09-ee3f9bfc1504)  
+[Save disk space with OneDrive files on demand for windows](https://support.microsoft.com/en-us/office/save-disk-space-with-onedrive-files-on-demand-for-windows-0e6860d3-d9f3-4971-b321-7092438fb38e)
