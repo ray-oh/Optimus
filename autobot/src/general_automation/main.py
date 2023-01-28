@@ -36,10 +36,12 @@ def main():
 
     # get program dir from windows environment
     import os
-    if os.getenv('OPTIMUS_DIR') is None:
+    # change logic - always use current program dir for settings path instead from the OPTIMUS_DIR env var
+    if True:    #os.getenv('OPTIMUS_DIR') is None:
         SETTINGS_PATH = Path(CWD_DIR + "/settings.ini").resolve().absolute().__str__()
         COMMANDS_PATH = Path(CWD_DIR + "/commands.xlsx").resolve().absolute().__str__()
-        setEnvVar("OPTIMUS_DIR", Path(AUTOBOT_DIR).resolve().parents[0].absolute().__str__())
+        # Disable to set OPTIMUS_DIR env var
+        #setEnvVar("OPTIMUS_DIR", Path(AUTOBOT_DIR).resolve().parents[0].absolute().__str__())
     else:
         SETTINGS_PATH = Path(os.environ['OPTIMUS_DIR'] + "/autobot/settings.ini").resolve().absolute().__str__()
         COMMANDS_PATH = Path(os.environ['OPTIMUS_DIR'] + "/autobot/commands.xlsx").resolve().absolute().__str__()
@@ -61,8 +63,13 @@ def main():
     #codeValue = f"501259457, {__file__} {program_args['startfile']}"
     #from auto_core_lib import _telegram
     #_telegram(codeValue)
+
     if program_args['initialization'] == 1:
+        # initialization is current not used - can pass
         print("running initialization option")
+        pass
+
+        '''
         PROGRAM_DIR = Path(AUTOBOT_DIR).parents[0].resolve().absolute().__str__()
         SCRIPTS_DIR = Path(PROGRAM_DIR + '/scripts').absolute().__str__()
         PREFECT_DIR = Path(PROGRAM_DIR + '/prefect').absolute().__str__()
@@ -91,7 +98,7 @@ def main():
         with open(SETTINGS_PATH, 'w') as configfile:
             configObj.write(configfile)
         print('Settings updated and saved:', SETTINGS_PATH, ' Backup:',SETTINGS_PATH_BAK)
-
+    '''
 
     # Create Deployment 
     elif program_args['flowrun'] == 2:
@@ -195,9 +202,11 @@ def main():
         #result = run.with_options(name=deploymentname, timeout_seconds = timeout, retries = 1)()
         #print(f"Retries .... {program_args['retries']}")
         retries = int(program_args['retries'])
-        with tags("production", "test"):
+        tag = program_args['tag']
+        #print(tag, retries)
+        with tags(tag):   #("production", "test"):
             #run()  # has tags: a, b
-            result = run.with_options(name=deploymentname, retries=retries)()#, timeout_seconds=timeout)()
+            result = run.with_options(name=deploymentname, retries=retries)() #, timeout_seconds=timeout)()
 
 
 

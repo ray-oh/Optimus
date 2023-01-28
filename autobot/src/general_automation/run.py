@@ -26,6 +26,8 @@ initialize seting:  run -i 1 -pd D:\optimus_1.2
 # Deployment flow will run run.py including header section
 #print("running run.py module start section")
 
+script_version = '2022.10.27'
+
 from pathlib import Path, PureWindowsPath
 import sys, os
 from datetime import datetime
@@ -82,7 +84,7 @@ def main_flow(startfile, startsheet, startcode, background, program_dir):
 
 
 @flow(name='launch-autobot', 
-      description='launch autobot rpa flow', version='2022.10.27')
+      description='launch autobot rpa flow', version=script_version)
 def run(file = '', flowrun = 1, deploymentname = '', PROGRAM_DIR = '', startcode = '', startsheet = '', background = ''):
     ''' Deployment run or normal run or deploy to prefect '''
     #print("running run flow")
@@ -90,15 +92,19 @@ def run(file = '', flowrun = 1, deploymentname = '', PROGRAM_DIR = '', startcode
     startTime = datetime.now()
 
     current_DIR = Path('.').resolve().absolute().__str__()
-    OPTIMUS_DIR = os.getenv('OPTIMUS_DIR')  #D:\Optimus-Prefect-Test1
+    # disable use of OPTIMUS_DIR env var
+    #OPTIMUS_DIR = os.getenv('OPTIMUS_DIR')  #D:\Optimus-Prefect-Test1
     # deployment run or normal run or deploy to prefect
     # module paths
-    MODULE_PATH_file = Path(__file__).parents[0].resolve().absolute().__str__()
-    MODULE_PATH_lib = Path(f"{OPTIMUS_DIR}/autobot/venv/Lib/site-packages").resolve().absolute().__str__()
-    sys.path.append(MODULE_PATH_file)
+    #MODULE_PATH_file = Path(__file__).parents[0].resolve().absolute().__str__()
+    MODULE_PATH_lib = Path(f"{PROGRAM_DIR}/autobot/venv/Lib/site-packages").resolve().absolute().__str__()  #OPTIMUS_DIR
+    #sys.path.append(MODULE_PATH_file)
     sys.path.append(MODULE_PATH_lib)
-    logger.info(f"RPA start {startTime.strftime('%m/%d/%Y, %H:%M:%S')} | {HEADER} | flowExecute file={file}, flowrun={flowrun}, deploymentname={deploymentname} | OPTIMUS_DIR={OPTIMUS_DIR}, __file__={__file__}")
-    logger.info(f"Module path: {MODULE_PATH_file} | {MODULE_PATH_lib}")
+    logger.debug(f"RPA start {startTime.strftime('%m/%d/%Y, %H:%M:%S')} | {HEADER} | \
+        Version={script_version} | PROGRAM_DIR={PROGRAM_DIR}, current_DIR={current_DIR}, __file__={__file__} | \
+            flowExecute file={file}, flowrun={flowrun}, deploymentname={deploymentname} | \
+                Module path: {MODULE_PATH_lib}")  # {MODULE_PATH_file} and  OPTIMUS_DIR={OPTIMUS_DIR}, 
+    #logger.debug(f"Module path: {MODULE_PATH_file} | {MODULE_PATH_lib}")
     #logger.info(f"sys path: {sys.path}")
 
     # if not deployment run i.e. normal run
@@ -123,7 +129,7 @@ def run(file = '', flowrun = 1, deploymentname = '', PROGRAM_DIR = '', startcode
 
         # Check if start file is valid - but this code probably not needed here as its included in CONFIG file executed by import config
         if not checkFileValid(Path(config.STARTFILE)):
-            logger.info(f"SCRIPT START FILE INVALID - Check file path: {Path(config.STARTFILE)}")            
+            logger.critical(f"SCRIPT START FILE INVALID - Check file path: {Path(config.STARTFILE)}")            
             raise ValueError(f"Start File Error {config.STARTFILE}")
             exit
 
@@ -145,7 +151,7 @@ def run(file = '', flowrun = 1, deploymentname = '', PROGRAM_DIR = '', startcode
         #print('Exception')
         #sys.exit(config.EX_SOFTWARE)
         if e.__str__() == "Excel.Application.Workbooks":
-            logger.info(f"kiil process: {killprocess('excel')}")
+            logger.critical(f"kiil process: {killprocess('excel')}")
         raise ValueError(f"Software Error: {e}")
 
     from auto_utility_dates import getDuration

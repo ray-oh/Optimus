@@ -78,7 +78,7 @@ def _otherRunCode(df, code, codeID, codeValue, objVar):
 
     # ------------------ RPA functions ------------------------------
     elif codeID.lower() == 'runInBackground'.lower():   _runInBackground()  # run automation in background mode without user attendance
-    elif codeID.lower() == 'initializeRPA'.lower(): _initilizeRPA()
+    elif codeID.lower() == 'initializeRPA'.lower(): _initializeRPA()
     elif codeID.lower() == 'closeRPA'.lower():  _closeRPA()
     elif codeID.lower() == 'url'.lower():       _url(codeValue, df)         # url:OKTA or url:<URL_Dclick_Pages:key> or url:@<URL_Dclick_Pages:@columnHeader>
     elif codeID.lower() == 'urls'.lower():   _urls(codeValue, objVar)        # No longer required - can remove
@@ -168,7 +168,7 @@ def _iterate(codeValue, df, objVar):
         additionalobjVarList = []
         for i in range(startCount, startCount + totalCount):
             #variables['loopCount'] = i
-            print('ITERATION ---------------------------------------- ', 'LOOP', n)                
+            #print('ITERATION ---------------------------------------- ', 'LOOP', n)                
             logger.info(f"'ITERATION ---------------------------------------- LOOP {n}")
             #runCode(df, sub_code)
             increment = 'set:loopCount=' + str(i)
@@ -190,7 +190,7 @@ def _iterate(codeValue, df, objVar):
             #logger.info(f"      objTableSet: {objTableSet.iloc[withHeader:, 0].values.tolist()}")
         else:
             objVarList = dfObjList(df, objVar, withHeader)
-        logger.info(f"      LOOP over {codeValue}.  {objVar}:{objVarList}")
+        logger.debug(f"      LOOP over {codeValue}.  {objVar}:{objVarList}")
         #print(f"      Iteration list: {objVar}, {objVarList}")
         #logg('******** runIterate objVar:', objVar = objVar) # e.g. URL_Dclick_Pages
         #logg('******** runIterate sub_code:', sub_code = sub_code) # e.g. openPages
@@ -242,7 +242,7 @@ def _isCodeList(df, code, objVar):
     #runCodelist(CodeObject(df), sub_code)
     n = len(sub_code)
     logger = get_run_logger()
-    logger.info(f"   Steps:{sub_code}")
+    logger.debug(f"   Steps:{sub_code}")
     return sub_code, [df] * n, [objVar] * n
 
 #@task
@@ -301,12 +301,12 @@ def _wait(codeValue, df, objVar):
             print('wait run code list', tmpDict['run_code'])
 
             logger = get_run_logger()
-            logger.info(f"   Scenario list:{tmpDict['identifier']} Action list:{tmpDict['run_code']}")
+            logger.debug(f"   Scenario list:{tmpDict['identifier']} Action list:{tmpDict['run_code']}")
 
             matchBool, index = waitIdentifierExist(tmpDict['identifier'], time_sec, 1, False)         #waitIdentifierExist(identifier, time_seconds, interval) - returns true or false
             if not matchBool:
                 #logg('      Time out from waiting', level = 'warning')                    #raise CriticalAccessFailure("TXT logon window did not appear")
-                logger.info(f"Time out from waiting ...")
+                logger.warning(f"Time out from waiting ...")
                 return [], [], []
             else:
                 if 'run_code' in tmpDict:                                           #run code if time out
@@ -317,7 +317,7 @@ def _wait(codeValue, df, objVar):
 
                     #runCodelist(CodeObject(df), run_code)
                     n = len(run_code)
-                    logger.info(f"   Action:{tmpDict['run_code'][index]}, {n} steps:{run_code} {[objVar] * n}")
+                    logger.debug(f"   Action:{tmpDict['run_code'][index]}, {n} steps:{run_code} {[objVar] * n}")
 
                     return run_code, [df] * n, [objVar] * n
                     #return run_code, [df], [objVar]
@@ -354,27 +354,27 @@ def _waitDisappear(codeValue, df, objVar):
     logger = get_run_logger()
     tmpDict = parseArguments('time_sec,identifier,run_code,run_code_until',codeValue)  #items = 'wait:15:ID:codeA'
     time_sec = int(tmpDict['time_sec'])
-    logger.info('checking 1...')
+    logger.debug('checking 1...')
     if 'identifier' in tmpDict:                 # do while identifier is found - r.exist
-        logger.info(f"   identifier = {tmpDict['identifier']}")
+        logger.debug(f"   identifier = {tmpDict['identifier']}")
         if not waitIdentifierDisappear(tmpDict['identifier'], time_sec, 1, False):         #waitIdentifierExist(identifier, time_seconds, interval) - returns true or false
-            logger.info(f"   Time out from waiting', level = 'warning'")                    #raise CriticalAccessFailure("TXT logon window did not appear")
+            logger.warning(f"   Time out from waiting', level = 'warning'")                    #raise CriticalAccessFailure("TXT logon window did not appear")
             if 'run_code' in tmpDict:                                           #run code if time out
                 run_code = dfObjList(df, tmpDict['run_code'])
                 if 'run_code_until' in tmpDict:
-                    logger.info(f"'Time out - run code:', run_code = {run_code}, run_code_until = {tmpDict['run_code_until']}, level = 'debug'")
+                    logger.debug(f"'Time out - run code:', run_code = {run_code}, run_code_until = {tmpDict['run_code_until']}, level = 'debug'")
                     #runCodelist(CodeObject(df), run_code, '', tmpDict['run_code_until'])
                     n = len(run_code)
                     return run_code, [df] * n, [objVar] * n
                 else:                                                           
-                    logger.info(f"'      Time out - run code:', run_code = {run_code}, level = 'warning'")
+                    logger.warning(f"'      Time out - run code:', run_code = {run_code}, level = 'warning'")
                     #runCodelist(CodeObject(df), run_code)
                     n = len(run_code)
                     return run_code, [df] * n, [objVar] * n
         else:
             return [], [], []
     else:
-        logger.info(f"'wait', time_sec = {time_sec}")
+        logger.debug(f"'wait', time_sec = {time_sec}")
         time.sleep(time_sec)
         # r.wait(time_sec)
         return [], [], []
@@ -420,7 +420,7 @@ def _createPDF(codeValue, df):
         #if imagelist == '': imagelist = ''
         if imagelist == None:
             #imagelist = ''
-            logger.info('Error - no imagelist ...')
+            logger.error('Error - no imagelist ...')
         else:
             if 'outputPath' in tmpDict:
                 #logg('outputPath', content = tmpDict['outputPath'])  # D:\\iCristal\\
@@ -483,7 +483,7 @@ def _runExcelMacro(codeValue):
             wbClose = False
 
     xl.Visible = False
-    logger.info(f"   excel {excel.__str__()} workBookName {workBookName.__str__()} macro {macro}")
+    logger.debug(f"   excel {excel.__str__()} workBookName {workBookName.__str__()} macro {macro}")
     wb = xl.Workbooks.Open(excel)
     xl.Application.Run(macro)
     wb.Save()
@@ -524,7 +524,7 @@ def _runJupyterNb(codeValue):
     nb_file = codeValue.split(',', 1)[0].strip()
     jsonString = codeValue.split(',', 1)[1].strip()
 
-    logger.info(f"       Run Jupyter Notebook = {nb_file}, Parameters = {jsonString}")
+    logger.debug(f"       Run Jupyter Notebook = {nb_file}, Parameters = {jsonString}")
 
     from auto_initialize import checkWorkDirectory
     from pathlib import Path, PureWindowsPath
@@ -965,13 +965,13 @@ def _runInBackground():
     runInBackground()
 
 #@task
-def _initilizeRPA():
+def _initializeRPA():
     logger = get_run_logger()
     #if not browserDisable:
     #r.init()
     instantiatedRPA = r.init(visual_automation = True)
     #logg('Initialize RPA', result = instantiatedRPA, level = 'info')
-    logger.info(f"       Initialize RPA = {instantiatedRPA}")
+    logger.debug(f"       Initialize RPA = {instantiatedRPA}")
 
 
 #@task
@@ -979,7 +979,7 @@ def _closeRPA():
     logger = get_run_logger()
     #if not browserDisable:
     instantiatedRPA = r.close()    
-    logger.info(f"       Close RPA = {instantiatedRPA}")
+    logger.debug(f"       Close RPA = {instantiatedRPA}")
     #logg('Close RPA ', result = instantiatedRPA, level = 'info')
 
 #@task
@@ -998,7 +998,7 @@ def _url(codeValue, df):
         url_value = dfKey_value(df, key)
         #print('      ','URL:',key, url_value) #, type(url_value))
         #logger.info(f"      DEBUG url: ', VARIABLE_TYPE = {type(url_value)}, key = {key}, url_value = {url_value}")
-        logger.info(f"      Open URL: {url_value}")
+        logger.debug(f"      Open URL: {url_value}")
 
     import math
     #x = float('nan')

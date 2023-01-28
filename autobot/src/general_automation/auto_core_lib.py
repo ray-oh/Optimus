@@ -43,7 +43,7 @@ def runCodelist(df: pd.DataFrame, codeList: list, run_code_until: str = '', objV
     if run_code_until != '':
         codeList = codeList[:int(run_code_until)]
         print('******************************ERROR !!!!! **************************************')
-        logger.info(f"DEBUG *** codeList sliced ****', codeList = {codeList}, level = 'WARNING'")
+        logger.debug(f"DEBUG *** codeList sliced ****', codeList = {codeList}, level = 'WARNING'")
     while len(codeList) > 0:
         x = codeList[0]
         df = DFlist[0]
@@ -58,7 +58,7 @@ def runCodelist(df: pd.DataFrame, codeList: list, run_code_until: str = '', objV
         #logger.info(f">>>>>runCodelist ... popped :  {x} {df.__len__()} {objVar}")
          
         if isinstance(x, list):
-            logger.info(f"click', codeInCodeList = {x[0]}")
+            logger.debug(f"click', codeInCodeList = {x[0]}")
             #hoverClick(x[0], 2, 1, x[1], x[2]) # if a list is defined, call with offset x and y
         else:
             #try_catch(runCode(df, x, objVar), x)
@@ -117,7 +117,7 @@ def runCode(df, code, objVar=''):
         logger.info(f"RUN STEP | {codeBeforeTemplateUpdate}")
     if codeBeforeTemplateUpdate.strip() != code.strip():
         #print('       updated:', code)
-        logger.info(f"       updated:{code}")
+        logger.debug(f"       updated:{code}")
     if False: pass
         #elif codeID in commands_df['commands'].dropna().values.tolist():           #run Block of Code
         #pass

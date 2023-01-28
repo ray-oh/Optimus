@@ -213,7 +213,7 @@ STARTFILE = checkStartFile(STARTFILE, Path(PROGRAM_DIR) / "scripts")
 #logger.info(f"DEBUG config.py STARTFILE {STARTFILE}")
 
 if not checkFileValid(Path(STARTFILE)):
-    logger.info(f"SCRIPT START FILE INVALID - Check file path: {Path(STARTFILE)}")            
+    logger.critical(f"SCRIPT START FILE INVALID - Check file path: {Path(STARTFILE)}")            
     raise ValueError(f"Start File Error {STARTFILE}")
     exit
 else:
@@ -237,5 +237,5 @@ else:
 
 #checkSaveSettings(SETTINGS, SETTINGS_PATH, configObj)  # save settings file if SETTINGS parameter = 1
 
-logger.info('CONFIGURATION SETTINGS completed ...')
+logger.debug('CONFIGURATION SETTINGS completed ...')
 

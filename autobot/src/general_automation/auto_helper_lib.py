@@ -74,7 +74,7 @@ def readExcelConfig(sheet, excel = config.STARTFILE):
 
         wbk = xw.Book(Path(excel).absolute().__str__())
         wbk.api.RefreshAll()
-        logger.info(f'Excel refreshed: {excel}')
+        logger.debug(f'Excel refreshed: {excel}')
 
         # two options to save
         wbk.save(Path(excel).absolute().__str__()) # this will overwrite the file
@@ -91,8 +91,8 @@ def readExcelConfig(sheet, excel = config.STARTFILE):
         command = "Get-Process | Where-Object {{$_.Name -Like '{}'}} ".format(processName)
         result = subprocess.run(["powershell.exe", command], capture_output=True)
         if len(result.stdout.decode('ASCII')) > 0:
-            logger.info("process killed" + result.stdout.decode('ASCII'))
-            print("process killed" + result.stdout.decode('ASCII'))
+            logger.warning("process killed" + result.stdout.decode('ASCII'))
+            #print("process killed" + result.stdout.decode('ASCII'))
 
         df = pd.read_excel(excel, sheet_name=sheet)
         #df = df[['Type','Object','Key','Value']][df.Key.notna()]
@@ -159,13 +159,13 @@ def refreshExcel(excel = ''):
         if os.path.exists(f):
             try:
                 os.rename(f, f)
-                logger.info('Access on file "' + f.name +'" is available!')
+                logger.debug('Access on file "' + f.name +'" is available!')
             except OSError as e:
-                logger.info('Access-error on file "' + f.name + '"! \n' + str(e))
+                logger.critical('Access-error on file "' + f.name + '"! \n' + str(e))
         wb = office.Workbooks.Open(excel.__str__())
         #wb = office.Workbooks.Open('D:\Optimus-Prefect-Test1\scripts\cscKPI.xlsm')
     #wb = office.Workbooks.Open(workBookName)
-    logger.info(f"Refreshing workbook")        
+    logger.debug(f"Refreshing workbook")        
     wb.RefreshAll()
     office.CalculateUntilAsyncQueriesDone()
     wb.Save()
