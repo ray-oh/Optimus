@@ -9,7 +9,7 @@ EX_SOFTWARE = 2
 EX_OK = 0
 
 #logging
-log_space = "     "
+log_space = "          "
 
 from datetime import datetime, timedelta
 
@@ -45,6 +45,8 @@ variables['present']=None
 variables['exist']=None
 variables['count']=None
 variables['loopCount']=None
+variables['sentEmailCheck_hour']=3
+variables['sentEmailCheck_min']=15
 codeVersion = 'version 1.2'
 
 ######################## Initialize SETTINGS #######################

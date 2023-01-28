@@ -1263,7 +1263,9 @@ def _email(codeValue, df):
             #from auto_utility_email import sentEmailSubjectList
             #logger.info(f"#####>>>> sentEmailSubList, {len(sentEmailSubjectList)}")
             import datetime
-            sentEmailSubjectList = email_sender.getSentEmailSubjectList(sentEmailSubjectList = [], cutOffDateTme=datetime.datetime.today().replace(hour=0, minute=0, second=0, microsecond=0))
+            cutOffDateTme=datetime.datetime.today().replace(hour=int(variables['sentEmailCheck_hour']), minute=int(variables['sentEmailCheck_min']), second=0, microsecond=0)
+            logger.debug(f"{log_space}{cutOffDateTme}  {variables['sentEmailCheck_hour']}  {variables['sentEmailCheck_min']}")            
+            sentEmailSubjectList = email_sender.getSentEmailSubjectList(sentEmailSubjectList = [], cutOffDateTme=cutOffDateTme)
             if not Subject in sentEmailSubjectList or boolForce:
                 email_sender.send_email(boolDisplay=boolDisplay, boolRun=boolRun, EmailObj = emailObj)
                 logger.debug(f'{log_space}email SENT')

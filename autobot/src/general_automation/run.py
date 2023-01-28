@@ -27,8 +27,7 @@ initialize seting:  run -i 1 -pd D:\optimus_1.2
 #print("running run.py module start section")
 
 script_version = '2022.10.27'
-
-from config import log_space
+log_space = "          "
 
 from pathlib import Path, PureWindowsPath
 import sys, os

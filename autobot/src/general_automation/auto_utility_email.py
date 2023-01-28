@@ -347,7 +347,7 @@ class EmailsSender:
                 #    print("%s :: %s" % (str(timeReceived), sub.Subject))
                 if not str(sub.Subject) in subjectList:
                     #print("%s :: %s" % (str(timeReceived), sub.Subject))
-                    logMaillist = logMaillist + f"   {tzInfo2Naive(sub.ReceivedTime)}::{sub.Subject}\n"
+                    logMaillist = logMaillist + f"{log_space}{tzInfo2Naive(sub.ReceivedTime)}::{sub.Subject}\n"
                     subjectList = subjectList + [str(sub.Subject)]
             #logger.info(f"{tzInfo2Naive(sub.ReceivedTime)}::{sub.Subject}\n")
             logger.debug(f"{log_space}Folder item count: {folderItems.Count}, {logMaillist}" )
