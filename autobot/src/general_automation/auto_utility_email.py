@@ -34,11 +34,11 @@ src_file = Path.cwd() / 'mail.xlsx'
 #df = pd.read_excel(src_file)
 #df.head()
 
-today = datetime.datetime.today().replace(hour=0, minute=0, second=0, microsecond=0) #.strftime('%Y-%m-%d')
+#today = datetime.datetime.today().replace(hour=0, minute=0, second=0, microsecond=0) #.strftime('%Y-%m-%d')
 #print(today.strftime('%d/%m/%Y %H:%M %p'))
 
 #global sentEmailSubjectList
-sentEmailSubjectList = []
+#sentEmailSubjectList = []
 
 class EmailsSender:
     def __init__(self):
@@ -58,7 +58,7 @@ class EmailsSender:
             #self.outlook = win32.Dispatch('outlook.application')      
         except AttributeError:
             # using gencache may have AttributeError - if so, delete gen_py in temp folder and relauch com object
-            logger.info("AttributeError - relaunch COM object")
+            logger.error("AttributeError - relaunch COM object")
             f_loc = tempfolder #r'C:\Users\svc_supplychain\AppData\Local\Temp\gen_py'
             #for f in Path(f_loc):
             #    Path.unlink(f)
@@ -69,18 +69,23 @@ class EmailsSender:
         
         self.olOutbox = self.outlook.GetNamespace("MAPI").GetDefaultFolder(4) #outlook.olFolderOutbox)
 
+    def getSentEmailSubjectList(self, sentEmailSubjectList = [], cutOffDateTme = datetime.datetime.today().replace(hour=0, minute=0, second=0, microsecond=0)):
         # get list of previous sent items
         #import datetime
-        global today
+        #global today
         #print(today.strftime('%d/%m/%Y %H:%M %p'))
-        global sentEmailSubjectList
+        #global sentEmailSubjectList
+        #today = datetime.datetime.today().replace(hour=0, minute=0, second=0, microsecond=0) #.strftime('%Y-%m-%d')
+        #sentEmailSubjectList = []
         #print('>>>> sentEmailSubList',len(sentEmailSubjectList))
-        if len(sentEmailSubjectList) == 0: sentEmailSubjectList = self.folderItemsList(ofolder=5,dateRange_StartOn=today)          #.sentFolderList()                
+        if len(sentEmailSubjectList) == 0: sentEmailSubjectList = self.folderItemsList(ofolder=5,dateRange_StartOn=cutOffDateTme)          #.sentFolderList()                
         #print('>>>> sentEmailSubList',len(sentEmailSubjectList))
 
         #from auto_core_lib_helper import _ifObjectExist
         #print(_ifObjectExist('sentEmailSubjectList'))
         #if _ifObjectExist('sentEmailSubjectList'):
+
+        return sentEmailSubjectList
 
     def refreshMail(self):
         logger = get_run_logger()
@@ -104,7 +109,7 @@ class EmailsSender:
 
         from win32com.client import constants
         mpfInbox = nsp.GetDefaultFolder(constants.olFolderInbox)  #olFolderSentMail  #olFolderOutbox
-        logger.info("-----------------------------------refreshMail")
+        logger.debug("-----------------------------------refreshMail")
 
         #mpfInbox.InAppFoldersSyncObject = True
         objSyc.Start
@@ -126,7 +131,7 @@ class EmailsSender:
 
         from pathlib import Path
         try:
-            logger.info("Try 1 ,,,23")
+            logger.debug("Try 1 ,,,23")
             #office = win32com.client.Dispatch("Excel.Application",pythoncom.CoInitialize())
             import win32com.client as win32
             #xl=win32com.client.Dispatch("Excel.Application",pythoncom.CoInitialize())
@@ -136,7 +141,7 @@ class EmailsSender:
             self.olOutbox = self.outlook.GetNamespace("MAPI").GetDefaultFolder(4) #outlook.olFolderOutbox)
 
         except AttributeError:
-            logger.info("Try 2")
+            logger.debug("Try 2")
 
             f_loc = r'C:\Users\svc_supplychain\AppData\Local\Temp\gen_py'
             for f in Path(f_loc):
@@ -148,7 +153,7 @@ class EmailsSender:
     def temp():
         logger = get_run_logger()
         try:
-            logger.info("Try 1")
+            logger.debug("Try 1")
 
             from win32com import client as win32
             #self.outlook = win32.gencache.EnsureDispatch('outlook.application')
@@ -156,7 +161,7 @@ class EmailsSender:
             self.olOutbox = self.outlook.GetNamespace("MAPI").GetDefaultFolder(4) #outlook.olFolderOutbox)
             #xl = client.gencache.EnsureDispatch('Excel.Application')
         except AttributeError:
-            logger.info("Try 2")
+            logger.debug("Try 2")
 
             # Corner case dependencies.
             import os
@@ -182,7 +187,7 @@ class EmailsSender:
         mail = self.outlook.CreateItem(0)
 
         if not boolRun: 
-            logger.info(f"   Skip run:{not boolRun}")
+            logger.debug(f"   Skip run:{not boolRun}")
             return  # skip send_email if boolRun is False
 
         for key,value in members.items():
@@ -249,7 +254,7 @@ class EmailsSender:
         #olOutbox = self.outlook.GetNamespace("MAPI").GetDefaultFolder(4) #outlook.olFolderOutbox)
         #print('Count:', self.olOutbox.Items.Count)
         #logger.info('   ###################################################')
-        logger.info(f"   Outbox sending in progress - outbox item count: {self.outlook.GetNamespace('MAPI').GetDefaultFolder(4).Items.Count}" )
+        logger.debug(f"   Outbox sending in progress - outbox item count: {self.outlook.GetNamespace('MAPI').GetDefaultFolder(4).Items.Count}" )
         #logger.info(f"Outbox Items: {self.outlook.GetNamespace('MAPI').GetDefaultFolder(4).Items[1].Subject}" )
         import time
         for i in range(timeOut):
@@ -257,14 +262,14 @@ class EmailsSender:
             itemsInOutbox = self.outlook.GetNamespace("MAPI").GetDefaultFolder(4).Items.Count
             if itemsInOutbox == 0: return True #break
             time.sleep(1) # Sleep for 1 seconds           
-            logger.info(f"   Timeout countdown {i} to {timeOut}.  Outbox item count: {itemsInOutbox}")
+            logger.debug(f"   Timeout countdown {i} to {timeOut}.  Outbox item count: {itemsInOutbox}")
 
-        logger.info('   Timeout:' + str(itemsInOutbox))
+        logger.debug('   Timeout:' + str(itemsInOutbox))
         return False
     
     def sentFolderList(self):
         logger = get_run_logger()
-        logger.info(f"Sentbox item count: {self.outlook.GetNamespace('MAPI').GetDefaultFolder(5).Items.Count}" )
+        logger.debug(f"Sentbox item count: {self.outlook.GetNamespace('MAPI').GetDefaultFolder(5).Items.Count}" )
 
         import win32com.client as win32
         import datetime
@@ -286,7 +291,7 @@ class EmailsSender:
         print(_sFilter_)
         #https://learn.microsoft.com/en-us/office/vba/api/outlook.items.restrict
         folderItems = sentfolder.Items.Restrict(_sFilter_)
-        logger.info(f"Folder item count: {folderItems.Count}" )
+        logger.debug(f"Folder item count: {folderItems.Count}" )
         #for message in sentfolder.Items.Restrict(_sFilter_):
         subjectList = []
         for message in folderItems:
@@ -343,7 +348,7 @@ class EmailsSender:
                     logMaillist = logMaillist + f"   {tzInfo2Naive(sub.ReceivedTime)}::{sub.Subject}\n"
                     subjectList = subjectList + [str(sub.Subject)]
             #logger.info(f"{tzInfo2Naive(sub.ReceivedTime)}::{sub.Subject}\n")
-            logger.info(f"   Folder item count: {folderItems.Count}, {logMaillist}" )
+            logger.debug(f"   Folder item count: {folderItems.Count}, {logMaillist}" )
             #logger.info(logMaillist)
 
         return subjectList

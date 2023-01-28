@@ -1237,7 +1237,7 @@ def _email(codeValue, df):
             #logger.info(objTableSet)
             #logger.info('columns')
             emailObj = json.loads(objTableSet.to_json(orient="columns"))
-            logger.info(f"   {emailObj}")
+            logger.debug(f"   {emailObj}")
     #logger.info(type(emailObj)) # dictionary object
 
     # Send email
@@ -1260,20 +1260,22 @@ def _email(codeValue, df):
             #logger.info(emailObj)
             email_sender = EmailsSender()
 
-            from auto_utility_email import sentEmailSubjectList
+            #from auto_utility_email import sentEmailSubjectList
             #logger.info(f"#####>>>> sentEmailSubList, {len(sentEmailSubjectList)}")
+            import datetime
+            sentEmailSubjectList = email_sender.getSentEmailSubjectList(sentEmailSubjectList = [], cutOffDateTme=datetime.datetime.today().replace(hour=0, minute=0, second=0, microsecond=0))
             if not Subject in sentEmailSubjectList or boolForce:
                 email_sender.send_email(boolDisplay=boolDisplay, boolRun=boolRun, EmailObj = emailObj)
-                logger.info('   email SENT')
+                logger.debug('   email SENT')
             else:
-                logger.info('   email NOT SENT - already sent')
+                logger.debug('   email NOT SENT - already sent')
         else:
-            logger.info('   boolRun is FALSE')
+            logger.debug('   boolRun is FALSE')
         #result = email_sender.wait_send_complete()
     except ValueError as e:
-        logger.info('error --', e)
+        logger.error('error --', e)
     except Exception as e:
-        logger.info(traceback.format_exc())
+        logger.error(traceback.format_exc())
         #logger.info('error --', e)
     #print('complete')
 
@@ -1296,7 +1298,7 @@ def _waitEmailComplete(codeValue, df):
  
     #email_sender.refreshMail()
  
-    logger.info('   Email complete = ' + str(result))
+    logger.debug('   Email complete = ' + str(result))
 
 
 def etest():    
