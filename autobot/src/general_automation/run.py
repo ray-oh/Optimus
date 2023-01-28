@@ -28,6 +28,8 @@ initialize seting:  run -i 1 -pd D:\optimus_1.2
 
 script_version = '2022.10.27'
 
+from config import log_space
+
 from pathlib import Path, PureWindowsPath
 import sys, os
 from datetime import datetime
@@ -100,7 +102,7 @@ def run(file = '', flowrun = 1, deploymentname = '', PROGRAM_DIR = '', startcode
     MODULE_PATH_lib = Path(f"{PROGRAM_DIR}/autobot/venv/Lib/site-packages").resolve().absolute().__str__()  #OPTIMUS_DIR
     #sys.path.append(MODULE_PATH_file)
     sys.path.append(MODULE_PATH_lib)
-    logger.debug(f"RPA start {startTime.strftime('%m/%d/%Y, %H:%M:%S')} | {HEADER} | \
+    logger.debug(f"{log_space}RPA start {startTime.strftime('%m/%d/%Y, %H:%M:%S')} | {HEADER} | \
         Version={script_version} | PROGRAM_DIR={PROGRAM_DIR}, current_DIR={current_DIR}, __file__={__file__} | \
             flowExecute file={file}, flowrun={flowrun}, deploymentname={deploymentname} | \
                 Module path: {MODULE_PATH_lib}")  # {MODULE_PATH_file} and  OPTIMUS_DIR={OPTIMUS_DIR}, 

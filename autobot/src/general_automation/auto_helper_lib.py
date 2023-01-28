@@ -74,7 +74,7 @@ def readExcelConfig(sheet, excel = config.STARTFILE):
 
         wbk = xw.Book(Path(excel).absolute().__str__())
         wbk.api.RefreshAll()
-        logger.debug(f'Excel refreshed: {excel}')
+        logger.debug(f'{log_space}Excel refreshed: {excel}')
 
         # two options to save
         wbk.save(Path(excel).absolute().__str__()) # this will overwrite the file
@@ -159,13 +159,13 @@ def refreshExcel(excel = ''):
         if os.path.exists(f):
             try:
                 os.rename(f, f)
-                logger.debug('Access on file "' + f.name +'" is available!')
+                logger.debug(f'{log_space}Access on file "' + f.name +'" is available!')
             except OSError as e:
                 logger.critical('Access-error on file "' + f.name + '"! \n' + str(e))
         wb = office.Workbooks.Open(excel.__str__())
         #wb = office.Workbooks.Open('D:\Optimus-Prefect-Test1\scripts\cscKPI.xlsm')
     #wb = office.Workbooks.Open(workBookName)
-    logger.debug(f"Refreshing workbook")        
+    logger.debug(f"{log_space}Refreshing workbook")        
     wb.RefreshAll()
     office.CalculateUntilAsyncQueriesDone()
     wb.Save()

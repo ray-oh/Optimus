@@ -8,6 +8,9 @@ EX_CONFIG = 1
 EX_SOFTWARE = 2
 EX_OK = 0
 
+#logging
+log_space = "     "
+
 from datetime import datetime, timedelta
 
 from run import PREFECT_DEPLOYMENT_RUN #, TEST1VAR, TEST2VAR
@@ -237,5 +240,5 @@ else:
 
 #checkSaveSettings(SETTINGS, SETTINGS_PATH, configObj)  # save settings file if SETTINGS parameter = 1
 
-logger.debug('CONFIGURATION SETTINGS completed ...')
+logger.debug(f'{log_space}CONFIGURATION SETTINGS completed ...')
 

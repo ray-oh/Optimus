@@ -16,7 +16,7 @@ Versions:
 from prefect import task, flow, get_run_logger, context
 from prefect.task_runners import SequentialTaskRunner
 
-from config import variables, constants, STARTFILE, CWD_DIR, IMAGE_DIR, yesterdayYYYYMMDD
+from config import variables, constants, STARTFILE, CWD_DIR, IMAGE_DIR, yesterdayYYYYMMDD, log_space
 from pathlib import Path, PureWindowsPath
 import rpa as r
 
@@ -190,7 +190,7 @@ def _iterate(codeValue, df, objVar):
             #logger.info(f"      objTableSet: {objTableSet.iloc[withHeader:, 0].values.tolist()}")
         else:
             objVarList = dfObjList(df, objVar, withHeader)
-        logger.debug(f"      LOOP over {codeValue}.  {objVar}:{objVarList}")
+        logger.debug(f"{log_space}LOOP over {codeValue}.  {objVar}:{objVarList}")
         #print(f"      Iteration list: {objVar}, {objVarList}")
         #logg('******** runIterate objVar:', objVar = objVar) # e.g. URL_Dclick_Pages
         #logg('******** runIterate sub_code:', sub_code = sub_code) # e.g. openPages
@@ -242,7 +242,7 @@ def _isCodeList(df, code, objVar):
     #runCodelist(CodeObject(df), sub_code)
     n = len(sub_code)
     logger = get_run_logger()
-    logger.debug(f"   Steps:{sub_code}")
+    logger.debug(f"{log_space}Steps:{sub_code}")
     return sub_code, [df] * n, [objVar] * n
 
 #@task
@@ -301,7 +301,7 @@ def _wait(codeValue, df, objVar):
             print('wait run code list', tmpDict['run_code'])
 
             logger = get_run_logger()
-            logger.debug(f"   Scenario list:{tmpDict['identifier']} Action list:{tmpDict['run_code']}")
+            logger.debug(f"{log_space}Scenario list:{tmpDict['identifier']} Action list:{tmpDict['run_code']}")
 
             matchBool, index = waitIdentifierExist(tmpDict['identifier'], time_sec, 1, False)         #waitIdentifierExist(identifier, time_seconds, interval) - returns true or false
             if not matchBool:
@@ -317,7 +317,7 @@ def _wait(codeValue, df, objVar):
 
                     #runCodelist(CodeObject(df), run_code)
                     n = len(run_code)
-                    logger.debug(f"   Action:{tmpDict['run_code'][index]}, {n} steps:{run_code} {[objVar] * n}")
+                    logger.debug(f"{log_space}Action:{tmpDict['run_code'][index]}, {n} steps:{run_code} {[objVar] * n}")
 
                     return run_code, [df] * n, [objVar] * n
                     #return run_code, [df], [objVar]
@@ -354,15 +354,15 @@ def _waitDisappear(codeValue, df, objVar):
     logger = get_run_logger()
     tmpDict = parseArguments('time_sec,identifier,run_code,run_code_until',codeValue)  #items = 'wait:15:ID:codeA'
     time_sec = int(tmpDict['time_sec'])
-    logger.debug('checking 1...')
+    logger.debug(f'{log_space}checking 1...')
     if 'identifier' in tmpDict:                 # do while identifier is found - r.exist
-        logger.debug(f"   identifier = {tmpDict['identifier']}")
+        logger.debug(f"{log_space}identifier = {tmpDict['identifier']}")
         if not waitIdentifierDisappear(tmpDict['identifier'], time_sec, 1, False):         #waitIdentifierExist(identifier, time_seconds, interval) - returns true or false
             logger.warning(f"   Time out from waiting', level = 'warning'")                    #raise CriticalAccessFailure("TXT logon window did not appear")
             if 'run_code' in tmpDict:                                           #run code if time out
                 run_code = dfObjList(df, tmpDict['run_code'])
                 if 'run_code_until' in tmpDict:
-                    logger.debug(f"'Time out - run code:', run_code = {run_code}, run_code_until = {tmpDict['run_code_until']}, level = 'debug'")
+                    logger.debug(f"{log_space}Time out - run code: run_code = {run_code}, run_code_until = {tmpDict['run_code_until']}, level = 'debug'")
                     #runCodelist(CodeObject(df), run_code, '', tmpDict['run_code_until'])
                     n = len(run_code)
                     return run_code, [df] * n, [objVar] * n
@@ -374,7 +374,7 @@ def _waitDisappear(codeValue, df, objVar):
         else:
             return [], [], []
     else:
-        logger.debug(f"'wait', time_sec = {time_sec}")
+        logger.debug(f"{log_space}wait time_sec = {time_sec}")
         time.sleep(time_sec)
         # r.wait(time_sec)
         return [], [], []
@@ -483,7 +483,7 @@ def _runExcelMacro(codeValue):
             wbClose = False
 
     xl.Visible = False
-    logger.debug(f"   excel {excel.__str__()} workBookName {workBookName.__str__()} macro {macro}")
+    logger.debug(f"{log_space}excel {excel.__str__()} workBookName {workBookName.__str__()} macro {macro}")
     wb = xl.Workbooks.Open(excel)
     xl.Application.Run(macro)
     wb.Save()
@@ -524,7 +524,7 @@ def _runJupyterNb(codeValue):
     nb_file = codeValue.split(',', 1)[0].strip()
     jsonString = codeValue.split(',', 1)[1].strip()
 
-    logger.debug(f"       Run Jupyter Notebook = {nb_file}, Parameters = {jsonString}")
+    logger.debug(f"{log_space}Run Jupyter Notebook = {nb_file}, Parameters = {jsonString}")
 
     from auto_initialize import checkWorkDirectory
     from pathlib import Path, PureWindowsPath
@@ -971,7 +971,7 @@ def _initializeRPA():
     #r.init()
     instantiatedRPA = r.init(visual_automation = True)
     #logg('Initialize RPA', result = instantiatedRPA, level = 'info')
-    logger.debug(f"       Initialize RPA = {instantiatedRPA}")
+    logger.debug(f"{log_space}Initialize RPA = {instantiatedRPA}")
 
 
 #@task
@@ -979,7 +979,7 @@ def _closeRPA():
     logger = get_run_logger()
     #if not browserDisable:
     instantiatedRPA = r.close()    
-    logger.debug(f"       Close RPA = {instantiatedRPA}")
+    logger.debug(f"{log_space}Close RPA = {instantiatedRPA}")
     #logg('Close RPA ', result = instantiatedRPA, level = 'info')
 
 #@task
@@ -998,7 +998,7 @@ def _url(codeValue, df):
         url_value = dfKey_value(df, key)
         #print('      ','URL:',key, url_value) #, type(url_value))
         #logger.info(f"      DEBUG url: ', VARIABLE_TYPE = {type(url_value)}, key = {key}, url_value = {url_value}")
-        logger.debug(f"      Open URL: {url_value}")
+        logger.debug(f"{log_space}Open URL: {url_value}")
 
     import math
     #x = float('nan')
@@ -1045,7 +1045,7 @@ def _read(codeValue):
 def _checkVariable(codeValue):
     logger = get_run_logger()
     variableValue = variables[codeValue]
-    logger.info(f"checkVariable:', key = {codeValue}, variableValue = {variableValue}")
+    logger.debug(f"{log_space}checkVariable:', key = {codeValue}, variableValue = {variableValue}")
 
 #@task
 def _set(codeValue):
@@ -1237,7 +1237,7 @@ def _email(codeValue, df):
             #logger.info(objTableSet)
             #logger.info('columns')
             emailObj = json.loads(objTableSet.to_json(orient="columns"))
-            logger.debug(f"   {emailObj}")
+            logger.debug(f"{log_space}{emailObj}")
     #logger.info(type(emailObj)) # dictionary object
 
     # Send email
@@ -1266,11 +1266,11 @@ def _email(codeValue, df):
             sentEmailSubjectList = email_sender.getSentEmailSubjectList(sentEmailSubjectList = [], cutOffDateTme=datetime.datetime.today().replace(hour=0, minute=0, second=0, microsecond=0))
             if not Subject in sentEmailSubjectList or boolForce:
                 email_sender.send_email(boolDisplay=boolDisplay, boolRun=boolRun, EmailObj = emailObj)
-                logger.debug('   email SENT')
+                logger.debug(f'{log_space}email SENT')
             else:
-                logger.debug('   email NOT SENT - already sent')
+                logger.debug(f'{log_space}email NOT SENT - already sent')
         else:
-            logger.debug('   boolRun is FALSE')
+            logger.debug(f'{log_space}boolRun is FALSE')
         #result = email_sender.wait_send_complete()
     except ValueError as e:
         logger.error('error --', e)
@@ -1290,7 +1290,7 @@ def _waitEmailComplete(codeValue, df):
     #result2 = email_sender.folderItemsList(ofolder=5,dateRange_StartOn=today)          #.sentFolderList()
     #print(result2)
     
-    from auto_utility_email import today, sentEmailSubjectList
+    #from auto_utility_email import today, sentEmailSubjectList
     #global today
     #global sentEmailSubjectList
     #print(today.strftime('%d/%m/%Y %H:%M %p'), sentEmailSubjectList)
@@ -1298,7 +1298,7 @@ def _waitEmailComplete(codeValue, df):
  
     #email_sender.refreshMail()
  
-    logger.debug('   Email complete = ' + str(result))
+    logger.debug(f'{log_space}Email complete = ' + str(result))
 
 
 def etest():    
