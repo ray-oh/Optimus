@@ -55,7 +55,9 @@ Refer to the DOCUMENTATION section below for further technical information on th
     - Each new release can also be installed over a previous release as an upgrade.  
       Normally, an upgrade installation will not remove existing user files.  But it may overwrite existing scripts files with same name.
       Backup your scripts folder to avoid problems.
-    - Click here for the latest stable [installation package](./installation).  And run the installation batch file with the package directly in the root directory of the folder where you wish to install OPTIMUS.  We recommend to keep the name of the program folder as Optimus.
+    - Click here for the latest stable [installation package](./installation).  And run the installation batch file with the package directly in the root directory of the folder where you wish to install OPTIMUS.  We recommend to keep the name of the program folder as Optimus.  
+#### Installation issues
+- [SQLite ‘no such table: json_each’](https://github.com/PrefectHQ/prefect/issues/5970) - potential issue with python / SQLite version.  Ensure python version 3.9 or 3.10 is used.  
 
 ### USAGE
 - Use `runRPA.bat` to launch RPA program.  Requires to specify an Excel script file.
