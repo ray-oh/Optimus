@@ -6,7 +6,7 @@ Commercial equivalents of such tools would be alteryx, tableau prep.  Which are 
 
 There are some a number of alternative open source options - which come at zero cost - and are more open in integration with python and pandas.  In fact many of such solutions are built upon standard pandas and other python libraries.
 The following open source data exploration tools have been evaluated for integration with OPTIMUS, including:
-- [mito](https://www.trymito.io/) This solution has been selected for inclusion in the OPTIMUS package as its the most mature among the evaluated tools in terms of user interface and features.
+- [mito](https://www.trymito.io/) This solution has been selected for inclusion in the OPTIMUS package as its the most mature among the evaluated tools in terms of user interface and features.  Here is an youtube video [review on mito](https://www.youtube.com/watch?v=js4iaGQvTAo&list=PLtqF5YXg7GLkskjS9D2PSIwKV6HUuWkXo&index=14)
 - [bamboolib](https://docs.bamboolib.8080labs.com/)
 - [pandas GUI](https://github.com/adamerose/PandasGUI).  Youtube [Video](https://www.youtube.com/watch?v=F8mSlETrcl8&list=PLtqF5YXg7GLkskjS9D2PSIwKV6HUuWkXo&index=20) on how to use PandasGUI for Exploratory Data Analysis and Data Science
 - [pandas ui](https://github.com/arunnbaba/pandas_ui) 
@@ -16,7 +16,8 @@ The following open source data exploration tools have been evaluated for integra
 [mito](https://www.trymito.io/) is a GUI front end to python pandas for data analysis.  It provides a familiar EXCEL spreadsheet interface for automating python data analysis, without need to learn coding in python and pandas.
 
 Installing mito
-
+````
+```
 D:\Optimus\autobot>.\venv\Scripts\activate
 
 (venv) D:\Optimus\autobot>python -m pip install mitoinstaller
@@ -88,3 +89,5 @@ error uploading: HTTPSConnectionPool(host='api.segment.io', port=443): Max retri
 [W 2023-03-04 06:15:22.314 ServerApp] Got events for closed stream <zmq.eventloop.zmqstream.ZMQStream object at 0x0000013A78C1F0D0>
 [I 2023-03-04 06:17:17.731 ServerApp] Saving file at /mito-starter-notebook.ipynb
 [I 2023-03-04 06:17:32.795 ServerApp] Starting buffering for f203d1e0-305e-44d0-8bfc-fb0e79cfe295:9db3962e-dbb2-48e8-b0a1-069fbfbed05d
+```
+````
