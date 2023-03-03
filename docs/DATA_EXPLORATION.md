@@ -12,7 +12,7 @@ The following open source data exploration tools have been evaluated for integra
 - [pandas ui](https://github.com/arunnbaba/pandas_ui) 
 
 Some other reviews on data exploratory solutions for reference:
-[4 Python Tools Every Data Scientist Should Start Using - pandas GUI, mito, lux, bokeh](https://medium.com/trymito/4-python-tools-every-data-scientist-should-start-using-f1a3be18d2c9)
+- [4 Python Tools Every Data Scientist Should Start Using - pandas GUI, mito, lux, bokeh](https://medium.com/trymito/4-python-tools-every-data-scientist-should-start-using-f1a3be18d2c9)
 
 # mito - automate entire spreadsheet workflows without having to learn Python
 
