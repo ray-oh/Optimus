@@ -11,6 +11,9 @@ The following open source data exploration tools have been evaluated for integra
 - [pandas GUI](https://github.com/adamerose/PandasGUI).  Youtube [Video](https://www.youtube.com/watch?v=F8mSlETrcl8&list=PLtqF5YXg7GLkskjS9D2PSIwKV6HUuWkXo&index=20) on how to use PandasGUI for Exploratory Data Analysis and Data Science
 - [pandas ui](https://github.com/arunnbaba/pandas_ui) 
 
+Some other reviews on data exploratory solutions for reference:
+[4 Python Tools Every Data Scientist Should Start Using - pandas GUI, mito, lux, bokeh](https://medium.com/trymito/4-python-tools-every-data-scientist-should-start-using-f1a3be18d2c9)
+
 # mito - automate entire spreadsheet workflows without having to learn Python
 
 [mito](https://www.trymito.io/) is a GUI front end to python pandas for data analysis.  It provides a familiar EXCEL spreadsheet interface for automating python data analysis, without need to learn coding in python and pandas.
