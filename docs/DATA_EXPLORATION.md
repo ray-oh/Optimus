@@ -1,6 +1,15 @@
 # Data Exploration
 
-Data exploration tools installed with OPTIMUS include mito.
+Data exploration involves data cleansing, transformation, wrangling and quick profiling and visualizations.
+All these can be done with python pandas.  But there are a number of tools that make this easier without need for knowledge on python coding.
+Commercial equivalents of such tools would be alteryx, tableau prep.  Which are proprietary and have a high license cost.
+
+There are some a number of alternative open source options - which come at zero cost - and are more open in integration with python and pandas.  In fact many of such solutions are built upon standard pandas and other python libraries.
+The following open source data exploration tools have been evaluated for integration with OPTIMUS, including:
+- [mito](https://www.trymito.io/) This solution has been selected for inclusion in the OPTIMUS package as its the most mature among the evaluated tools in terms of user interface and features.
+- [bamboolib](https://docs.bamboolib.8080labs.com/)
+- [pandas GUI](https://github.com/adamerose/PandasGUI).  [Video](https://www.youtube.com/watch?v=F8mSlETrcl8&list=PLtqF5YXg7GLkskjS9D2PSIwKV6HUuWkXo&index=20) on how  to use PandasGUI for Exploratory Data Analysis and Data Science
+- [pandas ui](https://github.com/arunnbaba/pandas_ui) 
 
 # mito - automate entire spreadsheet workflows without having to learn Python
 
