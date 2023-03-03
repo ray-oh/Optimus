@@ -1,3 +1,7 @@
+# Data Exploration
+
+Data exploration tools installed with OPTIMUS include mito.
+
 # mito - automate entire spreadsheet workflows without having to learn Python
 
 [mito](https://www.trymito.io/) is a GUI front end to python pandas for data analysis.  It provides a familiar EXCEL spreadsheet interface for automating python data analysis, without need to learn coding in python and pandas.
