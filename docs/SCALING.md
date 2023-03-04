@@ -6,7 +6,9 @@ In this video we benchmark some of the python pandas alternative libraries and b
 [The BEST library for building Data Pipelines...](https://www.youtube.com/watch?v=mi9f9zOaqM8)
 Building data pipelines with #python is an important skill for data engineers and data scientists. But what's the best library to use? In this video we look at three options: pandas, polars, and spark (pyspark).
 
-modin
+[Scaling Pandas: Comparing Dask, Ray, Modin, Vaex, and RAPIDS](https://www.datarevenue.com/en-blog/pandas-vs-dask-vs-vaex-vs-modin-vs-rapids-vs-ray#:~:text=Dask%3A%20a%20low%2Dlevel%20scheduler,by%20either%20Dask%20or%20Ray.)
+
+## [modin](https://modin.readthedocs.io/en/stable/)
 [Alejandro Herrera - Supercharging your pandas workflows with Modin | PyData Global 2022](https://www.youtube.com/watch?v=PqXSJnewFnI)
 
 ![image](https://user-images.githubusercontent.com/115925194/222877428-6e20587f-c6fa-414a-b8a3-0bb06af074b3.png)
