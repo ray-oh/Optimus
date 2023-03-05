@@ -32,7 +32,7 @@ Copy and run this in Jupyter Notebook:
 import mitosheet
 mitosheet.sheet()
 ```
-Installation log.  Potential delay in installation due to expired certificate.
+Installation log.  Potential delay in installation due to [SSL certificate warning](https://github.com/segmentio/analytics-python/issues/142)
 ```
 D:\Optimus\autobot>.\venv\Scripts\activate
 
