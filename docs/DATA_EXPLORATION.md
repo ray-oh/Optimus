@@ -16,7 +16,7 @@ The following open source data exploration tools have been evaluated for integra
 Some other reviews on data exploratory solutions for reference:
 - [4 Python Tools Every Data Scientist Should Start Using - pandas GUI, mito, lux, bokeh](https://medium.com/trymito/4-python-tools-every-data-scientist-should-start-using-f1a3be18d2c9)
 - [Dtale - easy way to view & analyze Pandas data structures](https://github.com/man-group/dtale) 
-    - [D-Tale The Best Library To Perform Exploratory Data Analysis Using Single Line Of Code]([https://github.com/segmentio/analytics-python/issues/142](https://towardsdatascience.com/d-tale-for-fast-and-easy-exploratory-data-analysis-of-well-log-data-a2ffca5295b6))
+    - [D-Tale The Best Library To Perform Exploratory Data Analysis Using Single Line Of Code](https://towardsdatascience.com/d-tale-for-fast-and-easy-exploratory-data-analysis-of-well-log-data-a2ffca5295b6)
 - [LUX - A Python API for Intelligent Visual Discovery](https://github.com/lux-org/lux)
 
 # mito - automate entire spreadsheet workflows without having to learn Python
