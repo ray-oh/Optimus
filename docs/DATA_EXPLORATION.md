@@ -18,8 +18,21 @@ Some other reviews on data exploratory solutions for reference:
 
 [mito](https://www.trymito.io/) is a GUI front end to python pandas for data analysis.  It provides a familiar EXCEL spreadsheet interface for automating python data analysis, without need to learn coding in python and pandas.
 
-Installing mito
-````
+## Installing mito
+Install the Mito installer:
+```
+python -m pip install mitoinstaller
+```
+Run installer:
+```
+python -m mitoinstaller install
+```
+Copy and run this in Jupyter Notebook:
+```
+import mitosheet
+mitosheet.sheet()
+```
+Installation log.  Potential delay in installation due to expired certificate.
 ```
 D:\Optimus\autobot>.\venv\Scripts\activate
 
@@ -93,4 +106,4 @@ error uploading: HTTPSConnectionPool(host='api.segment.io', port=443): Max retri
 [I 2023-03-04 06:17:17.731 ServerApp] Saving file at /mito-starter-notebook.ipynb
 [I 2023-03-04 06:17:32.795 ServerApp] Starting buffering for f203d1e0-305e-44d0-8bfc-fb0e79cfe295:9db3962e-dbb2-48e8-b0a1-069fbfbed05d
 ```
-````
+
