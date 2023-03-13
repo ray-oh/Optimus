@@ -93,7 +93,9 @@ OPTIMUS also natively leverages many other python packages for additional featur
 - [Pandas](https://pypi.org/project/pandas/): for data analysis
   - [Matplotlib](https://pypi.org/project/matplotlib/): comprehensive library for creating static, animated, and interactive visualizations in Python
 - [Pillow](https://pypi.org/project/Pillow/): for image processing
-- [dataframe-image](https://pypi.org/project/dataframe-image/): to export dataframe output as image files
+- [dataframe-image](https://pypi.org/project/dataframe-image/) / [Github](https://github.com/dexplo/dataframe_image): to export dataframe output as image files
+  - [HTML2Image](https://pypi.org/project/html2image/) - alternative.  Also relies on chrome browser
+  - [Visualize and save full dataframes as images](https://randomds.com/2021/12/23/visualize-and-save-full-pandas-dataframes-as-images/)
 - [xlwings](https://www.xlwings.org/): for Excel automation 
   - it also leverages common windows COM components for Outlook integration, OneDrive Sync Client for OneDrive / Sharepoint / Teams integration.
 
