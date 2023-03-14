@@ -100,6 +100,11 @@ OPTIMUS also natively leverages many other python packages for additional featur
 - [xlwings](https://www.xlwings.org/): for Excel automation 
   - it also leverages common windows COM components for Outlook integration, OneDrive Sync Client for OneDrive / Sharepoint / Teams integration.
 
+There are some on-going enhancements of OPTIMUS that have yet to be fully incorporated into the solution.  Please contact the developer for further details:
+- integrate [data exploration tools like mitos, DTale, Lux](https://github.com/ray-oh/Optimus/blob/master/docs/DATA_EXPLORATION.md).  These are tools that simplify working with Pandas by offering a GUI front end.
+- components that allow further [scaling of the solution to handle big data e.g > 10TB without resorting to Spark](https://github.com/ray-oh/Optimus/blob/master/docs/SCALING.md)
+- building a GUI front end for writing OPTIMUS RPA commands
+
 ### PROGRAM TECHNICAL INFORMATION
 Pre-requisites:
 - Windows 10 or Windows 10 Enterprise Server.
