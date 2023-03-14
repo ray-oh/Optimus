@@ -12,6 +12,7 @@ The following open source data exploration tools have been evaluated for integra
     - Youtube [Video](https://www.youtube.com/watch?v=F8mSlETrcl8&list=PLtqF5YXg7GLkskjS9D2PSIwKV6HUuWkXo&index=20) on how to use PandasGUI for Exploratory Data Analysis and Data Science
     - [Analysing data with pandas gui](https://flowygo.com/en/blog/pandasgui-graphical-user-interface-for-analyzing-data-with-pandas/)
 - [pandas ui](https://github.com/arunnbaba/pandas_ui) 
+- [pandas table data explore application](https://pypi.org/project/pandastable/) - useful for data analysts and programmers who want to get an initial interactive look at their tabular data without coding
 
 Some other reviews on data exploratory solutions for reference:
 - [4 Python Tools Every Data Scientist Should Start Using - pandas GUI, mito, lux, bokeh](https://medium.com/trymito/4-python-tools-every-data-scientist-should-start-using-f1a3be18d2c9)
