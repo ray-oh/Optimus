@@ -78,8 +78,10 @@ def main_flow(startfile, startsheet, startcode, background, program_dir):
     if not browserDisable and not instantiatedRPA:
         instantiatedRPA = r.close()    
         #logger.info(f"'DEBUG run.py/main_flow Close RPA ', result = {instantiatedRPA}, level = 'info'")
-
     #logger.info(f"DEBUG run.py/main_flow Complete RPA flow:{startcode}")
+    from auto_helper_lib import Window, process_list
+    processResult = process_list(name='', minutes=30)
+    #selectedWindows = Window()
 
     return
 
@@ -97,16 +99,22 @@ def run(file = '', flowrun = 1, deploymentname = '', PROGRAM_DIR = '', startcode
     #OPTIMUS_DIR = os.getenv('OPTIMUS_DIR')  #D:\Optimus-Prefect-Test1
     # deployment run or normal run or deploy to prefect
     # module paths
-    #MODULE_PATH_file = Path(__file__).parents[0].resolve().absolute().__str__()
+    MODULE_PATH_file = Path(__file__).parents[0].resolve().absolute().__str__()
     MODULE_PATH_lib = Path(f"{PROGRAM_DIR}/autobot/venv/Lib/site-packages").resolve().absolute().__str__()  #OPTIMUS_DIR
-    #sys.path.append(MODULE_PATH_file)
+    sys.path.append(MODULE_PATH_file)
     sys.path.append(MODULE_PATH_lib)
     logger.debug(f"{log_space}RPA start {startTime.strftime('%m/%d/%Y, %H:%M:%S')} | {HEADER} | \
         Version={script_version} | PROGRAM_DIR={PROGRAM_DIR}, current_DIR={current_DIR}, __file__={__file__} | \
             flowExecute file={file}, flowrun={flowrun}, deploymentname={deploymentname} | \
-                Module path: {MODULE_PATH_lib}")  # {MODULE_PATH_file} and  OPTIMUS_DIR={OPTIMUS_DIR}, 
+                Module path: {MODULE_PATH_lib} and {MODULE_PATH_file}")  # and  OPTIMUS_DIR={OPTIMUS_DIR}, 
     #logger.debug(f"Module path: {MODULE_PATH_file} | {MODULE_PATH_lib}")
     #logger.info(f"sys path: {sys.path}")
+
+    from auto_helper_lib import Window, process_list
+    processResult = process_list(name='', minutes=30)
+    #selectedWindows = windows_getTitle(name='')
+    selectedWindows = Window()
+    #logger.debug(f'{log_space}Windows: {selectedWindows.title}')
 
     # if not deployment run i.e. normal run
     #print(f"Context ... {context.get_run_context().flow_run.deployment_id}")
@@ -154,6 +162,9 @@ def run(file = '', flowrun = 1, deploymentname = '', PROGRAM_DIR = '', startcode
         if e.__str__() == "Excel.Application.Workbooks":
             logger.critical(f"kiil process: {killprocess('excel')}")
         raise ValueError(f"Software Error: {e}")
+
+    selectedWindows.getNew()
+    selectedWindows.closeNew()
 
     from auto_utility_dates import getDuration
     endTime = getDuration(startTime, datetime.now())

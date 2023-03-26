@@ -221,18 +221,51 @@ def _iterate(codeValue, df, objVar):
 
 #@task
 def _if(codeValue, df, objVar):
-    condition = codeValue.split(':',1)[0]
-    codeBlock = codeValue.split(':',1)[1]
+    logger = get_run_logger()    
+    # codeValue = condition : if true block, if false block or if empty then pass
+    condition = codeValue.split(':',1)[0].strip()
+    codeBlock = codeValue.split(':',1)[1].strip()
+    import re
+    match = re.findall( r"'''(.*?)'''", codeBlock)     # Output: ['cats', 'dogs']
+    # if codeBlock is encapsulated with ''' ''' then the internal is a statement
+    #print(match)
+    i = 0
+    for item in match:
+        codeBlock = codeBlock.replace(f"'''{item}'''", 'match'+str(i))
+        i = i+1
+    #print(codeBlock)
+    args = codeBlock.split('ELSE')
+    #args
+    if len(args)>0:
+        if 'match0' in codeBlock:
+            codeBlock1 = args[0].replace('match0', match[0]).strip()
+        else:
+            codeBlock1 = args[0].strip()
+        print(codeBlock1)        
+    if len(args)>1:
+        if 'match1' in codeBlock:
+            codeBlock2 = args[1].replace('match1', match[1]).strip()
+        else:
+            codeBlock2 = args[1].strip()
+        print(codeBlock2)
+    else:
+        codeBlock2 = 'pass'
+
     if objVar == None or objVar =="": objVar = " "
     #logg('if condition:', condition = condition, codeBlock = codeBlock)
-    print('      ', str(eval(condition)).upper(), ' : ', codeBlock)
+    logger.debug(f'{log_space}IF {str(eval(condition)).upper()} THEN {codeBlock1} ELSE {codeBlock2}')
+    
     if eval(condition):
         #logg('condition is true -----')
         #runCode(df, codeBlock)
-        return [codeBlock], [df], [objVar]
+        return [codeBlock1], [df], [objVar]
         #codeList = dfObjList(df, codeBlock)
         #runCodelist(df, codeList)
-    return [], [], []
+    else:
+        if codeBlock2 != 'pass':
+            return [codeBlock2], [df], [objVar]
+        else:
+            return [], [], []
 
 def _isCodeList(df, code, objVar):
     # parameterObjs(df)
@@ -967,12 +1000,21 @@ def _runInBackground():
 #@task
 def _initializeRPA():
     logger = get_run_logger()
+
+    from auto_helper_lib import Window, process_list
+    processResult = process_list(name='', minutes=5)
+    #selectedWindows = windows_getTitle(name='')
+    selectedWindows = Window()  # instantiate windows object with snapshot of existing windows
+    #logger.debug(f'{log_space}Windows: {selectedWindows.title}')
+
     #if not browserDisable:
     #r.init()
     instantiatedRPA = r.init(visual_automation = True)
     #logg('Initialize RPA', result = instantiatedRPA, level = 'info')
     logger.debug(f"{log_space}Initialize RPA = {instantiatedRPA}")
 
+    selectedWindows.getNew()    # get newly opened windows compared to previous snapshot
+    selectedWindows.focus(name='google chrome') # focus the newly opend window with name of
 
 #@task
 def _closeRPA():

@@ -33,6 +33,135 @@ from ctypes import windll
 from datetime import date, datetime, timedelta
 import time
 
+# manage windows
+# https://pypi.org/project/PyGetWindow/
+import pygetwindow as gw
+class Window:
+    def __init__(self):
+        '''instantiate a new windows object'''
+        self.title = []
+        self.new = []
+        self.win = []
+        self.snap()
+
+    def get(self, name=''):
+        '''returns list of all windows'''        
+        return gw.getWindowsWithTitle(name)
+
+    def getTitles(self, name=''):
+        '''returns titles of all windows'''        
+        return gw.getWindowsWithTitle(name)
+    
+    
+    def snap(self, name=''):
+        '''returns list of all windows'''        
+        logger = get_run_logger()    
+        selectedWindows = gw.getWindowsWithTitle(name)
+        win_list = []
+        title_list = []
+        for win in selectedWindows:
+            #if win.title != '':
+            #logger.debug(f'{log_space}Open Windows:{win.title}')
+            #print(f'{log_space}Open Windows:{win.title}')
+            win_list = win_list + [win]
+            title_list = title_list + [win.title]
+        #return result
+        #print(win_list, title_list)
+        logger.debug(f'{log_space}Windows snapshot:{title_list}')
+        self.win = win_list
+        self.title = title_list
+
+    def getNew(self):
+        new_set = self.get()
+        prev_set = self.win
+        #print(new_set,prev_set)
+        new = Diff(new_set, prev_set)
+        #self.win = new_set
+        self.new = new
+        #self.title = self._title()
+        return new
+
+    def getTitles(self, selection):
+        titles = []
+        for item in selection:
+            titles = titles + [item.title]
+        return titles
+    
+    def closeNew(self):
+        logger = get_run_logger()    
+        try:            
+            #print(f'closed {self.new}')
+            logger.debug(f'{log_space}Closed:{self.getTitles(self.new)}')
+            for win in self.new:
+                win.close()
+            self.new = []
+        except Exception as e:
+            logger.debug('none closed')
+            logger.debug(str(e))
+            pass
+
+    def focus(self, name=''):
+        '''bring selected window to front'''
+        logger = get_run_logger()    
+        try:
+            for win in self.new:
+                if name.lower() in str(win.title).lower():
+                    logger.debug(f'{log_space}Focus:{win.title}')
+                    win.minimize()
+                    win.restore()
+        except Exception as e:
+            logger.debug('error')
+            logger.debug(str(e))
+        
+        
+# Python code to get difference of two lists
+# Not using set()
+def Diff(li1, li2):
+    #li_dif = [i for i in li1 + li2 if i not in li1 or i not in li2]
+    li_dif = [i for i in li1 if i not in li2]
+    return li_dif    
+    
+# manage processes
+def process_kill(process=[]):
+    import psutil
+    import time
+    for proc in process:
+        try:
+            # Get process name & pid from process object.
+            processName = proc.name()
+            processID = proc.pid
+            etime = (time.time() - proc.create_time())/60/60 # in hours
+            print(processName , ' ::: ', processID, etime)
+            proc.kill()
+        except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
+            print('error')
+            pass
+
+def process_list(name='', minutes=30):
+    '''List processes less than time in min'''
+    logger = get_run_logger()
+    import psutil
+    import time
+    # Iterate over all running process
+    result = []
+    log_str = ''
+    for proc in psutil.process_iter():
+        try:
+            # Get process name & pid from process object.
+            processName = proc.name()
+            processID = proc.pid
+            etime = round((time.time() - proc.create_time())/60,1) # in minutes
+            if name in processName and etime < minutes:#etime < 60*30: #and not processName in 'svchost.exe python.exe msedge.exe conhost.exe TaniumCX.exe':
+                log_str = log_str + f"{log_space}{processName} ::: ID {processID} ::: {etime} min\n"
+                #print(f"{log_space}{processName} ::: {processID} {etime}")
+                result = result + [proc]
+            #logger.debug(f"{log_space}{processName} ::: {processID} {etime}")           
+        except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
+            pass
+    logger.debug(log_str) 
+    return result
+
+
 # import configuration Excel
 #def readExcelConfig(sheet, excel = '.\main.xlsx'):
 #mainExcelConfigFile = '.\main.xlsm'
