@@ -47,6 +47,12 @@ pip install jupyter
 for %%I in (.) do set CurrDirName=%%~nxI
 rem echo %CurrDirName%
 .\autobot\venv\Scripts\python -m ipykernel install --user --name=%CurrDirName%
+@echo ================ INSTALL MITO =================
+SET /P AREYOUSURE=Install Mito sheets for use in Jupyter Notebook - Are you sure (Y/[N])
+IF /I "%AREYOUSURE%" NEQ "Y" GOTO END1
+echo ... Installing Mito - may take some time ...
+.\autobot\venv\Scripts\python -m pip install mitoinstaller
+.\autobot\venv\Scripts\python -m mitoinstaller install
 @echo ================ INSTALLATION COMPLETED ==========================
 @echo To use Auto RPA - click runRPA.bat or from the command line with parameters
 call runRPA -i 1
