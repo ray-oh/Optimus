@@ -10,6 +10,7 @@ This is a list to track some known bugs and current resolution.
 
 - [refreshenv - to refresh the path environment if program fails with message of file not found](https://thecategorizer.com/windows/how-to-refresh-environment-variables-in-windows/)
   - Optimus will call some powershell commands.  Or some of the libraries will use the "where" system command to locate path of a program.  And this sometimes fails if the path variable is not working correctly.  Call this command could resolve the problem.
+  - if path variable is corrupted, refreshenv, echo %path%, copy result and reapply it in the windows to [recover the path variable](https://stackoverflow.com/questions/32015759/how-to-recover-deleted-environment-variables)
 
 
 
