@@ -43,7 +43,8 @@ time.ctime() method converts a time in seconds since the epoch to a string in lo
 [Pyperclip is a cross-platform Python module for copy and paste clipboard functions](https://pypi.org/project/pyperclip/)
 [Copy and paste text to the clipboard with pyperclip](https://note.nkmk.me/en/python-pyperclip-usage/)
 
-
+# Calculating Mix
+[Percentage of total with groupby](https://stackoverflow.com/questions/23377108/pandas-percentage-of-total-with-groupby)
 
 
 
