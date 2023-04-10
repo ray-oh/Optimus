@@ -80,7 +80,7 @@ def main_flow(startfile, startsheet, startcode, background, program_dir):
         #logger.info(f"'DEBUG run.py/main_flow Close RPA ', result = {instantiatedRPA}, level = 'info'")
     #logger.info(f"DEBUG run.py/main_flow Complete RPA flow:{startcode}")
     from auto_helper_lib import Window, process_list
-    processResult = process_list(name='', minutes=30)
+    processResult = process_list(name='', minutes=30) # get list of specific name process or all process (if name = '') started within last X min
     #selectedWindows = Window()
 
     return
@@ -110,11 +110,15 @@ def run(file = '', flowrun = 1, deploymentname = '', PROGRAM_DIR = '', startcode
     #logger.debug(f"Module path: {MODULE_PATH_file} | {MODULE_PATH_lib}")
     #logger.info(f"sys path: {sys.path}")
 
-    from auto_helper_lib import Window, process_list
+    from auto_helper_lib import Window, process_list, process_kill
     processResult = process_list(name='', minutes=30)
     #selectedWindows = windows_getTitle(name='')
     selectedWindows = Window()
     #logger.debug(f'{log_space}Windows: {selectedWindows.title}')
+
+    # Clean up processes - either run clean.bat or perform below kill process
+    #logger.debug(f"Process_kill xxx")
+    process_kill(process=['OUTLOOK.EXE','EXCEL.EXE', 'chrome.exe', 'Sikulix', 'CASPERJS', 'PHANTOMJS'])
 
     # if not deployment run i.e. normal run
     #print(f"Context ... {context.get_run_context().flow_run.deployment_id}")
@@ -160,7 +164,7 @@ def run(file = '', flowrun = 1, deploymentname = '', PROGRAM_DIR = '', startcode
         #print('Exception')
         #sys.exit(config.EX_SOFTWARE)
         if e.__str__() == "Excel.Application.Workbooks":
-            logger.critical(f"kiil process: {killprocess('excel')}")
+            logger.critical(f"kiil process: {killprocess('excel')}")  # kill process with name using powershell
         raise ValueError(f"Software Error: {e}")
 
     selectedWindows.getNew()

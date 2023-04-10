@@ -1,0 +1,1 @@
+Powershell.exe -executionpolicy remotesigned -File  D:\Optimus\autobot\addon\cleanProcesses.ps1

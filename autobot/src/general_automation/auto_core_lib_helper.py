@@ -587,8 +587,16 @@ def _runJupyterNb(codeValue):
     #    parameters = paramDict
     #)
 
+    from datetime import datetime
+    currentDateAndTime = datetime.now()
+    #print("The current date and time is", currentDateAndTime)
+    # Output: The current date and time is 2022-03-19 10:05:39.482383
+    #currentTime = currentDateAndTime.strftime("%H:%M:%S")
+    #print("The current time is", currentTime)
+    # The current time is 10:06:55
+
     res = pm.execute_notebook(
-        nb_file, nb_file.replace('.ipynb', '_output.ipynb'),
+        nb_file, nb_file.replace('.ipynb', '_output_'+ currentDateAndTime.strftime("%H%M%S") +'.ipynb'),
         parameters = paramDict
     )
 
