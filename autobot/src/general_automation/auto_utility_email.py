@@ -350,7 +350,7 @@ class EmailsSender:
                     logMaillist = logMaillist + f"{log_space}{tzInfo2Naive(sub.ReceivedTime)}::{sub.Subject}\n"
                     subjectList = subjectList + [str(sub.Subject)]
             #logger.info(f"{tzInfo2Naive(sub.ReceivedTime)}::{sub.Subject}\n")
-            logger.debug(f"{log_space}Folder item count: {folderItems.Count}, {logMaillist}" )
+            logger.debug(f"{log_space}Sent item count: {folderItems.Count} since {strDate},\n{logMaillist}" )
             #logger.info(logMaillist)
 
         return subjectList

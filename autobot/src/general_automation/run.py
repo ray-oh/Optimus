@@ -116,10 +116,6 @@ def run(file = '', flowrun = 1, deploymentname = '', PROGRAM_DIR = '', startcode
     selectedWindows = Window()
     #logger.debug(f'{log_space}Windows: {selectedWindows.title}')
 
-    # Clean up processes - either run clean.bat or perform below kill process
-    #logger.debug(f"Process_kill xxx")
-    process_kill(process=['OUTLOOK.EXE','EXCEL.EXE', 'chrome.exe', 'Sikulix', 'CASPERJS', 'PHANTOMJS'])
-
     # if not deployment run i.e. normal run
     #print(f"Context ... {context.get_run_context().flow_run.deployment_id}")
     if context.get_run_context().flow_run.deployment_id == None:
@@ -150,6 +146,14 @@ def run(file = '', flowrun = 1, deploymentname = '', PROGRAM_DIR = '', startcode
         #logger.info(f"DEBUG run.py/run STARTFILE:{config.STARTFILE} {flowname}")
         #logger.info("DEBUG run.py/run Version: 22.10.26.1")
 
+    # Clean up processes - either run clean.bat or perform below kill process
+    #logger.debug(f"Process_kill xxx")
+    logger.debug(f"background {background}, {type(background)}")
+    #if background == '' or str(background).strip()=="2":
+    #    pass
+    #else:
+    if int(background) != 2: process_kill(process=['OUTLOOK.EXE','EXCEL.EXE', 'chrome.exe', 'Sikulix', 'CASPERJS', 'PHANTOMJS']) #int(background) != 2 does not work as background could be blank
+    
     try:
         #print('Command:',file)
         #logger.info(f"DEBUG run.py/run Current directory {Path('.').resolve().absolute().__str__()}")

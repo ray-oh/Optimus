@@ -83,6 +83,8 @@ def waitIdentifierExist(identifier, time_seconds = 10, interval = 5, snapPic = T
     #identifier
 
     start_time = time.time()
+    elapsed_time = int(time.time() - start_time)
+    print('waitIdentifierExist', time.ctime(start_time), '|', elapsed_time, '|', type(identifier))    
     if type(identifier) == list:
         #identifier_list = map(lambda x: Path(config.IMAGE_DIR + '/' + x).absolute().__str__() \
         #    if x.lower().endswith(('.png', '.jpg', '.jpeg')) else x, identifier)
@@ -105,7 +107,9 @@ def waitIdentifierExist(identifier, time_seconds = 10, interval = 5, snapPic = T
                     sourcePath = identifierParamList[0].strip()
                     filePattern = identifierParamList[1].strip()
                     withinLastSec = float(identifierParamList[2].strip())
-                    downloadedFile = GetRecentCreatedFile(sourcePath, filePattern, withinLastSec) # get most recent file of pdf format in last 120 sec in path
+                    # CHANGE logic - check recent file from withinLastSec or elapsed_time - which ever is smaller
+                    #downloadedFile = GetRecentCreatedFile(sourcePath, filePattern, withinLastSec) # get most recent file of pdf format in last 120 sec in path
+                    downloadedFile = GetRecentCreatedFile(sourcePath, filePattern, min(withinLastSec,elapsed_time+10)) # get most recent file of pdf format in last 120 sec in path
                     #logg('renameFile parameters', targetPath = targetPath, saveName = saveName, fileExtension = fileExtension, level = 'debug')
                     #logg('Recent Download file : none', level = 'error') if downloadedFile is None else logg('Recent Download file:', downloadFile = downloadedFile, targetPath = targetPath, saveName = saveName, fileExtension = fileExtension, level = 'info')
                     if downloadedFile is not None: return True, idx
@@ -134,7 +138,7 @@ def waitIdentifierExist(identifier, time_seconds = 10, interval = 5, snapPic = T
     # type is not list
     else:
         if identifier.lower().endswith(('.png', '.jpg', '.jpeg')): identifier = Path(config.IMAGE_DIR + '/' + identifier).absolute().__str__()
-
+        print('Not list',time.ctime(start_time), '|', elapsed_time, '|', type(identifier), 'identifer=', identifier)    
         while True:
             #identifier = "FILE=filepath|filepattern|inLastNumOfSec" eg. FILE=
             if identifier.startswith("FILE="):
@@ -143,7 +147,7 @@ def waitIdentifierExist(identifier, time_seconds = 10, interval = 5, snapPic = T
                 sourcePath = identifierParamList[0].strip()
                 filePattern = identifierParamList[1].strip()
                 withinLastSec = float(identifierParamList[2].strip())
-                downloadedFile = GetRecentCreatedFile(sourcePath, filePattern, withinLastSec) # get most recent file of pdf format in last 120 sec in path
+                downloadedFile = GetRecentCreatedFile(sourcePath, filePattern, min(withinLastSec,elapsed_time+10)) # get most recent file of pdf format in last 120 sec in path
                 #logg('renameFile parameters', targetPath = targetPath, saveName = saveName, fileExtension = fileExtension, level = 'debug')
                 #logg('Recent Download file : none', level = 'error') if downloadedFile is None else logg('Recent Download file:', downloadFile = downloadedFile, targetPath = targetPath, saveName = saveName, fileExtension = fileExtension, level = 'info')
                 if downloadedFile is not None: return True
