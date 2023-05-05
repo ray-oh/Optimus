@@ -78,7 +78,7 @@ def _otherRunCode(df, code, codeID, codeValue, objVar):
 
     # ------------------ RPA functions ------------------------------
     elif codeID.lower() == 'runInBackground'.lower():   _runInBackground()  # run automation in background mode without user attendance
-    elif codeID.lower() == 'initializeRPA'.lower(): _initializeRPA()
+    elif codeID.lower() == 'initializeRPA'.lower(): _initializeRPA(codeValue)
     elif codeID.lower() == 'closeRPA'.lower():  _closeRPA()
     elif codeID.lower() == 'url'.lower():       _url(codeValue, df)         # url:OKTA or url:<URL_Dclick_Pages:key> or url:@<URL_Dclick_Pages:@columnHeader>
     elif codeID.lower() == 'urls'.lower():   _urls(codeValue, objVar)        # No longer required - can remove
@@ -358,7 +358,7 @@ def _wait(codeValue, df, objVar):
                     return [], [], []
 
         else: # not a special object list
-            if not waitIdentifierExist(tmpDict['identifier'], time_sec, 1, False):         #waitIdentifierExist(identifier, time_seconds, interval) - returns true or false
+            if not waitIdentifierExist(tmpDict['identifier'], time_sec, 5, False):         #waitIdentifierExist(identifier, time_seconds, interval) - returns true or false
                 #logg('      Time out from waiting', level = 'warning')                    #raise CriticalAccessFailure("TXT logon window did not appear")
                 if 'run_code' in tmpDict:                                           #run code if time out
                     run_code = dfObjList(df, tmpDict['run_code'])
@@ -596,7 +596,7 @@ def _runJupyterNb(codeValue):
     # The current time is 10:06:55
 
     res = pm.execute_notebook(
-        nb_file, nb_file.replace('.ipynb', '_output_'+ currentDateAndTime.strftime("%H%M%S") +'.ipynb'),
+        nb_file, nb_file.replace('.ipynb', '_output_'+ currentDateAndTime.strftime("%Y%m%d_%H%M%S") +'.ipynb'),
         parameters = paramDict
     )
 
@@ -1006,7 +1006,8 @@ def _runInBackground():
     runInBackground()
 
 #@task
-def _initializeRPA():
+def _initializeRPA(codeValue: str):
+    # visual_automation = False, chrome_browser = True, headless_mode = False, turbo_mode = False
     logger = get_run_logger()
 
     from auto_helper_lib import Window, process_list
@@ -1017,7 +1018,31 @@ def _initializeRPA():
 
     #if not browserDisable:
     #r.init()
-    instantiatedRPA = r.init(visual_automation = True)
+    # init(visual_automation = False, chrome_browser = True, headless_mode = False, turbo_mode = False):
+    #instantiatedRPA = r.init(visual_automation = True)
+    visual_automation = True #False
+    chrome_browser = True
+    headless_mode = False
+    turbo_mode = False
+
+    jsonString = codeValue.strip()
+    import json
+    #jsonString = '{"file":"C:\\Users\\roh\\Downloads\\d5c7a4f7-b9a7-4d1e-904e-ce7349e0f27c.xlsx", "country": "All"}'
+    #jsonString = '{"file": "C:/Users/roh/Downloads/d5c7a4f7-b9a7-4d1e-904e-ce7349e0f27c.xlsx", "country": "All"}'
+    try:
+        paramDict = json.loads(jsonString.lower())
+        #logger.info(f"parameter dictionary = {paramDict}")    
+        #print(paramDict['file'])
+        #print(paramDict['country'])
+        #print(jsonString, paramDict)
+        logger.debug(f"{log_space}RPA Initialize Parameters = {jsonString}, {paramDict}")
+        for item in paramDict:
+            #print(item)
+            exec(f"{item}={paramDict[item]}")  # modify variables
+    except:
+        print("error json string", jsonString)
+
+    instantiatedRPA = r.init(visual_automation = visual_automation, chrome_browser = chrome_browser, headless_mode = headless_mode, turbo_mode = turbo_mode)
     #logg('Initialize RPA', result = instantiatedRPA, level = 'info')
     logger.debug(f"{log_space}Initialize RPA = {instantiatedRPA}")
 
@@ -1314,7 +1339,7 @@ def _email(codeValue, df):
             #logger.info(f"#####>>>> sentEmailSubList, {len(sentEmailSubjectList)}")
             import datetime
             cutOffDateTme=datetime.datetime.today().replace(hour=int(variables['sentEmailCheck_hour']), minute=int(variables['sentEmailCheck_min']), second=0, microsecond=0)
-            logger.debug(f"{log_space}{cutOffDateTme}  {variables['sentEmailCheck_hour']}  {variables['sentEmailCheck_min']}")            
+            #logger.debug(f"{log_space}{cutOffDateTme}  {variables['sentEmailCheck_hour']}  {variables['sentEmailCheck_min']}")            
             sentEmailSubjectList = email_sender.getSentEmailSubjectList(sentEmailSubjectList = [], cutOffDateTme=cutOffDateTme)
             if not Subject in sentEmailSubjectList or boolForce:
                 email_sender.send_email(boolDisplay=boolDisplay, boolRun=boolRun, EmailObj = emailObj)

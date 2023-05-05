@@ -43,7 +43,10 @@ def GetRecentCreatedFile(filepath,filetype,inLastNumOfSec):
     #print(not not list_of_files ) # returns true if empty
     if list_of_files:
         latest_file = max(list_of_files, key=os.path.getctime)
+        # time.ctime(c_time)
+        print('Latest file', latest_file, 'create', time.ctime(os.path.getctime(latest_file)), '>', time.ctime(time.time()-inLastNumOfSec), os.path.getctime(latest_file) > time.time()-inLastNumOfSec)
         if os.path.getctime(latest_file) > time.time()-inLastNumOfSec:
+            print('Time', time.time()-inLastNumOfSec, '|' , latest_file)            
             return latest_file
         else:
             return None
