@@ -21,4 +21,23 @@
 ### Installation notes
 - On first run of after installation, expect some running time to download and setup TagUI (~200MB) 
 ![image](https://user-images.githubusercontent.com/115925194/236681790-12e5712a-dd5c-4dd8-a04e-84a008c50013.png)
+- When running "send email" command from rpa script, if below error is encountered, its probably because of some security policy that prevents programatic access to outlook. Enable programatic access to resolve the problem.
+![image](https://user-images.githubusercontent.com/115925194/236682136-08af34fa-d2c6-45f4-8375-ab745ba83e89.png)
+![image](https://user-images.githubusercontent.com/115925194/236682269-55a23610-1e16-4a3c-b37d-b33cbee40656.png)
+- To setup a good RPA environment on your workstation or VM, you can add the following shortcuts
+  - optimus folder
+  - jupyter notebook
+  - Prefect dashboard
+  - Quit VM
+![image](https://user-images.githubusercontent.com/115925194/236682576-00975523-c6a7-4aee-9baa-74b4c96123fa.png)
+- Setup key windows task jobs for the optimus
+  - optimus agent - activates prefect agent for listening to and processing new RPA jobs
+  - optimus orion - activates prefect server
+  - run daily reboot - good practice to reboot the RPA workstation on a daily basis
+![image](https://user-images.githubusercontent.com/115925194/236682818-a83ec9e5-3eda-49ba-a3bf-197d258dcdcf.png)
+
+
+
+
+
 
