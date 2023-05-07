@@ -18,4 +18,7 @@
     - Click here for the latest stable [installation package](./installation).  And run the installation batch file with the package directly in the root directory of the folder where you wish to install OPTIMUS.  We recommend to keep the name of the program folder as Optimus.  
 #### Installation issues
 - [SQLite ‘no such table: json_each’](https://github.com/PrefectHQ/prefect/issues/5970) - potential issue with python / SQLite version.  Ensure python version 3.9 or 3.10 is used.  
+### Installation notes
+- On first run of after installation, expect some running time to download and setup TagUI (~200MB) 
+![image](https://user-images.githubusercontent.com/115925194/236681790-12e5712a-dd5c-4dd8-a04e-84a008c50013.png)
 
