@@ -45,8 +45,8 @@ variables['present']=None
 variables['exist']=None
 variables['count']=None
 variables['loopCount']=None
-variables['sentEmailCheck_hour']=3
-variables['sentEmailCheck_min']=15
+variables['sentEmailCheck_hour']=3  # used by email program to check if email has already been sent (duplicate subject since this cut off time for the day)
+variables['sentEmailCheck_min']=15  # default value can be overwritten in excel script: e.g. set:sentEmailCheck_min=0
 codeVersion = 'version 1.2'
 
 ######################## Initialize SETTINGS #######################

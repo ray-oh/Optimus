@@ -31,7 +31,7 @@ rmdir tmp /S /Q
 SET /P AREYOUSURE=Reinstall other python libraries - Are you sure (Y/[N])
 IF /I "%AREYOUSURE%" NEQ "Y" GOTO END1
 echo ... Reinstalling libraries ...
-if exist venv (
+if exist .\autobot\venv (
 	rmdir .\autobot\venv /S /Q
 )
 python -m venv .\autobot\venv
@@ -47,6 +47,9 @@ pip install jupyter
 for %%I in (.) do set CurrDirName=%%~nxI
 rem echo %CurrDirName%
 .\autobot\venv\Scripts\python -m ipykernel install --user --name=%CurrDirName%
+rem @echo ================ INSTALL wkhtmltoimage =================
+rem xcopy .\autobot\wkhtml*.* .\autobot\venv\scripts\.
+rem SET PATH=%PATH%;%cd%\autobot
 @echo ================ INSTALL MITO =================
 SET /P AREYOUSURE=Install Mito sheets for use in Jupyter Notebook - Are you sure (Y/[N])
 IF /I "%AREYOUSURE%" NEQ "Y" GOTO END1

@@ -121,21 +121,27 @@ def Diff(li1, li2):
     li_dif = [i for i in li1 if i not in li2]
     return li_dif    
     
-# manage processes
+# manage processes - kill processes that match the list of specified process names
 def process_kill(process=[]):
     import psutil
     import time
-    for proc in process:
-        try:
-            # Get process name & pid from process object.
-            processName = proc.name()
-            processID = proc.pid
-            etime = (time.time() - proc.create_time())/60/60 # in hours
-            print(processName , ' ::: ', processID, etime)
-            proc.kill()
-        except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
-            print('error')
-            pass
+    #print(psutil.process_iter())
+    #print(process)
+    for proc in psutil.process_iter(): #process:
+        #print(f"kill {proc.name()}")
+        if proc.name() in process:
+            try:
+                # Get process name & pid from process object.
+                processName = proc.name()
+                processID = proc.pid
+                processUser = psutil.Process(processID).username()
+                etime = (time.time() - proc.create_time())/60/60 # in hours
+                print(processName , ' ::: ', processID, etime, processUser)
+                if not 'SYSTEM' in processUser:
+                    proc.kill()
+            except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
+                print('error')
+                pass
 
 def process_list(name='', minutes=30):
     '''List processes less than time in min'''

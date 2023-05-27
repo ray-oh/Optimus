@@ -136,6 +136,7 @@ dmypy.json
 /temp
 /deployment
 /scripts
+/scripts/*
 /scripts/*/output
 /scripts/*test*
 /scripts/*main*

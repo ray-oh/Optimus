@@ -14,7 +14,8 @@ param(
 
     # logFile name
     #[String] $logFile = 'D:\DClick\log\process.txt',
-    [String] $logFile = $oneDrive + $folder + '\log\process.txt',
+    #[String] $logFile = $oneDrive + $folder + '\log\process.txt',
+    [String] $logFile = 'process.txt',
 
     # msg to log
     [String] $msg = '',

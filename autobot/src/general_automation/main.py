@@ -112,7 +112,7 @@ def main():
             "PROGRAM_DIR": Path(AUTOBOT_DIR).parents[0].resolve().absolute().__str__(), \
             "startcode": program_args['startcode'], \
             "startsheet": program_args['startsheet'], \
-            "background": str(1)} 
+            "background": str(program_args['background'])} 
 
         from deployment import workflowDeployment
         workflowDeployment(deploymentname, parametervalue)

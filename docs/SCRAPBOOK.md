@@ -185,3 +185,7 @@ https://github.com/FlaUI/FlaUI
 
 https://pywinauto.readthedocs.io/en/latest/
 https://github.com/pywinauto/py_inspect
+
+
+Pull Requests in VS Code
+https://www.youtube.com/watch?v=LdSwWxVzUpo
