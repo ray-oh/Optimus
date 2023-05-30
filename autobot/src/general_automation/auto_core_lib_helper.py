@@ -58,6 +58,8 @@ def _otherRunCode(df, code, codeID, codeValue, objVar):
     elif codeID.lower() == 'runExcelMacro'.lower():       _runExcelMacro(codeValue)                          # runExcelMacro:excel, macro
     elif codeID.lower() == 'runPowerShellScript'.lower():       _runPowerShellScript(codeValue)                          # runExcelMacro:excel, macro
     elif codeID.lower() == 'runBatchScript'.lower():       _runBatchScript(codeValue)                          # runExcelMacro:excel, macro
+    elif codeID.lower() == 'openProgram'.lower():       _openProgram(codeValue)                          # openProgram:path
+    elif codeID.lower() == 'focusWindow'.lower():       _focusWindow(codeValue)                          # focusWindow:windowName
     elif codeID.lower() == 'runJupyterNb'.lower():       _runJupyterNb(codeValue)                          # runJupyterNb:notebook_file, parameters
     elif codeID.lower() == 'mergeFiles'.lower():    _mergeFiles(codeValue, df)                               # mergeFiles: fileList, keep, uniqueColumnsList, fileName, encoding 
     elif codeID.lower() == 'dropNRowsExcel'.lower():   _dropNRowsExcel(codeValue)                                # merge files.  merge:newFile,oldFile,olderFile
@@ -551,6 +553,25 @@ def _runBatchScript(codeValue):
     #print(p.returncode)
     #print("An error occured: %s", p.stderr)
     #print("Output %s", p.stdout)
+
+def _openProgram(codeValue):
+    script = codeValue.split(',')[0].strip()
+    if len(codeValue.split(','))>1:
+        workingDir = codeValue.split(',')[1].strip()
+    else:
+        workingDir = CWD_DIR
+    from pywinauto import Application
+    Application().start(script)
+
+def _focusWindow(codeValue):
+    script = codeValue.split(',')[0].strip()
+    if len(codeValue.split(','))>1:
+        workingDir = codeValue.split(',')[1].strip()
+    else:
+        workingDir = CWD_DIR
+    from pywinauto import Application
+    app = Application(backend="uia").connect(path=script)
+    app.top_window().set_focus()
 
 def _runJupyterNb(codeValue):
     logger = get_run_logger()

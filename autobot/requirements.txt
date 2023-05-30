@@ -33,3 +33,4 @@ imgkit
 py-setenv
 pyarrow
 anyio
+pywinauto
