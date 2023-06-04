@@ -25,6 +25,14 @@ https://telegram.org/faq
 https://www.freecodecamp.org/news/how-to-create-a-telegram-bot-using-python/
 using pyTelegramBotAPI
 
+https://levelup.gitconnected.com/fixing-your-ssl-verify-errors-in-python-71c2201db4b2
+certificate verify failed: unable to get local issuer certificate (_ssl.c:1007)
+How to fix your SSL Errors - because your company is using SSL Decryption and you are on windows:
+python -m pip install python-certifi-win32
+
+https://stackoverflow.com/questions/55409641/asyncio-run-cannot-be-called-from-a-running-event-loop-when-using-jupyter-no
+"asyncio.run() cannot be called from a running event loop" when using Jupyter Notebook
+
 https://medevel.com/open-source-zapier-ifttt-alternatives/
 
 
