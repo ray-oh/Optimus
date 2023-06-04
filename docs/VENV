@@ -1,0 +1,34 @@
+https://www.freecodecamp.org/news/how-to-setup-virtual-environments-in-python/
+
+How to setup a virtual environment in python
+- pip install virtualenv
+- python<version> -m venv <virtual-env-name>
+
+e.g.
+- mkdir projectA
+- cd projectA
+- python3.8 -m venv env
+
+Activate virtual env
+env/Scripts/activate.bat
+
+pip list
+pip freeze > requirements.txt
+
+pip install -r requirements.txt
+
+deactivate
+
+Telegram bot
+https://telegram.org/faq
+
+https://www.freecodecamp.org/news/how-to-create-a-telegram-bot-using-python/
+using pyTelegramBotAPI
+
+https://medevel.com/open-source-zapier-ifttt-alternatives/
+
+
+
+https://towardsdatascience.com/python-file-change-trigger-6f8a6c94c13e
+Using watchdog
+
