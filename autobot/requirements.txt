@@ -41,6 +41,8 @@ pywinauto
 python-telegram-bot
 # used by telegramBot to allow async to run in jupyter notebook
 nest_asyncio
+# needed by telegramBot to fix SSL Errors - if your company is using SSL Decryption and you are on windows
+python-certifi-win32
 # passwords: pycryptodome pypiwin32
 pycryptodome
 pypiwin32
