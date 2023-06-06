@@ -1,3 +1,6 @@
+# Requirements file for setup of Optimus
+# https://stackoverflow.com/questions/9159757/can-i-add-comments-to-a-pip-requirements-file
+
 altgraph==0.17.3
 et-xmlfile==1.1.0
 future==0.18.2
@@ -34,3 +37,11 @@ py-setenv
 pyarrow
 anyio
 pywinauto
+# telegramBot
+python-telegram-bot
+# used by telegramBot to allow async to run in jupyter notebook
+nest_asyncio
+# passwords: pycryptodome pypiwin32
+pycryptodome
+pypiwin32
+
