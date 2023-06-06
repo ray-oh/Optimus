@@ -17,10 +17,12 @@ from prefect.server.schemas.filters import (
     FlowRunFilterStartTime,    
     DeploymentFilter,
     DeploymentFilterName,
+    FlowRunFilterId,
+    FlowFilterId,
 )
 
 
-async def prefectQuery(hours=24*5, flowname=""):
+async def prefectQuery(hours=24*1, flowname=""):
     from datetime import datetime, timedelta
     start_time = datetime.now() - timedelta(hours=hours)  # minutes    
     async with get_client() as client:
@@ -35,7 +37,10 @@ async def prefectQuery(hours=24*5, flowname=""):
                     after_=start_time
                 )
             ))
-        result = 'VM22'
+        import socket
+        hostname=socket.gethostname()   
+        IPAddr=socket.gethostbyname(hostname) 
+        result = f"{hostname} VM{IPAddr.split('.')[3]}"
         def myFunc(e):
             print(e)
             return len(e) #e['start_time']
@@ -67,7 +72,28 @@ async def prefectQuery(hours=24*5, flowname=""):
                 status = '⚡️'            
             else:
                 status = '⚠️' #'✋🆗👉'❕⚠️⛔️⚡️🔥
-            text = [st, f'({duration})', status, flow.parameters['deploymentname'].split('-C')[0][:8], flow.name.split('-')[1][:7]  ] #flow.state_name[:3]
+            
+            # use flow id from flow run, to get flow name from read flows
+            f = await client.read_flows(
+                limit=15,
+                flow_run_filter=FlowRunFilter(
+                    #state=FlowRunFilterState(
+                    #    type=FlowRunFilterStateName(any_=["COMPLETED"])
+                    #),
+                    #flow_run_filter_id=FlowRunFilterId(id=FlowRunFilterId(any_=[flow.id])),
+                    #flow_run_filter_id=FlowRunFilterId(id=FlowRunFilterId(any_=[flow.id])),
+                    #flow_filter=FlowFilter(id=FlowFilterId(any_=[flow_id])),
+                    #flow_filter=FlowFilter(id=FlowFilterId(any_=[flow.id])),
+                    id=FlowFilterId(any_=[flow.id]),  
+                    # refer to link below on documentation for how to use FlowRunFilter:
+                    #https://docs.prefect.io/2.10.12/api-ref/server/schemas/filters/#prefect.server.schemas.filters.FlowRunFilter
+                    start_time=FlowRunFilterStartTime(
+                        after_=start_time
+                    )
+            ))
+            zflowName = f[0].name  # flow.parameters['deploymentname'].split('-C')[0][:8]  Instead of using the deployment name, get actual flow name
+            # note this flow name is different from flow.name below which is name of the instance of flow run
+            text = [st, f'({duration})', status, zflowName[:8] , flow.name.split('-')[1][:7]  ] #flow.state_name[:3]
             text = " ".join(text)
             result = result + '\n' + text
             
@@ -75,7 +101,7 @@ async def prefectQuery(hours=24*5, flowname=""):
             #      flow.start_time.strftime("%m/%d/%Y, %H:%M:%S"), flow.total_run_time)
             #print(flow.name, flow.flow_id, flow.created)    #https://discourse.prefect.io/t/flow-run-filter-with-flowrunfilterstarttime-doesnt-return-all-runs/2486
         #print(r)
-        return result       
+        return result #+ str(r[0])
 
 if __name__ == "__mainXXX__":
     import asyncio
