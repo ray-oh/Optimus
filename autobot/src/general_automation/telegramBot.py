@@ -3,7 +3,12 @@
 # Bot token/password is stored in Chrome and retrieved with passwords library
 # Refer to below on how to setup the batch file to run in minimized mode from windows task scheduler
 # https://datacornering.com/run-batch-file-minimized/#:~:text=Here%20is%20a%20simple%20example,adjustments%20in%20the%20Actions%20tab.&text=%E2%80%9C%5E%26%20exit%E2%80%9D%20at%20the,the%20batch%20file%20is%20executed.
-
+'''
+https://levelup.gitconnected.com/fixing-your-ssl-verify-errors-in-python-71c2201db4b2
+certificate verify failed: unable to get local issuer certificate (_ssl.c:1007)
+How to fix your SSL Errors - because your company is using SSL Decryption and you are on windows:
+python -m pip install python-certifi-win32
+'''
 
 from prefect import get_client
 from prefect.server.schemas.core import FlowRun
