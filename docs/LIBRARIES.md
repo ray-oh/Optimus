@@ -16,7 +16,7 @@ Loaded in sequence of 'optimus script', 'optimusLib.xlsm', 'optimusLibPublic.xls
 > shareX - using shareX utility (separately download and installed, and operated using default hotkeys)
 >  - launch, screen record, screenshot 
 > win - general window automation
->  - leveraging keyboard shortcuts: ![keyboard shortcuts](https://support.microsoft.com/en-us/windows/keyboard-shortcuts-in-windows-dcc61a57-8ff0-cffe-9796-cb9706c75eec)
+>  - leveraging keyboard shortcuts: [keyboard shortcuts](https://support.microsoft.com/en-us/windows/keyboard-shortcuts-in-windows-dcc61a57-8ff0-cffe-9796-cb9706c75eec)
 >  - minimize.all, close, switch, undo, copy, paste, desktop.show.hide, maximize, minimize.alterative, minimize, restore
 
 > chrome - browser automation using keyboard shortcuts
@@ -32,16 +32,16 @@ Loaded in sequence of 'optimus script', 'optimusLib.xlsm', 'optimusLibPublic.xls
 
 > teams - microsoft teams web automation
 >   - using keyboard shortcuts:
->       - ![13 best keyboard shortcuts for teams](https://helpdeskgeek.com/office-tips/the-13-best-keyboard-shortcuts-for-microsoft-teams/)
->       - ![keyboard shortcuts for teams](https://support.microsoft.com/en-gb/office/keyboard-shortcuts-for-microsoft-teams-2e8e2a70-e8d8-4a19-949b-4c36dd5292d2#bkmk_global)
+>       - [13 best keyboard shortcuts for teams](https://helpdeskgeek.com/office-tips/the-13-best-keyboard-shortcuts-for-microsoft-teams/)
+>       - [keyboard shortcuts for teams](https://support.microsoft.com/en-gb/office/keyboard-shortcuts-for-microsoft-teams-2e8e2a70-e8d8-4a19-949b-4c36dd5292d2#bkmk_global)
 >   - launch
 
 > Various logon functions.  Called with example syntax - okta.logon.  Available for:
 >   - okta, qlik, servicenow
 
 > Most of the above steps leverage pywinauto.keyboard function:
->   - ![pywinauto keyboard reference](https://pywinauto.readthedocs.io/en/latest/code/pywinauto.keyboard.html)
->   - ![Get urls of opened tabs in browser with pywinauto](https://stackoverflow.com/questions/72594066/get-urls-of-opened-tabs-in-browser-pywinauto-python)
+>   - [pywinauto keyboard reference](https://pywinauto.readthedocs.io/en/latest/code/pywinauto.keyboard.html)
+>   - [Get urls of opened tabs in browser with pywinauto](https://stackoverflow.com/questions/72594066/get-urls-of-opened-tabs-in-browser-pywinauto-python)
 
 ***optimusLib.xlsm*** - private to installed optimus program.  Shared library of functions accessible by all script runs.  Can also store private library of constants, variables.
 
