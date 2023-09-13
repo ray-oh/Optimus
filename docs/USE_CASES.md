@@ -20,4 +20,6 @@ New browser driver option
 Robotframework
 - https://robotframework.org/robotframework/latest/RobotFrameworkUserGuide.html#test-setup-and-teardown
  
+Robocorp
+- https://robocorp.com/docs/libraries/rpa-framework/rpa-desktop
 
