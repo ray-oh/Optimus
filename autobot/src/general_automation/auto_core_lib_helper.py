@@ -27,23 +27,47 @@ from auto_utility_browser import chromeZoom, waitIdentifierExist, waitIdentifier
 from auto_utility_parsers import parseArguments, regexSearch
 from auto_utility_email import EmailsSender
 
-def _otherRunCode(df, code, codeID, codeValue, objVar):   
+def _otherRunCode(df, code, codeID, codeValue, objVar):
+
+    # code for handling block codes - extract parameters if that is defined e.g. command(parameter)
+    # parameters are in json string format e.g. {"name":"value","name":"value"}
+    import re  
+    param = re.search('\((.*?)\)', code, re.IGNORECASE)
+    if param and code.strip()[-1:]==')':               # if parameters exist
+        parameters = param.group(1).strip()
+        command = re.search('(.*?)\(', code, re.IGNORECASE)        
+        code = command.group(1).strip()
+        print(code, parameters)
+
+        import json
+        #jsonString = '{"file":"C:\\Users\\roh\\Downloads\\d5c7a4f7-b9a7-4d1e-904e-ce7349e0f27c.xlsx", "country": "All"}'
+        #jsonString = '{"file": "C:/Users/roh/Downloads/d5c7a4f7-b9a7-4d1e-904e-ce7349e0f27c.xlsx", "country": "All"}'
+        variables.update(json.loads(parameters))
+        print(variables)
+
     if False: pass
     # ------------------ code processing functions ------------------------------
     elif codeID.lower() == 'rem'.lower():   pass                    # remarks - do nothing
     elif codeID.lower() == 'print'.lower():  _print(codeValue)
     elif codeID.lower() == 'log':  _log(codeValue)
     elif codeID.lower() == 'exit'.lower():    _exit()
-    elif codeID.lower() == 'exitError'.lower():    _exitError(codeValue)                 # exit with an error code e.g. exitError:2
-    elif codeID.lower() == 'raiseError'.lower():    _raiseError(codeValue)                 # exit with an error code e.g. exitError:2
-    elif codeID.lower() == 'if'.lower(): return _if(codeValue, df, objVar)
+    elif codeID.lower() == 'exitError'.lower():    _exitError(codeValue)                  # exit with an error code e.g. exitError:2
+    elif codeID.lower() == 'raiseError'.lower():    _raiseError(codeValue)                # exit with an error code e.g. exitError:2
+    elif codeID.lower() == 'if'.lower(): return _if(codeValue, df, objVar)                # codeValue = condition : if true block, if false block or if empty then pass
+
     elif code in df[(df.Type == 'list')]['Object'].dropna().values.tolist(): return _isCodeList(df, code, objVar)          #run Block of Code
-    elif codeID.lower() == 'runModule'.lower(): return _runModule(codeValue, df, objVar)                  #runModule:sheet, excelfile
+    elif codeID.lower() == 'runTask'.lower() and codeValue in df[(df.Type == 'list')]['Object'].dropna().values.tolist(): return _isCodeListTask(df, codeValue, objVar)          #run Block of Code    .with_options(name=codeValue.split(',')[0].strip())    
+    elif codeID.lower() == 'runFlow'.lower() and codeValue in df[(df.Type == 'list')]['Object'].dropna().values.tolist(): return _isCodeListFlow(df, codeValue, objVar)          #run Block of Code        
+    elif codeID.lower() == 'runModule'.lower(): return _runModule(codeValue, df, objVar)                  #runModule:sheet, codeblock, excelfile
+    elif codeID.lower() == 'runTask'.lower(): return _runTask(codeValue, df, objVar)                  #runModule:sheet, excelfile .with_options(name=codeValue.split(',')[0].strip())
+    elif codeID.lower() == 'runFlow'.lower(): return _runFlow(codeValue, df, objVar)                  #runModule:sheet, excelfile .with_options(name=codeValue.split(',')[0].strip())
     elif codeID.lower() == 'codeList'.lower(): return _codeList(codeValue, df, objVar)
     elif codeID.lower() == 'wait'.lower():  return _wait(codeValue, df, objVar)                        # wait:time_sec,identifier,run_code
-    elif codeID.lower() == 'waitDisappear'.lower(): return _waitDisappear(codeValue, df, objVar)                        # waitDisappear:time_sec,identifier,run_code
+    elif codeID.lower() == 'waitDisappear'.lower(): return _waitDisappear(codeValue, df, objVar)       # waitDisappear:time_sec,identifier,run_code
+    elif codeID.lower() == 'waitFile'.lower(): return _waitFile(codeValue, df, objVar)                  # waitFile: file_pattern, action, timeout, actionIfTimeout
     elif codeID.lower() == 'iterate'.lower(): return _iterate(codeValue, df, objVar)                    # iterate: objlists, runCodelist e.g. iterate: @url_pages : openPage
     elif codeID.lower() == 'iterationCount'.lower(): _iterationCount(codeValue, df, objVar)
+    elif codeID.lower() == 'loopWhile'.lower(): return _loopWhile(codeValue, df, objVar)                # while:condition:do this:repeat every X sec
     elif codeID.lower() == 'test'.lower(): _test(codeValue, df, objVar)
 
     # ------------------ Custom functions ------------------------------
@@ -58,6 +82,7 @@ def _otherRunCode(df, code, codeID, codeValue, objVar):
     elif codeID.lower() == 'runExcelMacro'.lower():       _runExcelMacro(codeValue)                          # runExcelMacro:excel, macro
     elif codeID.lower() == 'runPowerShellScript'.lower():       _runPowerShellScript(codeValue)                          # runExcelMacro:excel, macro
     elif codeID.lower() == 'runBatchScript'.lower():       _runBatchScript(codeValue)                          # runExcelMacro:excel, macro
+    elif codeID.lower() == 'triggerRPAScript'.lower():       _triggerRPAScript(codeValue)                          # triggerRPAScript:command with flags    
     elif codeID.lower() == 'openProgram'.lower():       _openProgram(codeValue)                          # openProgram:path
     elif codeID.lower() == 'focusWindow'.lower():       _focusWindow(codeValue)                          # focusWindow:windowName
     elif codeID.lower() == 'runJupyterNb'.lower():       _runJupyterNb(codeValue)                          # runJupyterNb:notebook_file, parameters
@@ -70,6 +95,10 @@ def _otherRunCode(df, code, codeID, codeValue, objVar):
     elif codeID.lower() == 'DFdropDuplicates'.lower():    _DFdropDuplicates(codeValue) # merge files.  merge:newFile,oldFile,olderFile
     elif codeID.lower() == 'DFconcatenate'.lower():    _DFconcatenate(codeValue)    # merge files.  merge:newFile,oldFile,olderFile
     elif codeID.lower() == 'DFcreate'.lower(): _DFcreate(codeValue)
+    # ------------------ Custom automation functions using pywinauto ------------------------------
+    #elif codeID.lower() == 'openProgram'.lower():       _openProgram(codeValue)                          # keyboard_pwa:path    
+    elif codeID.lower() == 'keyboard_pwa'.lower():  _keyboard_pwa(codeValue)        # key press e.g. [home] [end] [insert] [f1] .. [f15] [shift] [ctrl] [alt] [win] [cmd] [enter] [space] [tab] [esc] [backspace] [delete] [clear]
+
     # ------------------ Browser / Windows functions ------------------------------
     elif codeID.lower() == 'chromeZoom'.lower():  _chromeZoom(codeValue)
     elif codeID.lower() == 'copyFile'.lower():   _copyFile(codeValue)       # copyFile:source,dest  e.g. copy file to one drive sync folder
@@ -77,6 +106,10 @@ def _otherRunCode(df, code, codeID, codeValue, objVar):
     elif codeID.lower() == 'makeDir'.lower():     _makeDir(codeValue)     # makeDir:pathname
     elif codeID.lower() == 'removeFile'.lower():  _removeFile(codeValue)        # removeFile:source,dest  e.g. copy file to one drive sync folder
     elif codeID.lower() == 'renameRecentDownloadFile'.lower(): _renameRecentDownloadFile(codeValue) # renameRecentDownloadFile:saveName,path,fileExtension,withinLastSec
+    elif codeID.lower() == 'touchFile'.lower(): _touchFile(codeValue) # touch file https://stackoverflow.com/questions/1158076/implement-touch-using-python
+    elif codeID.lower() == 'raiseEvent'.lower():   _raiseEvent(codeValue)        # raise event
+    elif codeID.lower() == 'ifEvent'.lower():  return _ifEvent(codeValue, df, objVar)  # if event do action
+    elif codeID.lower() == 'ifTest'.lower():  return _ifTest(codeValue, df, objVar)  # if event do action
 
     # ------------------ RPA functions ------------------------------
     elif codeID.lower() == 'runInBackground'.lower():   _runInBackground()  # run automation in background mode without user attendance
@@ -93,13 +126,19 @@ def _otherRunCode(df, code, codeID, codeValue, objVar):
     elif codeID.lower() == 'rclick'.lower():    _rclick(codeValue)          # right click
     elif codeID.lower() == 'present'.lower():   _present(codeID, codeValue) # right click
     elif codeID.lower() == 'exist'.lower():     _exist(codeID, codeValue)   # Waits until the timeout for an element to exist and returns a JavaScript true or false
+    elif codeID.lower() == 'focus'.lower():   _focus(codeID, codeValue) # focus() - app_to_focus (full name of app) - make application in focus
+    elif codeID.lower() == 'popup'.lower():   _popup(codeID, codeValue) # popup(url) - focus tagui rpa on specific tab/browser by url    
+    elif codeID.lower() == 'title'.lower():   _title(codeID, codeValue) # title() - title of current tagui rpa tab/browser session        
     elif codeID.lower() == 'count'.lower():     _count(codeID, codeValue)   # right click
     elif codeID.lower() == 'select'.lower():    _select(codeValue)  # Selects a dropdown option in a web input. select:dropdown,option
     elif codeID.lower() == 'type'.lower():    _type(codeValue)  # type:identifier,value
     elif codeID.lower() == 'snap'.lower():      _snap(codeValue)    # snap:page,saveFile   Snap entire web page
     elif codeID.lower() == 'telegram'.lower():  _telegram(codeValue)
+
     elif codeID.lower() == 'email'.lower():  _email(codeValue, df)
     elif codeID.lower() == 'waitEmailComplete'.lower():  _waitEmailComplete(codeValue, df)
+    elif codeID.lower() == 'click'.lower():  _click(codeValue)
+    elif codeID.lower() in ['### StartTask'.lower(), '### EndTask'.lower(), '### StartFlow'.lower(), '### EndFlow'.lower()]:  pass
     else:                       _click(code)        # normal left click
     return [], [], []
 
@@ -269,6 +308,32 @@ def _if(codeValue, df, objVar):
         else:
             return [], [], []
 
+#@task
+def _isCodeListTask(df, code, objVar):
+    # parameterObjs(df)
+    sub_code = dfObjList(df, code)
+    #logg('Run Code Block - user defined objects in sheet - ParameterObjs: ', code = code, sub_code = sub_code, level = 'info')
+    #runCodelist.with_options(name=code)(df, sub_code)
+    #runCodelist(CodeObject(df), sub_code)
+    sub_code = ['### StartTask:'+code] + sub_code + ['### EndTask']
+    n = len(sub_code)
+    logger = get_run_logger()
+    logger.debug(f"{log_space}Steps:{sub_code}")
+    return sub_code, [df] * n, [objVar] * n
+
+#@flow
+def _isCodeListFlow(df, code, objVar):
+    # parameterObjs(df)
+    sub_code = dfObjList(df, code)
+    #logg('Run Code Block - user defined objects in sheet - ParameterObjs: ', code = code, sub_code = sub_code, level = 'info')
+    #runCodelist.with_options(name=code)(df, sub_code)
+    #runCodelist(CodeObject(df), sub_code)
+    sub_code = ['### StartFlow:'+code] + sub_code + ['### EndFlow']
+    n = len(sub_code)
+    logger = get_run_logger()
+    logger.debug(f"{log_space}Steps:{sub_code}")
+    return sub_code, [df] * n, [objVar] * n
+
 def _isCodeList(df, code, objVar):
     # parameterObjs(df)
     sub_code = dfObjList(df, code)
@@ -280,8 +345,89 @@ def _isCodeList(df, code, objVar):
     logger.debug(f"{log_space}Steps:{sub_code}")
     return sub_code, [df] * n, [objVar] * n
 
-#@task
 def _runModule(codeValue, df, objVar):
+    logger = get_run_logger()
+    sheet = codeValue.split(',')[0]
+    num_arg = len(codeValue.split(','))
+    if num_arg==1: 
+        codeBlock = 'main'
+        excelfile = ''
+    elif num_arg==2: 
+        codeBlock = codeValue.split(',')[1]
+        excelfile = ''
+    elif num_arg==3:
+        codeBlock = codeValue.split(',')[1]
+        excelfile = codeValue.split(',')[2]
+
+    #excelfile = '' if len(codeValue.split(','))==1 else codeValue.split(',',1)[1]
+    #logg('runModule: ', excelfile = excelfile, sheet = sheet, isExcelFileStringValue = str(excelfile==''))
+    from config import SCRIPTS_DIR
+    # check if only name given without path
+    #if Path('D:\optimus\scripts\serviceNow.xlsm').__str__() == Path('D:\optimus\scripts\serviceNow.xlsm').name
+    if excelfile=='': excelfile = STARTFILE
+    from pathlib import Path
+    if Path(excelfile).__str__() == Path(excelfile).name:  # only name given, add script path
+        excelfile = Path(SCRIPTS_DIR, excelfile).resolve().__str__()
+    else:
+        excelfile = Path(excelfile).resolve().__str__()
+
+    if not Path(excelfile).exists():
+        logger.debug(f".... runModule file not exists .... sheet:{sheet} excelfile:{excelfile} df:{df.shape}")
+        return [],[],[]
+
+    new_df = readExcelConfig(sheet, excelfile)
+    #logger.info(f".... runModule .... new_df sheet:{sheet} excelfile:{excelfile} df:{df.shape}")
+
+    import pandas as pd
+    from utility_excel import cacheScripts
+    from config import PROGRAM_DIR
+    #dfmain, msgStr = cacheScripts(script=Path(startfile).name,df=pd.DataFrame(),program_dir=program_dir, startsheet=startsheet, refresh=bool(update), msgStr='')
+    new_df, msgStr = cacheScripts(script='OptimusLib.xlsm',df=new_df,program_dir=PROGRAM_DIR, startsheet='main', refresh=False, msgStr='')
+    new_df, msgStr = cacheScripts(script='OptimusLibPublic.xlsm',df=new_df,program_dir=PROGRAM_DIR, startsheet='main', refresh=False, msgStr=msgStr)
+    msgStr = f"{log_space}Start file:{excelfile}, Start sheet:{sheet}, Start file name:{Path(excelfile).name}\n{log_space}Scripts files loaded:\n" + msgStr
+    logger.debug(f"{msgStr}")
+
+    run_code = dfObjList(new_df, codeBlock)               # run the main code block
+    #logger.info(f".... runModule .... run_code:{run_code}")
+
+    #runCodelist.with_options(name=sheet)(df, run_code)
+    #runCodelist(CodeObject(df), run_code)
+    n = len(run_code)
+    return run_code, [new_df] * n, [objVar] * n
+
+#@task(name='sub task', description='sub task description')
+def _runTask(codeValue, df, objVar):
+    #logger = get_run_logger()
+    sheet = codeValue.split(',')[0]
+    num_arg = len(codeValue.split(','))
+    if num_arg==1: 
+        codeBlock = 'main'
+        excelfile = ''
+    elif num_arg==2: 
+        codeBlock = codeValue.split(',')[1]
+        excelfile = ''
+    elif num_arg==3:
+        codeBlock = codeValue.split(',')[1]
+        excelfile = codeValue.split(',')[2]
+
+    #excelfile = '' if len(codeValue.split(','))==1 else codeValue.split(',',1)[1]
+    #logg('runModule: ', excelfile = excelfile, sheet = sheet, isExcelFileStringValue = str(excelfile==''))
+    if excelfile=='': excelfile = STARTFILE
+    #logger.info(f".... runModule .... sheet:{sheet} excelfile:{excelfile} df:{df.shape}")
+
+    new_df = readExcelConfig(sheet, excelfile)
+    #logger.info(f".... runModule .... new_df sheet:{sheet} excelfile:{excelfile} df:{df.shape}")
+
+    run_code = dfObjList(new_df, codeBlock)               # run the main code block
+    #logger.info(f".... runModule .... run_code:{run_code}")
+
+    #runCodelist.with_options(name=sheet)(df, run_code)
+    #runCodelist(CodeObject(df), run_code)
+    n = len(run_code)
+    return run_code, [new_df] * n, [objVar] * n
+
+#@flow(name='sub task', description='sub task description')
+def _runFlow(codeValue, df, objVar):
     #logger = get_run_logger()
     sheet = codeValue.split(',')[0]
     num_arg = len(codeValue.split(','))
@@ -413,6 +559,17 @@ def _waitDisappear(codeValue, df, objVar):
         time.sleep(time_sec)
         # r.wait(time_sec)
         return [], [], []
+
+def _waitFile(codeValue, df, objVar):
+    # https://www.geeksforgeeks.org/create-a-watchdog-in-python-to-look-for-filesystem-changes/
+    logger = get_run_logger()
+    tmpDict = parseArguments('file_pattern, action, timeout, actionIfTimeout',codeValue)  # waitFile: file_pattern, action, timeout, actionIfTimeout
+    timeout = int(tmpDict['timeout'])   # timeout in sec
+    logger.debug(f'{log_space}checking 1...')
+
+    return [], [], []
+
+
 
 #@task
 def _print(codeValue):
@@ -554,16 +711,135 @@ def _runBatchScript(codeValue):
     #print("An error occured: %s", p.stderr)
     #print("Output %s", p.stdout)
 
+def _triggerRPAScript(codeValue):
+    import yaml
+    # write python obj to yaml file
+    def write_yaml(py_obj,filename):
+        with open(f'{filename}', 'w',) as f :
+            yaml.dump(py_obj,f,sort_keys=False) 
+        #print('Written to file successfully')
+        return True
+
+    # read yaml to python obj/dictionary
+    def read_yaml(filename):
+        with open(f'{filename}','r') as f:
+            output = yaml.safe_load(f)
+        print(output)
+        return output
+
+    # trigger RPA event by generating token in pending
+    def triggerRPA(file='', token={}, memoryPath=''):
+        from pathlib import Path, PureWindowsPath
+        #print(f"background:{background}")
+        state="pending"
+        from config import STARTFILE, STARTSHEET, STARTCODE, PROGRAM_DIR, UPDATE, BACKGROUND, RETRIES, MEMORYPATH
+        if memoryPath=='': memoryPath=MEMORYPATH
+        #write_yaml_to_file(data, 'output.txt')
+        if token == {}:
+            #token = {}
+            token['update']=UPDATE
+            token['startfile']=STARTFILE
+            token['startsheet']=STARTSHEET
+            token['startcode']=STARTCODE
+            token['background']=BACKGROUND
+            token['program_dir']=PROGRAM_DIR
+            print('Token',token)
+        print('LAUNCH RPA SCRIPT:', Path(file).stem, write_yaml(token, rf"{memoryPath}\{state}\{Path(file).stem}.txt"))
+
+        result = read_yaml(rf"{memoryPath}\{state}\{Path(file).stem}.txt")
+        print(result)
+        return True
+
+    # ----------------------------------------
+    #script = 'test -sc not ready -b okay -u happy'  # triggerRPAScript:test -u 1 -b 0 -r 3 -sh main -sc main
+    script = codeValue.split(',')[0].strip()  # triggerRPAScript:test -u 1 -b 0 -r 3 -sh main -sc main    
+    file = codeValue.split(' ')[0].strip()
+    #default token values
+    from config import STARTFILE, STARTSHEET, STARTCODE, PROGRAM_DIR, UPDATE, BACKGROUND, RETRIES, MEMORYPATH    
+    token = {}
+    token['update']=UPDATE
+    token['startfile']=STARTFILE
+    token['startsheet']=STARTSHEET
+    token['startcode']=STARTCODE
+    token['background']=BACKGROUND
+    token['program_dir']=PROGRAM_DIR
+
+    print('Token',token)    
+    strSearch = script+' '
+    strSearch = strSearch.replace("-u ", "--update ")
+    strSearch = strSearch.replace("-b ", "--background ")
+    strSearch = strSearch.replace("-r ", "--retries ")
+
+    import re
+    # Find all occurrences of single whitespace characters
+    #result = re.findall(r'-+([\D]+?)\s+(.*?)\s', string)
+    strPattern=r'\s-+([\D]+?)\s+(.*?)\s'
+    flags = re.findall(strPattern, strSearch)
+    #flags = regexSearch(strPattern=r'-+([\D]+?)\s+(.*?)\s', strSearch=strSearch)    
+    print(flags)
+    # Python code to merge dict using update() method
+    def Merge(dict1, dict2):
+        print('merge',dict1, dict2)
+        print('MERGED',dict2.update(dict1))
+        return(dict2.update(dict1))
+
+    # Python code to convert into dictionary
+    def Convert(tup, di):
+        for a, b in tup:
+            #di.setdefault(a, []).append(b)
+            di.setdefault(a, b)
+        return di 
+
+    dictionary = {}
+    flags = Convert(flags, dictionary)
+    print('flags',flags, token,type(flags), type(token) )
+    Merge(flags, token)
+    print('new token',token)
+
+    print('Triggered', triggerRPA(file=file, token=token))
+    #if len(codeValue.split(','))>1:
+    #    workingDir = codeValue.split(',')[1].strip()
+    #else:
+    #    workingDir = CWD_DIR
+    #https://riptutorial.com/python/example/5714/more-flexibility-with-popen
+    #from subprocess import Popen
+    #p = Popen("test.bat", cwd=r".\AddOn")
+    #p = Popen(script, cwd=workingDir)
+    #stdout, stderr = p.communicate()
+
 def _openProgram(codeValue):
     script = codeValue.split(',')[0].strip()
     if len(codeValue.split(','))>1:
         workingDir = codeValue.split(',')[1].strip()
     else:
         workingDir = CWD_DIR
-    from pywinauto import Application
+
+    # To force the new window to the top
+    #from auto_helper_lib import Window
+    #selectedWindows = Window()  # instantiate windows object with snapshot of existing windows
+
+    from pywinauto import Application    
     Application().start(script)
 
-def _focusWindow(codeValue):
+    #selectedWindows.getNew()    # get newly opened windows compared to previous snapshot
+    #variables['lastWindow']=selectedWindows
+    #variables['lastWindow'].focus() # focus the newly opend window with name of    name='google chrome'
+
+def _keyboard_pwa(codeValue:str):
+    # from pywinauto.SendKeysCtypes import SendKeys # old for pywinauto==0.5.x
+    from pywinauto.keyboard import send_keys
+    send_keys(codeValue.replace(" ","{SPACE}"))            
+    #send_keys("{VK_SHIFT down}"
+    #        "pywinauto"
+    #        "{VK_SHIFT up}") # to type PYWINAUTO    
+
+def _focusWindow(codeValue:str):
+    from auto_helper_lib import Window
+    selectedWins= Window()  # instantiate windows object with snapshot of existing windows
+    #selectedWindows.get(name=codeValue)
+    selectedWins.focus(name=codeValue) # focus the newly opend window with name of    name='google chrome'     #     
+
+def _focusWindowTemp(codeValue):
     script = codeValue.split(',')[0].strip()
     if len(codeValue.split(','))>1:
         workingDir = codeValue.split(',')[1].strip()
@@ -1020,6 +1296,132 @@ def _renameRecentDownloadFile(codeValue):
     #logg('Recent Download file : none', level = 'error') if downloadedFile is None else #logg('Recent Download file:', downloadFile = downloadedFile, targetPath = targetPath, saveName = saveName, fileExtension = fileExtension, level = 'info')
     if downloadedFile is not None: renameFile(downloadedFile, targetPath + saveName + '.' + fileExtension)
 
+def _touchFile(codeValue):
+    # touchFile: file, path optional
+    # e.g. codeValue = 'renameRecentDownloadFile:D:/iCristal/Output/APAC_Daily_Sales/,D:\\iCristal\\,*.pdf,120'
+    tmpDict = parseArguments('file, path',codeValue)
+    print('touchFile','file,path', tmpDict)
+
+    from pathlib import Path
+    #_path = "D:\OneDrive-Sync\OneDrive - Christian Dior Couture\Shared Documents - RPA Project-APAC_FIN\Daily Report" # "." # path/to/
+    #Path(_path, 'status.txt').touch()
+    
+    if 'path' in tmpDict:
+        _path = tmpDict['path']
+    else:
+        _path = ""
+    Path(_path, tmpDict['file']).touch()
+
+    #filename = codeValue.split(',',1)[0].strip()
+    #msg = codeValue.split(',',1)[1].strip()
+    #flow_run_name = context.get_run_context().flow_run.dict()['name']  # error if this is not executed in a flow
+    #from auto_core_lib import touchFile 
+    #r.telegram(int(id),f"{flow_run_name}-{msg}")
+    #print(touchFile(filename))
+
+    #if 'saveName' in tmpDict:
+
+    #source = codeValue.split(',',1)[0]
+    #dest = codeValue.split(',',1)[1]
+    #logg('moveFile:', source = source, dest = dest)
+    #import os
+    #import shutil
+    #destination = shutil.move(source, dest)
+    #logg("Path of moved file:", destination = destination)
+
+def _raiseEvent(codeValue):
+    # touchFile: file, path optional
+    # e.g. codeValue = 'renameRecentDownloadFile:D:/iCristal/Output/APAC_Daily_Sales/,D:\\iCristal\\,*.pdf,120'
+    tmpDict = parseArguments('event',codeValue)
+    print('event', tmpDict)
+    if 'event' in tmpDict:
+        from config import MEMORYPATH        
+        filename = f"{MEMORYPATH}/event/{tmpDict['event']}.txt" #'/home/tuhingfg/Desktop'        
+        #msg = codeValue.split(',',1)[1].strip()
+        #flow_run_name = context.get_run_context().flow_run.dict()['name']  # error if this is not executed in a flow
+        from auto_core_lib import touchFile 
+        #r.telegram(int(id),f"{flow_run_name}-{msg}")
+        print('event raised', touchFile(filename))
+
+def _ifEvent(codeValue, df, objVar):
+    tmpDict = parseArguments('event, action1, action2',codeValue)
+    print('event','action1','action2', tmpDict)
+    if 'event' in tmpDict and 'action1' in tmpDict:     
+        # Import Path class
+        from pathlib import Path
+        from config import MEMORYPATH
+        # Path
+        path = f"{MEMORYPATH}/event/{tmpDict['event']}.txt" #'/home/tuhingfg/Desktop'
+        
+        # Instantiate the Path class
+        obj = Path(path)
+        
+        # Check if path exists
+        run_code = [tmpDict['action1']]
+        if 'action2' in tmpDict:
+            run_code_else = [tmpDict['action2']]
+        else:
+            run_code_else = []
+        print(f"ifEvent: {tmpDict['event']} : {obj.exists()}, {run_code} ELSE {run_code_else}")
+        if obj.exists():
+            obj.unlink(missing_ok=False)  #if missing_ok is false (the default), FileNotFoundError is raised if the path does not exist.
+            n = len(run_code)
+            print('action1', run_code, n)
+            return run_code, [df] * n, [objVar] * n
+        else:
+            n = len(run_code_else)
+            print('action2', run_code_else, n)
+            return run_code_else, [df] * n, [objVar] * n            
+    else:
+        return [], [], []        
+
+def _ifTest(codeValue, df, objVar):
+    logger = get_run_logger()    
+    # codeValue = condition : if true block, if false block or if empty then pass
+    condition = codeValue.split(':',1)[0].strip()
+    codeBlock = codeValue.split(':',1)[1].strip()
+    import re
+    match = re.findall( r"'''(.*?)'''", codeBlock)     # Output: ['cats', 'dogs']
+    # if codeBlock is encapsulated with ''' ''' then the internal is a statement
+    #print(match)
+    i = 0
+    for item in match:
+        codeBlock = codeBlock.replace(f"'''{item}'''", 'match'+str(i))
+        i = i+1
+    #print(codeBlock)
+    args = codeBlock.split('ELSE')
+    #args
+    if len(args)>0:
+        if 'match0' in codeBlock:
+            codeBlock1 = args[0].replace('match0', match[0]).strip()
+        else:
+            codeBlock1 = args[0].strip()
+        print(codeBlock1)        
+    if len(args)>1:
+        if 'match1' in codeBlock:
+            codeBlock2 = args[1].replace('match1', match[1]).strip()
+        else:
+            codeBlock2 = args[1].strip()
+        print(codeBlock2)
+    else:
+        codeBlock2 = 'pass'
+
+    if objVar == None or objVar =="": objVar = " "
+    #logg('if condition:', condition = condition, codeBlock = codeBlock)
+    logger.debug(f'{log_space}IF {str(eval(condition)).upper()} THEN {codeBlock1} ELSE {codeBlock2}')
+    
+    if eval(condition):
+        #logg('condition is true -----')
+        #runCode(df, codeBlock)
+        return [codeBlock1], [df], [objVar]
+        #codeList = dfObjList(df, codeBlock)
+        #runCodelist(df, codeList)
+    else:
+        if codeBlock2 != 'pass':
+            return [codeBlock2], [df], [objVar]
+        else:
+            return [], [], []
+
 
 def _runInBackground():
     #script = codeValue.split(',')[0].strip()
@@ -1041,34 +1443,56 @@ def _initializeRPA(codeValue: str):
     #r.init()
     # init(visual_automation = False, chrome_browser = True, headless_mode = False, turbo_mode = False):
     #instantiatedRPA = r.init(visual_automation = True)
-    visual_automation = True #False
-    chrome_browser = True
-    headless_mode = False
-    turbo_mode = False
+
+    if variables['headless_mode']==True:
+        visual_automation = False
+        chrome_browser = True
+        headless_mode = True
+        turbo_mode = False
+    else: # variables['headless_mode']==False:
+        visual_automation = True #False
+        chrome_browser = True
+        headless_mode = False
+        turbo_mode = False
 
     jsonString = codeValue.strip()
+    #jsonString='{"visual_automation":False, "chrome_browser":True, "headless_mode":True, "turbo_mode":False}' # overwrite setting in command
+
     import json
     #jsonString = '{"file":"C:\\Users\\roh\\Downloads\\d5c7a4f7-b9a7-4d1e-904e-ce7349e0f27c.xlsx", "country": "All"}'
     #jsonString = '{"file": "C:/Users/roh/Downloads/d5c7a4f7-b9a7-4d1e-904e-ce7349e0f27c.xlsx", "country": "All"}'
-    try:
-        paramDict = json.loads(jsonString.lower())
-        #logger.info(f"parameter dictionary = {paramDict}")    
-        #print(paramDict['file'])
-        #print(paramDict['country'])
-        #print(jsonString, paramDict)
-        logger.debug(f"{log_space}RPA Initialize Parameters = {jsonString}, {paramDict}")
-        for item in paramDict:
-            #print(item)
-            exec(f"{item}={paramDict[item]}")  # modify variables
-    except:
-        print("error json string", jsonString)
+    if jsonString == '':
+        pass
+    else:
+        try:
+            paramDict = json.loads(jsonString.lower())
+            #logger.info(f"parameter dictionary = {paramDict}")    
+            #print(paramDict['file'])
+            #print(paramDict['country'])
+            #print(jsonString, paramDict)
+            logger.debug(f"{log_space}RPA Initialize Parameters = {jsonString}, {paramDict}")
+            for item in paramDict:
+                if item == "visual_automation": visual_automation=paramDict[item]
+                elif item == "chrome_browser": chrome_browser=paramDict[item]
+                elif item == "headless_mode": headless_mode=paramDict[item]
+                elif item == "turbo_mode": turbo_mode=paramDict[item]
+                #print(item)
+                #print(f"{item}={paramDict[item]}")
+                #exec(f"{item}={paramDict[item]}")  # modify variables
+            print(visual_automation, chrome_browser, headless_mode, turbo_mode, type(visual_automation))
+        except:
+            print("Error json string in _initializeRPA:", jsonString)
 
     instantiatedRPA = r.init(visual_automation = visual_automation, chrome_browser = chrome_browser, headless_mode = headless_mode, turbo_mode = turbo_mode)
+    print(f"r.init(visual_automation = {visual_automation}, chrome_browser = {chrome_browser}, headless_mode = {headless_mode}, turbo_mode = {turbo_mode})")
     #logg('Initialize RPA', result = instantiatedRPA, level = 'info')
     logger.debug(f"{log_space}Initialize RPA = {instantiatedRPA}")
 
-    selectedWindows.getNew()    # get newly opened windows compared to previous snapshot
-    selectedWindows.focus(name='google chrome') # focus the newly opend window with name of
+    if instantiatedRPA:
+        selectedWindows.getNew()    # get newly opened windows compared to previous snapshot
+        title=r.title()
+        if title=='': title='about:blank'
+        selectedWindows.focus(name=title) #'google chrome') # focus the newly opend window with name of
 
 #@task
 def _closeRPA():
@@ -1105,7 +1529,7 @@ def _url(codeValue, df):
     elif not(isinstance(url_value, str)):
         url_value = url_value[0]
         #logg('IsInstanceOfStr', key = key, url_value = url_value)
-    if isinstance(url_value, str) and url_value[:4]=='http':
+    if isinstance(url_value, str) and (url_value[:4]=='http' or url_value[:6]=='chrome'):
         #runStatement = \
         #                '''
         #                result = r.url(url_value) # true if run is successful
@@ -1118,7 +1542,15 @@ def _url(codeValue, df):
             logger.info(f"      RPA ERROR: {consoleOutput}")
         else:
             #logger.info(f"      Valid URL")
-            pass
+            #pass
+            from auto_helper_lib import Window
+            selectedWindows = Window()  # instantiate windows object with snapshot of existing windows
+            #selectedWindows.getNew()    # get newly opened windows compared to previous snapshot
+            title=r.title()
+            if title=='': title='about:blank'
+            print('title of window to focus', title)
+            selectedWindows.focus(name=title) #'google chrome') # focus the newly opend window with name of
+
     else:
         logger.info(f"      ERROR: Not http address, url_value = {url_value}, key = {key}, level = 'warning'")
     constants['url'] = key          # set the URL key/name to a temp varaible with label url
@@ -1173,6 +1605,60 @@ def _iterationCount(codeValue, df, objVar):
     logger = get_run_logger()
     logger.info(f">>>>>>>>>>>>>>>>>>>> ITERATION:{int(countValue)+1}, {objVar} <<<<<<<<<<<<<<<<<")
 
+def _loopWhile(codeValue, df, objVar):                # while:condition:do this:repeat every X sec
+    logger = get_run_logger()    
+    # codeValue = condition : if true block, if false block or if empty then pass
+    condition = codeValue.split(':',1)[0].strip()
+    codeBlock = codeValue.split(':',1)[1].strip()
+    #repeatInSec = codeBlock.split(':',1)[1].strip()    
+    import re
+    match = re.findall( r"'''(.*?)'''", codeBlock)     # Output: ['cats', 'dogs']
+    # if codeBlock is encapsulated with ''' ''' then the internal is a statement
+    #print(match)
+    i = 0
+    for item in match:
+        codeBlock = codeBlock.replace(f"'''{item}'''", 'match'+str(i))
+        i = i+1
+    #print(codeBlock)
+    args = codeBlock.split('ELSE')
+    #args
+    if len(args)>0:
+        if 'match0' in codeBlock:
+            codeBlock1 = args[0].replace('match0', match[0]).strip()
+        else:
+            codeBlock1 = args[0].strip()
+        print(codeBlock1)        
+    if len(args)>1:
+        if 'match1' in codeBlock:
+            codeBlock2 = args[1].replace('match1', match[1]).strip()
+        else:
+            codeBlock2 = args[1].strip()
+        print(codeBlock2)
+    else:
+        codeBlock2 = 'pass'
+
+    if objVar == None or objVar =="": objVar = " "
+    #logg('if condition:', condition = condition, codeBlock = codeBlock)
+    codeToRun = eval(f"['{codeBlock1}']+['wait:5']")
+    codeBlock1 = 'codeList:' + codeBlock1 + ',wait:5, if:{condition}:{codeBlock1} ELSE {codeBlock2}' #codeValue #'loopWhile:' + codeValue
+    logger.debug(f'{log_space}IF {str(eval(condition)).upper()} THEN {codeToRun} ELSE {codeBlock2} | {codeValue} | {codeBlock1}')
+    
+    if eval(condition):
+        #logg('condition is true -----')
+        #runCode(df, codeBlock)
+        import time
+        time_sec = 10
+        #time.sleep(time_sec)
+        #return [codeBlock1], [df], [objVar]
+        return [codeBlock1], [df], [objVar]
+        #codeList = dfObjList(df, codeBlock)
+        #runCodelist(df, codeList)
+    else:
+        if codeBlock2 != 'pass':
+            return [codeBlock2], [df], [objVar]
+        else:
+            return [], [], []
+
 
 def _urlcontains(codeValue):
     search = codeValue.split('=',1)[0]
@@ -1200,6 +1686,19 @@ def _exist(codeID, codeValue):
 def _count(codeID, codeValue):
     variables[codeID] = r.count(codeValue)             # print('rclick',prefix[1])
     print('      ',codeID,variables[codeID])
+
+#_focus(codeID, codeValue) # focus() - app_to_focus (full name of app) - make application in focus
+def _focus(codeID, codeValue):
+    variables[codeID] = r.focus(codeValue)             # print('rclick',prefix[1])
+    print('      ',codeID,variables[codeID])
+
+def _popup(codeID, codeValue):
+    variables[codeID] = r.popup(codeValue)             # print('rclick',prefix[1])
+    print('      ',codeID,variables[codeID])
+
+def _title(codeID, codeValue):
+    variables[codeID] = r.title()             # print('rclick',prefix[1])
+    print('      ',codeID,variables[codeID])        
 
 #@task
 def _keyboard(codeValue: str):
@@ -1233,8 +1732,10 @@ def _snap(codeValue):
 def _telegram(codeValue):
     id = codeValue.split(',',1)[0].strip()
     msg = codeValue.split(',',1)[1].strip()
-    flow_run_name = context.get_run_context().flow_run.dict()['name']
+    #flow_run_name = context.get_run_context().flow_run.dict()['name']  # error if this is not executed in a flow
+    from config import flow_run_name 
     r.telegram(int(id),f"{flow_run_name}-{msg}")
+
 
 def selectTable(codeValue: str, df):
     # Returns a objTableSet (table object) with parameter which is either a table object in the list or a worksheet
@@ -1427,7 +1928,7 @@ def _click(code:str):
         # not int
         #logg('Not int - code is nan', level = 'error')
         return
-
+    print('click', code)
     if not waitIdentifierExist(code, 30, 1):        # identifier, time_sec, interval
             #logg('      Time out - unable to process step', level = 'critical')           #constants['lastCodelist'] = codeList  
             raise CriticalAccessFailure("Exception critical failure")              

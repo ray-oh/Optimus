@@ -141,6 +141,8 @@ dmypy.json
 /scripts/*test*
 /scripts/*main*
 /scripts/sample_notebook/*
+# ignore evertyhing above except the following
+!/scripts/OptimusLibPublic.xlsm
 *DClickReport*.ipynb
 .vscode
 studio

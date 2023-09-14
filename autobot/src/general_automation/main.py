@@ -17,12 +17,46 @@ Versions:
 # In[1]:
 
 #from prefect import task, get_run_logger
+#import time
 from prefect import tags, task, flow, get_run_logger
-import time
-
-from run import run
 
 def main():
+    import config    # call config upon startup - required to get background argument to modify flow name before calling run flow
+    from config import program_args, AUTOBOT_DIR
+    from pathlib import Path
+
+    #check program_args
+    #print(f"Check deploymentname .... {config.program_args['startfile']}   {config.program_args}")
+    #print(f"Check background .... {config.program_args['background']}")
+
+    if '4' in str(config.program_args['background']):
+        deploymentname = config.program_args['startfile'] + "_TRIGGER"
+    else:
+        deploymentname = config.program_args['startfile']
+
+    #timeout = 60*50 #3 * 60  # 1 hour = 60 min x 60 sec
+    retries = int(config.program_args['retries'])
+    tag = config.program_args['tag']
+    with tags(tag):   #("production", "test"):
+        #run()  # has tags: a, b
+        from run import run
+        result = run.with_options(name=deploymentname, retries=retries)() #, timeout_seconds=timeout)()
+
+#### temp delete below
+'''
+def main3():
+    print('#start#')
+    # create or update file
+    memoryPath = "D:\OneDrive-Sync\OneDrive - Christian Dior Couture\Shared Documents - RPA Project-APAC_FIN\Status"
+    def touchFile(filename):
+        from pathlib import Path
+        Path(filename).touch()
+        return True
+
+    touchFile(rf"{memoryPath}\fail\sense_start_time.txt")        
+    exit()
+
+def main2():
     #print("running main option")
     #if __name__ == "__main__":    
     #print(__name__)
@@ -57,51 +91,27 @@ def main():
         EX_CONFIG = 1
         sys.exit(EX_CONFIG)
 
+    # extract program_args from settings.ini and also CLI args or GUI options
     configObj, program_args = initializeFromSettings(SETTINGS_PATH)
+    # if no start file specificied, abort
+    if program_args['startfile'] == '':
+        raise ValueError(f"No script file specified")
+        import sys
+        EX_CONFIG = 1
+        sys.exit(EX_CONFIG)
+
+    #check program_args
+    print('##### CHECK ARGS ######', program_args)
+    #exit()
+
     #print(configObj, program_args)
     #print('marker', program_args)
     #codeValue = f"501259457, {__file__} {program_args['startfile']}"
     #from auto_core_lib import _telegram
     #_telegram(codeValue)
 
-    if program_args['initialization'] == 1:
-        # initialization is current not used - can pass
-        print("running initialization option")
-        pass
-
-        '''
-        PROGRAM_DIR = Path(AUTOBOT_DIR).parents[0].resolve().absolute().__str__()
-        SCRIPTS_DIR = Path(PROGRAM_DIR + '/scripts').absolute().__str__()
-        PREFECT_DIR = Path(PROGRAM_DIR + '/prefect').absolute().__str__()
-        AUTOBOT_DIR = Path(PROGRAM_DIR + '/autobot').absolute().__str__()
-        setEnvVar("OPTIMUS_DIR", PROGRAM_DIR)
-
-        configObj['settings']['PROGRAM_DIR'] = str(PROGRAM_DIR)
-        configObj['settings']['AUTOBOT_DIR'] = str(AUTOBOT_DIR)
-        configObj['settings']['SCRIPTS_DIR'] = str(SCRIPTS_DIR)
-        configObj['settings']['PREFECT_DIR'] = str(PREFECT_DIR)
-        #configObj['settings']['startfile'] = program_args['startfile']
-        #configObj['settings']['startcode'] = program_args['startcode']
-        #configObj['settings']['startsheet'] = program_args['startsheet']
-        #configObj['settings']['initialization'] = str(0) #program_args['initialization']
-        #configObj['settings']['flowrun'] = str(1) #program_args['flowrun']
-
-        from auto_initialize import save_settings
-        #save_settings(SETTINGS_PATH, configObj)
-        from datetime import datetime, timedelta
-        todayYYYYMMDD = datetime.today().strftime('%Y%m%d')
-        now_hhmmss = datetime.now().strftime('%H%M%S')
-        SETTINGS_PATH_BAK = SETTINGS_PATH + "_" + todayYYYYMMDD + "_" + now_hhmmss + ".bak"
-        print(SETTINGS_PATH_BAK)
-        from auto_utility_file import renameFile
-        renameFile(SETTINGS_PATH, SETTINGS_PATH_BAK)
-        with open(SETTINGS_PATH, 'w') as configfile:
-            configObj.write(configfile)
-        print('Settings updated and saved:', SETTINGS_PATH, ' Backup:',SETTINGS_PATH_BAK)
-    '''
-
     # Create Deployment 
-    elif program_args['flowrun'] == 2:
+    if program_args['flowrun'] == 2:
         print("Create deployment")
         import socket
         computername = socket.gethostname()
@@ -110,84 +120,13 @@ def main():
         #parametervalue = {"commandStr": Path(config.PROGRAM_DIR + '/runRPA.bat -f ' + Path(config.STARTFILE).name.__str__()).absolute().__str__()}
         parametervalue = {"file": program_args['startfile'] +".xlsm", "flowrun": 1, "deploymentname": deploymentname, \
             "PROGRAM_DIR": Path(AUTOBOT_DIR).parents[0].resolve().absolute().__str__(), \
+            "update": program_args['update'], \
             "startcode": program_args['startcode'], \
             "startsheet": program_args['startsheet'], \
             "background": str(program_args['background'])} 
 
         from deployment import workflowDeployment
         workflowDeployment(deploymentname, parametervalue)
-        '''
-        # save settings
-        DEPLOYMENTNAME = deploymentname
-        PROGRAM_DIR = Path(AUTOBOT_DIR).parents[0].resolve().absolute().__str__()
-        SCRIPTS_DIR = Path(PROGRAM_DIR + '/scripts').absolute().__str__()
-        PREFECT_DIR = Path(PROGRAM_DIR + '/prefect').absolute().__str__()
-        AUTOBOT_DIR = Path(PROGRAM_DIR + '/autobot').absolute().__str__()
-
-
-        # save deploymentname settings under deploymentname section
-        if configObj.has_section(DEPLOYMENTNAME):
-            configObj.remove_section(DEPLOYMENTNAME)
-        configObj.add_section(DEPLOYMENTNAME) 
-
-        configObj[DEPLOYMENTNAME] = configObj['settings']
-
-        if not configObj.has_section(DEPLOYMENTNAME): configObj.add_section(DEPLOYMENTNAME) 
-        configObj[DEPLOYMENTNAME]['AUTOBOT_DIR'] = str(AUTOBOT_DIR)
-        #configObj['settings']['PROGRAM_DIR'] = str(PROGRAM_DIR)
-        configObj[DEPLOYMENTNAME]['SCRIPTS_DIR'] = str(SCRIPTS_DIR)
-        configObj[DEPLOYMENTNAME]['PREFECT_DIR'] = str(PREFECT_DIR)
-        configObj[DEPLOYMENTNAME]['startfile'] = program_args['startfile']
-        configObj[DEPLOYMENTNAME]['startcode'] = program_args['startcode']
-        configObj[DEPLOYMENTNAME]['startsheet'] = program_args['startsheet']
-        configObj[DEPLOYMENTNAME]['initialization'] = str(0) #program_args['initialization']
-        configObj[DEPLOYMENTNAME]['flowrun'] = str(2) #program_args['flowrun']
-        configObj[DEPLOYMENTNAME]['background'] = str(1) #default run in background mode
-
-        #print("update: AUTOBOT_DIR, PROGRAM_DIR, SCRIPTS_DIR, PREFECT_DIR", AUTOBOT_DIR, PROGRAM_DIR, SCRIPTS_DIR, PREFECT_DIR)
-
-        # INITIALIZATION SETTING always default 0
-        #configObj['settings']['INITIALIZATION'] = str(0)
-        #configObj['settings']['FLOWRUN'] = str(0)
-        from auto_initialize import save_settings
-        #save_settings(SETTINGS_PATH, configObj)
-        from datetime import datetime, timedelta
-        todayYYYYMMDD = datetime.today().strftime('%Y%m%d')
-        now_hhmmss = datetime.now().strftime('%H%M%S')
-        SETTINGS_PATH_BAK = SETTINGS_PATH + "_" + todayYYYYMMDD + "_" + now_hhmmss + ".bak"
-        print(SETTINGS_PATH_BAK)
-        from auto_utility_file import renameFile
-        renameFile(SETTINGS_PATH, SETTINGS_PATH_BAK)
-        with open(SETTINGS_PATH, 'w') as configfile:
-            configObj.write(configfile)
-        print('Settings updated and saved:', SETTINGS_PATH, ' Backup:',SETTINGS_PATH_BAK)
-        '''
-
-        '''
-        [diorOrder-CDAPHKGRPA03]
-        startfile = diorOrder
-        startcode = main
-        startsheet = main
-        logprint = True
-        logprintlevel = 30
-        defaultloglevel = DEBUG
-        srclogfile = generalAutomation.log
-        configfile = .\\settings.ini
-        settings = 0
-        background = 0
-        program_dir = D:\Optimus-Prefect-Test1
-        autobot_dir = D:\Optimus-Prefect-Test1\autobot
-        scripts_dir = D:\Optimus-Prefect-Test1\scripts
-        prefect_dir = D:\Optimus-Prefect-Test1\prefect
-        image_path = /rpa
-        output_path = /output
-        log_path = /log
-        srclogpath = /log
-        addon_path = /addon
-        initialization = 0
-        flowrun = 2
-        version = 2022.10.09
-        '''
 
     # running from runrpa.bat
     else:
@@ -208,5 +147,5 @@ def main():
             #run()  # has tags: a, b
             result = run.with_options(name=deploymentname, retries=retries)() #, timeout_seconds=timeout)()
 
-
+'''
 

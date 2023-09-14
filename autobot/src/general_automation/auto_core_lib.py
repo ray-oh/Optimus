@@ -35,21 +35,171 @@ from auto_utility_parsers import *
 
 #@flow(task_runner=SequentialTaskRunner(), validate_parameters=False)
 #def runCodelist(request: CodeObject, codeList: list, run_code_until: str = '', objVar: str = ''):
-def runCodelist(df: pd.DataFrame, codeList: list, run_code_until: str = '', objVar: str = ''):    
-    DFlist = [df] * len(codeList)
-    objVarList = [objVar] * len(codeList)
+def runCodelist(df: pd.DataFrame, codeList: list, run_code_until: str = '', objVar: str = '', file: str = ''):    
     logger = get_run_logger()
     #logger.info(f"RunCodeList checking ...:  {codeList} ")
     if run_code_until != '':
         codeList = codeList[:int(run_code_until)]
         print('******************************ERROR !!!!! **************************************')
         logger.debug(f"{log_space}DEBUG *** codeList sliced ****', codeList = {codeList}, level = 'WARNING'")
+    queueSteps(df, codeList, run_code_until, objVar, file)
+    return
+
+from job_monitor import memoryPath, touchFile
+
+def queueSteps(df: pd.DataFrame, codeList: list, run_code_until: str = '', objVar: str = '', file: str = ''):
+    DFlist = [df] * len(codeList)
+    objVarList = [objVar] * len(codeList)
+    logger = get_run_logger()
     while len(codeList) > 0:
         x = codeList[0]
         df = DFlist[0]
         objVar = objVarList[0]
         #logger = get_run_logger()
         #logger.info(f">>>>>runCodelist ...:  {x} {df.__len__()} {objVar}")
+        print('##########################', x)
+        if '### StartFlow' in x:
+            index = codeList.index('### EndFlow')
+            print(index, len(codeList), codeList)
+            print(codeList[:index+1])
+            print(codeList[index+1:])
+            print(x.split(':')[1].strip())
+            queueStepsFlow.with_options(name=x.split(':')[1].strip())(df, codeList[:index+1], run_code_until, objVar)
+            codeList = codeList[index+1:]
+            DFlist = DFlist[index+1:]
+            objVarList = objVarList[index+1:]
+
+            # codeList.pop(0)
+            # DFlist.pop(0)
+            # objVarList.pop(0)
+
+        elif '### StartTask' in x:
+            index = codeList.index('### EndTask')
+            print(index, len(codeList), codeList)
+            print(codeList[:index+1])
+            print(codeList[index+1:])
+            print(x.split(':')[1].strip())
+            queueStepsTask.with_options(name=x.split(':')[1].strip())(df, codeList[:index+1], run_code_until, objVar)
+            codeList = codeList[index+1:]
+            DFlist = DFlist[index+1:]
+            objVarList = objVarList[index+1:]
+
+            # codeList.pop(0)
+            # DFlist.pop(0)
+            # objVarList.pop(0)
+
+        else:
+            codeList.pop(0)
+            DFlist.pop(0)
+            objVarList.pop(0)
+            #prefix = x.split(':',1)
+            #logger.info(f">>>>>runCodelist ... popped :  {x} {df.__len__()} {objVar}")
+
+            # touch process file - to indicate process still running
+            state='process'
+            touchFile(rf"{memoryPath}\{state}\{Path(file).stem}.txt")
+            
+            if isinstance(x, list):
+                logger.debug(f"{log_space}click', codeInCodeList = {x[0]}")
+                #hoverClick(x[0], 2, 1, x[1], x[2]) # if a list is defined, call with offset x and y
+            else:
+                #try_catch(runCode(df, x, objVar), x)
+                #logger.info(f">>>>>runCodelist ... before runCode :  {x} {df.__len__()} {objVar}")
+
+                additionalCodeList, additionalDFlist, additionalobjVarList = runCode(df, x, objVar)
+
+                #logger = get_run_logger()
+                if not (additionalCodeList == None or additionalCodeList == []):
+                    #logger.info(f"additional CodeList:{additionalCodeList} DFlist: {additionalDFlist.__len__()} objVarList:{additionalobjVarList} ")
+
+                    codeList = additionalCodeList + codeList
+                    DFlist = additionalDFlist + DFlist
+                    objVarList = additionalobjVarList + objVarList
+
+                    #logger.info(f"codeList ...:{codeList} DFlist ...:{DFlist.__len__()} objVarList ...:{objVarList}")
+
+                #try_catch(runCodeFlow.with_options(name=flowname, validate_parameters=False)(CodeObject(df)))
+                #try_catch(runCodeFlow.with_options(name=flowname, validate_parameters=False)(CodeObject(df), x, objVar))
+
+                import re
+                flowname = re.sub('[^a-zA-Z0-9 \n\.]', '_', x)
+                #try_catch(runCodeFlow.with_options(name=flowname)(CodeObject(df), x, objVar))
+                #logger.info(f"CHECK codeList ...:{codeList} {codeList.__len__()} DFlist ...:{DFlist.__len__()} objVarList ...:{objVarList}")
+
+        #r.wait(2)
+    return
+
+@flow(name="Test Flow")
+def queueStepsFlow(df, codeList, run_code_until, objVar): #(df: pd.DataFrame, codeList: list, run_code_until: str = '', objVar: str = ''):
+    DFlist = [df] * len(codeList)
+    objVarList = [objVar] * len(codeList)
+    logger = get_run_logger()
+    while len(codeList) > 0:
+        x = codeList[0]
+        df = DFlist[0]
+        objVar = objVarList[0]
+        #logger = get_run_logger()
+        #logger.info(f">>>>>runCodelist ...:  {x} {df.__len__()} {objVar}")
+
+        if x in ['### StartFlow']:
+            index = codeList.index('### EndFlow')
+            print(index, len(codeList), codeList)
+            print(codeList[:index+1])
+            print(codeList[index+1:])
+
+        codeList.pop(0)
+        DFlist.pop(0)
+        objVarList.pop(0)
+        #prefix = x.split(':',1)
+        #logger.info(f">>>>>runCodelist ... popped :  {x} {df.__len__()} {objVar}")
+         
+        if isinstance(x, list):
+            logger.debug(f"{log_space}click', codeInCodeList = {x[0]}")
+            #hoverClick(x[0], 2, 1, x[1], x[2]) # if a list is defined, call with offset x and y
+        else:
+            #try_catch(runCode(df, x, objVar), x)
+            #logger.info(f">>>>>runCodelist ... before runCode :  {x} {df.__len__()} {objVar}")
+
+            additionalCodeList, additionalDFlist, additionalobjVarList = runCode(df, x, objVar)
+
+            #logger = get_run_logger()
+            if not (additionalCodeList == None or additionalCodeList == []):
+                #logger.info(f"additional CodeList:{additionalCodeList} DFlist: {additionalDFlist.__len__()} objVarList:{additionalobjVarList} ")
+
+                codeList = additionalCodeList + codeList
+                DFlist = additionalDFlist + DFlist
+                objVarList = additionalobjVarList + objVarList
+
+                #logger.info(f"codeList ...:{codeList} DFlist ...:{DFlist.__len__()} objVarList ...:{objVarList}")
+
+            #try_catch(runCodeFlow.with_options(name=flowname, validate_parameters=False)(CodeObject(df)))
+            #try_catch(runCodeFlow.with_options(name=flowname, validate_parameters=False)(CodeObject(df), x, objVar))
+
+            import re
+            flowname = re.sub('[^a-zA-Z0-9 \n\.]', '_', x)
+            #try_catch(runCodeFlow.with_options(name=flowname)(CodeObject(df), x, objVar))
+            #logger.info(f"CHECK codeList ...:{codeList} {codeList.__len__()} DFlist ...:{DFlist.__len__()} objVarList ...:{objVarList}")
+
+        #r.wait(2)
+    return
+
+@task(name="Test Flow")
+def queueStepsTask(df, codeList, run_code_until, objVar): #(df: pd.DataFrame, codeList: list, run_code_until: str = '', objVar: str = ''):
+    DFlist = [df] * len(codeList)
+    objVarList = [objVar] * len(codeList)
+    logger = get_run_logger()
+    while len(codeList) > 0:
+        x = codeList[0]
+        df = DFlist[0]
+        objVar = objVarList[0]
+        #logger = get_run_logger()
+        #logger.info(f">>>>>runCodelist ...:  {x} {df.__len__()} {objVar}")
+
+        if x in ['### StartFlow']:
+            index = codeList.index('### EndFlow')
+            print(index, len(codeList), codeList)
+            print(codeList[:index+1])
+            print(codeList[index+1:])
 
         codeList.pop(0)
         DFlist.pop(0)
@@ -88,7 +238,6 @@ def runCodelist(df: pd.DataFrame, codeList: list, run_code_until: str = '', objV
     return
 
 
-
 # run Code - single line of code
 #runCode('url:https://bear.com')
 #runCode('read:checkUserName=okta-signin-username')
@@ -100,7 +249,7 @@ def runCode(df, code, objVar=''):
     from pathlib import Path, PureWindowsPath    
     prefix = code.split(':',1)
     codeID = prefix[0].strip()
-    if codeID == 'rem': return [], [], []                     # remarks - do nothing
+    if codeID == 'rem' or codeID in ['### StartFlow','### EndFlow']: return [], [], []                     # remarks - do nothing
     codeBeforeTemplateUpdate = code
     variables['codeBeforeTemplateUpdate'] = codeBeforeTemplateUpdate
     #logg('### runCode before replacing templated values ###:', CODE = code, OBJVAR = objVar) 
@@ -112,9 +261,16 @@ def runCode(df, code, objVar=''):
         codeValue = prefix[1].strip() 
     else: 
         codeValue = None
-    print('RUN STEP | ',codeBeforeTemplateUpdate)  # prints code after templated values update
+
+    #run_count = context.get_run_context().task_run.run_count #context.get("task_run_count")
+    #logger.info("%s. TaskRun", run_count)
+    from config import FLOW_COUNT
+    run_count = FLOW_COUNT
+
+    print(f'RUN {run_count} STEP | {codeBeforeTemplateUpdate}')  # prints code after templated values update
+
     if not 'iterationCount' in codeBeforeTemplateUpdate:
-        logger.info(f"RUN STEP | {codeBeforeTemplateUpdate}")
+        logger.info(f"RUN {run_count} STEP | {codeBeforeTemplateUpdate}")
     if codeBeforeTemplateUpdate.strip() != code.strip():
         #print('       updated:', code)
         logger.debug(f"{log_space}updated:{code}")
@@ -129,6 +285,7 @@ def runCode(df, code, objVar=''):
         return _otherRunCode(df, code, codeID, codeValue, objVar)
 
     return [], [], []
+
 
 #############################################################################################################################
 # obsolete code - not used below

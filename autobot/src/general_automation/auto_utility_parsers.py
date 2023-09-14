@@ -14,12 +14,114 @@ Versions:
 from auto_utility_file import jsonRead, jsonWrite
 from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter, RawDescriptionHelpFormatter
 
-def parseArg(configObj):
+from gooey import Gooey, GooeyParser
+from pathlib import Path
+@Gooey(
+    program_name='Optimus RPA - do more with less',
+    optional_cols=3,  
+    program_description=f"Input RPA script name and other parameters below", 
+    image_dir=f'{Path.cwd().__str__()}',
+    menu=[{
+        'name': 'Help',
+        'items': [{
+                'type': 'MessageDialog',
+                'menuTitle': 'About',
+                'caption': 'Inform',
+                'message': 'RPA solution with Excel front end for creating flows.\n\
+Designed with the typical data analyst who is not technical savy but comfortable using Excel in mind.\n\
+The solution makes it really easy for beginners to develop your own flows, especially with templates.\n\
+Users can easily share and reuse modular Excel based scripts to speed up flow creation or create sophisticated automation flows.\n\n\
+OPTIMUS differentiates itself from other RPA solutions including market leading commercial packages like UiPath in terms of its ease of use and extensibility.\n\
+But at the sametime, it does not compromise on features and capabilities.'
+            }, {
+                'type': 'Link',
+                'menuTitle': 'Documentation',
+                'url': 'https://github.com/ray-oh/Optimus'
+            }, {
+                'type': 'AboutDialog',
+                'menuTitle': 'Version / License',
+                'name': 'Optimus RPA',
+                'description': 'Program for running Optimus Automation Scripts',
+                'version': '1.2.1',
+                'copyright': '2023',
+                'website': 'https://github.com/ray-oh/Optimus',
+                'developer': 'Raymond Oh (https://github.com/ray-oh)',
+                'license': 'BSD-3-Clause license'
+            }]
+        }]
+    )
+def parseArgGUI(configObj):
+    # Parse command line arguments
+    version = configObj['settings']['version']
+    parserGUI = GooeyParser(description=f"Automate more with less!") 
+    #parser.add_argument('Filename', widget="FileChooser")
+    #parser.add_argument('Date', widget="DateChooser")
+    return parserGUI
+
+
+def parseArg(configObj, deploymentRun):
     # Parse command line arguments
     version = configObj['settings']['version']
     #parser = ArgumentParser(formatter_class=ArgumentDefaultsHelpFormatter, description= 'Optimus ' + version + ' \r\n sdfsdfsdfsdfsdfds Utility to process RPA scripts with steps defined from an Excel input.')
     #parser = ArgumentParser(formatter_class=RawDescriptionHelpFormatter, description= 'Optimus ' + version + '\n' +  'Utility to process RPA scripts with steps defined from an Excel input.')
-    parser = ArgumentParser(formatter_class=ArgumentDefaultsHelpFormatter, description= 'Optimus ' + version + '\n' +  'Utility to process RPA scripts with steps defined from an Excel input.')
+
+    import sys
+    #if len(sys.argv) > 1 or deploymentRun:  # more than 1 arg provided or deployment run, do not activate GUI, run from CLI
+    if True:
+        activateGooey=False
+        #print('>1 arg#####')
+        parser = ArgumentParser(formatter_class=ArgumentDefaultsHelpFormatter, description= 'Optimus ' + version + '\n' +  'Utility to process RPA scripts with steps defined from an Excel input.')
+    else:  # if no command line arguments specified, activate GUI
+        activateGooey=True
+        #print('trigger parser gui', configObj)        
+        parser = parseArgGUI(configObj)
+
+    required = parser.add_argument_group('Required arguments')
+    optional = parser.add_argument_group('Optional arguments')
+    def addArg(op, widget_action, activateGooey, defaultValue, typeValue, key):  # used below to setup gooey
+
+        def filelistcheck(value):  # field validation with type in argparse - experimental
+            from pathlib import Path
+            scripts = [f.stem for f in Path.cwd().parents[0].glob("./scripts/*.xlsm")]  # switch from autobot to optimus dir            
+            if value in scripts:
+                return value
+            else:
+                raise TypeError("Incorrect file")
+
+        if not activateGooey:
+            #print(key, typeValue, defaultValue, '>>>1')
+            op.add_argument(flag, flagLong, default=defaultValue, type=typeValue, help=help)
+        elif key == 'startfile': # widget
+            #print(key, typeValue, defaultValue, '>>>2 startfile')
+
+            # Get list of script file names https://builtin.com/data-science/python-list-files-in-directory
+            #files = [f. for f in pathlib.Path().iterdir() if f.is_file()]
+            scripts = [f.stem for f in Path.cwd().parents[0].glob("./scripts/*.xlsm")]  # switch from autobot to optimus dir
+            #print('scripts', scripts)
+            op.add_argument(flag, flagLong, help=help, choices=scripts, widget='FilterableDropdown', type=filelistcheck,  gooey_options={'full_width': True}, required=True)            
+            #op.add_argument(flag, flagLong, help=help, choices=scripts, type=filelistcheck, required=True)            
+            #op.add_argument(flag, flagLong, help=help, default=defaultValue, widget=widget_action, required=True)
+        elif 'choices[' in widget_action:   #type(widget_action) is list: # choice
+            #print(key, typeValue, defaultValue, '>>>2')            
+            op.add_argument(flag, flagLong, help=help, default=defaultValue, choices=eval(widget_action[7:]))                
+        elif str(widget_action).lower() in ['dirchooser','filechooser','integerfield']: # widget
+            #print(key, typeValue, defaultValue, '>>>3')            
+            op.add_argument(flag, flagLong, help=help, default=defaultValue, widget=widget_action, required=True)
+        elif str(widget_action).lower() in ['store','count']: # action
+            #print(key, typeValue, defaultValue, '>>>4')            
+            op.add_argument(flag, flagLong, help=help, action=widget_action, default=defaultValue)
+        elif typeValue==bool: # checkbox
+            #print(key, typeValue, defaultValue, '>>>5')
+            defaultValue=eval(defaultValue) # force to bool
+            #print(key, typeValue, defaultValue, '>>>5.1')            
+            op.add_argument(flag, flagLong, help=help, widget='CheckBox', default=defaultValue)
+        #elif str(widget_action).lower() in ['store_true', 'store_false']: # action
+        #    #defaultValue=eval(defaultValue) # force to bool
+        #    op.add_argument(flag, flagLong, help=help, action=widget_action, default=True)
+        else:
+            #print(key, typeValue, defaultValue, '>>>6')            
+            op.add_argument(flag, flagLong, default=defaultValue, type=typeValue, help=help)
+        return op
 
     config_keys = configObj.options('flag')
     flags_items = configObj.items('flag')
@@ -32,15 +134,31 @@ def parseArg(configObj):
         #print(key, configObj['flag'][key])
         flag = "-" + configObj['flag'][key]
         flagLong = "--" + key
-        defaultValue = configObj['settings'][key]
-        help = configObj['help'][key]
         typeValue = eval(configObj['type'][key])
-        #print(flag, flagLong, 'DEFAULT:',defaultValue, help, typeValue)
-        parser.add_argument(flag, flagLong, default=defaultValue, type=typeValue, help=help)
+        defaultValue = configObj['settings'][key]
+        widget_action = configObj['widget'][key]
+        help = configObj['help'][key]
+        #print(flag, flagLong, help, typeValue, 'DEFAULT:',defaultValue )
+
+        if key in ['startfile','program_dir']: # required
+            #required.add_argument(flag, flagLong, default=defaultValue, type=typeValue, help=help)
+            required = addArg(required, widget_action, activateGooey, defaultValue, typeValue, key)
+        else:
+            #optional.add_argument(flag, flagLong, default=defaultValue, type=typeValue, help=help)
+            optional = addArg(optional, widget_action, activateGooey, defaultValue, typeValue, key)
+
+
+        #parser.add_argument(flag, flagLong, default=defaultValue, type=typeValue, help=help)
+
+    #print('3333333333333333333333')
     args = vars(parser.parse_args())
+    #print('44444444444444444444')
+
+    #print('ARGS ####',args)
     return args
 
 
+# Not used ....
 def mainparseArguments():
     # declare global else startcode will be treated as local variable when assigning a value to variable with this name within function
     #global config.startfile, config.startcode, config.startsheet, config.logPrint, config.logPrintLevel, config.defaultLogLevel, config.srcLog, config.srcLogPath

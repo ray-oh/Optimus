@@ -28,7 +28,7 @@ def changeWorkingDirectory(NEW_DIR):
 
     # Print the current working directory
     CWD_DIR = Path('.').absolute().__str__()
-    print("Current working directory changed to: {0}".format(os.getcwd()))
+    #print("Current working directory changed to: {0}".format(os.getcwd()))
     #exit()
     return CWD_DIR    
 
@@ -38,14 +38,14 @@ def checkSettingsPath(SETTINGS_PATH):
         from config import EX_CONFIG
         sys.exit(EX_CONFIG)
 
-def initializeFromSettings(SETTINGS_PATH):
+def initializeFromSettings(SETTINGS_PATH, deploymentRun=False):
     #print('initialize from settings ...')
     # Load SYSTEM CONSTANTS from settings.ini
     configObj = configparser.ConfigParser()
     configObj.read(SETTINGS_PATH)
 
     # Setup SYSTEM CONSTANTS from command line arguments
-    program_args = parseArg(configObj)
+    program_args = parseArg(configObj, deploymentRun)
     #print(program_args)
     return configObj, program_args
 

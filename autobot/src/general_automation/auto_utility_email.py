@@ -55,6 +55,9 @@ class EmailsSender:
         try:
             #logger.info("Initialize EmailsSender class")
             #raise AttributeError
+            import pythoncom
+            pythoncom.CoInitialize()    # to avoid com_error: (-2147221008, 'CoInitialize has not been called.', None, None)
+
             self.outlook = win32.gencache.EnsureDispatch('outlook.application')
             #logger.info("Launch COM object")
             #self.outlook = win32.Dispatch('outlook.application')      

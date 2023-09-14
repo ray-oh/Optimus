@@ -59,15 +59,18 @@ class Window:
         selectedWindows = gw.getWindowsWithTitle(name)
         win_list = []
         title_list = []
+        titles_str = f"{log_space}List of open windows:"
         for win in selectedWindows:
             #if win.title != '':
             #logger.debug(f'{log_space}Open Windows:{win.title}')
             #print(f'{log_space}Open Windows:{win.title}')
             win_list = win_list + [win]
             title_list = title_list + [win.title]
+            if not win.title == '':
+                titles_str = titles_str + '\n' + f'     {log_space}' + win.title
         #return result
         #print(win_list, title_list)
-        logger.debug(f'{log_space}Windows snapshot:{title_list}')
+        logger.debug(f'{titles_str}')
         self.win = win_list
         self.title = title_list
 
@@ -104,8 +107,12 @@ class Window:
         '''bring selected window to front'''
         logger = get_run_logger()    
         try:
-            for win in self.new:
+            print('Focus *******', name.lower())
+            self.snap()
+            for win in self.win:  #self.new
+                #print('list',str(win.title).lower())
                 if name.lower() in str(win.title).lower():
+                    print('selected ****',str(win.title).lower())                    
                     logger.debug(f'{log_space}Focus:{win.title}')
                     win.minimize()
                     win.restore()
@@ -143,6 +150,72 @@ def process_kill(process=[]):
                 print('error')
                 pass
 
+# this version can be removed !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+'''
+def process_list2(name='', minutes=30):
+    #List processes less than time in min
+    logger = get_run_logger()
+    import psutil
+    import time
+    # Iterate over all running process
+    result = []
+    targetedList = ['chrome.exe','python.exe']
+    exclusionList_system = ['svchost.exe', 'LogonUI.exe','winlogon.exe','ctfmon.exe',
+    'smartscreen.exe','SearchFilterHost.exe','SearchProtocolHost.exe','dwm.exe',
+    'msiexec.exe','TabTip.exe','rdpclip.exe','fontdrvhost.exe','csrss.exe',
+    'WUDFHost.exe']
+    exclusionList_security = ['TaniumCX.exe','vm3dservice.exe','rdpinput.exe']
+    exclusionList_others = ['Code.exe']
+    exclusionList = exclusionList_system + exclusionList_security + exclusionList_others
+
+    def getListOfProcessSortedByCreateTime():
+
+        #Get list of running process sorted by Created Time
+
+        listOfProcObjects = []
+        # Iterate over the list
+        for proc in psutil.process_iter():
+            try:
+                # Fetch process details as dict
+                pinfo = proc.as_dict(attrs=['pid', 'name', 'username'])
+                pinfo['vms'] = proc.memory_info().vms / (1024 * 1024)
+                pinfo['etime'] = round((time.time() - proc.create_time())/60,1) # in minutes
+                # Append dict to list
+                listOfProcObjects.append(pinfo)
+            except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
+                pass
+
+        # Sort list of dict by key vms i.e. memory usage
+        #listOfProcObjects = sorted(listOfProcObjects, key=lambda procObj: procObj['vms'], reverse=True)
+        listOfProcObjects = sorted(listOfProcObjects, key=lambda procObj: procObj['etime'], reverse=True)        
+
+        return listOfProcObjects
+
+    log_str = f"{log_space}Running Process of last {minutes} min:\n"
+    for proc in getListOfProcessSortedByCreateTime():
+        log_str = log_str + f"     {log_space}{processName} ::: ID {processID} ::: {etime} min\n"
+
+
+    log_str = f"{log_space}Running Process of last {minutes} min:\n"
+    for proc in getListOfProcessSortedByCreateTime(): #psutil.process_iter():
+        try:
+            # Get process name & pid from process object.
+            processName = proc.name()
+            processID = proc.pid
+            etime = round((time.time() - proc.create_time())/60,1) # in minutes
+            if name in processName and etime < minutes:#etime < 60*30: #and not processName in 'svchost.exe python.exe msedge.exe conhost.exe TaniumCX.exe':
+                result = result + [proc]
+                if not processName in exclusionList:
+                    log_str = log_str + f"     {log_space}{processName} ::: ID {processID} ::: {etime} min\n"
+                #print(f"{log_space}{processName} ::: {processID} {etime}")
+            #logger.debug(f"{log_space}{processName} ::: {processID} {etime}")           
+        except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
+            pass
+
+    logger.debug(log_str) 
+    return result
+'''
+
 def process_list(name='', minutes=30):
     '''List processes less than time in min'''
     logger = get_run_logger()
@@ -150,21 +223,55 @@ def process_list(name='', minutes=30):
     import time
     # Iterate over all running process
     result = []
-    log_str = ''
-    for proc in psutil.process_iter():
-        try:
-            # Get process name & pid from process object.
-            processName = proc.name()
-            processID = proc.pid
-            etime = round((time.time() - proc.create_time())/60,1) # in minutes
-            if name in processName and etime < minutes:#etime < 60*30: #and not processName in 'svchost.exe python.exe msedge.exe conhost.exe TaniumCX.exe':
-                log_str = log_str + f"{log_space}{processName} ::: ID {processID} ::: {etime} min\n"
-                #print(f"{log_space}{processName} ::: {processID} {etime}")
-                result = result + [proc]
-            #logger.debug(f"{log_space}{processName} ::: {processID} {etime}")           
-        except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
-            pass
-    logger.debug(log_str) 
+    targetedList = ['chrome.exe','python.exe']
+    exclusionList_system = ['svchost.exe', 'LogonUI.exe','winlogon.exe','ctfmon.exe',
+    'smartscreen.exe','SearchFilterHost.exe','SearchProtocolHost.exe','dwm.exe',
+    'msiexec.exe','TabTip.exe','rdpclip.exe','fontdrvhost.exe','csrss.exe',
+    'WUDFHost.exe','WmiPrvSE.exe','conhost.exe']
+    exclusionList_security = ['TaniumCX.exe','TaniumClient.exe','vm3dservice.exe','rdpinput.exe']
+    exclusionList_others = ['Code.exe','msedge.exe']
+    exclusionList = exclusionList_system + exclusionList_security + exclusionList_others
+
+    def getListOfProcessSortedByCreateTime():
+        '''
+        Get list of running process sorted by Created Time
+        '''
+        result = []
+        listOfProcObjects = []
+        # Iterate over the list
+        for proc in psutil.process_iter():
+            try:
+                processName = proc.name()
+                etime = round((time.time() - proc.create_time())/60,1) # in minutes                
+                if name in processName and etime < minutes:#etime < 60*30: #and not processName in 'svchost.exe python.exe msedge.exe conhost.exe TaniumCX.exe':                
+                    if not processName in exclusionList:
+                        result = result + [proc]                       
+                        # Fetch process details as dict
+                        pinfo = proc.as_dict(attrs=['pid', 'name', 'username'])
+                        pinfo['vms'] = proc.memory_info().vms / (1024 * 1024)
+                        pinfo['etime'] = etime
+                        # Append dict to list
+                        listOfProcObjects.append(pinfo)
+            except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
+                pass
+
+        # Sort list of dict by key vms i.e. memory usage
+        #listOfProcObjects = sorted(listOfProcObjects, key=lambda procObj: procObj['vms'], reverse=True)
+        listOfProcObjects = sorted(listOfProcObjects, key=lambda procObj: procObj['etime'], reverse=True)        
+
+        return listOfProcObjects, result
+
+    listOfProcObjects, result = getListOfProcessSortedByCreateTime()
+    #print(listOfProcObjects)
+    #print(result)
+    #log_space = '     '
+    log_str = f"{log_space}Running Process of last {minutes} min:\n"
+    for proc in listOfProcObjects:
+        log_str = log_str + f"     {log_space}{proc['name']} ::: ID {proc['pid']} ::: {proc['etime']} min\n"
+        pass
+
+    logger.debug(log_str)
+    #print(log_str)
     return result
 
 
@@ -174,8 +281,10 @@ def process_list(name='', minutes=30):
 # define above in the main file with config.json
 import pandas as pd
 #print('autohelper lib', startfile)
-def readExcelConfig(sheet, excel = config.STARTFILE):
+def readExcelConfig(sheet, excel = config.STARTFILE, refresh=True):
     logger = get_run_logger()
+    from config import PROGRAM_DIR, STARTFILE
+
     #logger.info(f"readExcelConfig {sheet} {excel}")
 
     #print('readexcelconfig', config.STARTFILE)
@@ -183,8 +292,8 @@ def readExcelConfig(sheet, excel = config.STARTFILE):
     #logger.info(f"readExcelConfig fullpath {sheet} {excel}")
 
     #print('excel value', excel)
-    #logger.info(f"refreshExcel {sheet} {excel}")
-    if True:#refreshExcel(excel):
+    logger.debug(f"refreshExcel {sheet} {excel} {PROGRAM_DIR} {STARTFILE}")
+    if refresh:#refreshExcel(excel):
         from pathlib import Path, PureWindowsPath
         
         import pythoncom
@@ -229,14 +338,14 @@ def readExcelConfig(sheet, excel = config.STARTFILE):
             logger.warning("process killed" + result.stdout.decode('ASCII'))
             #print("process killed" + result.stdout.decode('ASCII'))
 
-        df = pd.read_excel(excel, sheet_name=sheet)
-        #df = df[['Type','Object','Key','Value']][df.Key.notna()]
-        df = df[df.Key.notna()]     # do not only filter key and value columns
-        df[['Type','Object']] = df[['Type','Object']].fillna(method='ffill')
-        constants['iterationCount'] = 0     # reset iterationCount when running a new sheet
-        return df
-    else:
-        exit(2)
+    df = pd.read_excel(excel, sheet_name=sheet)
+    #df = df[['Type','Object','Key','Value']][df.Key.notna()]
+    df = df[df.Key.notna()]     # do not only filter key and value columns
+    df[['Type','Object']] = df[['Type','Object']].fillna(method='ffill')
+    constants['iterationCount'] = 0     # reset iterationCount when running a new sheet
+    return df
+    #else:
+    #    exit(2)
 
 #dfmain = readExcelConfig('DCLICK2')
 
@@ -387,7 +496,15 @@ def updateConstants(df, code):
 
     for item in matchConstants:                
         #logger.info(f"    process item {item}")
-        if item in df[(df.Object == 'constants')]['Key'].values.tolist(): #Constants defined by user in excel
+        evalValue=re.findall( r'[eE][vV][aA][lL]\((.*)\)', item.strip()) # greedy mode without ?, instead of lazy mode
+        if len(evalValue)>0:                                  #evaluate contents
+            from datetime import datetime
+            evalStr = str(evalValue[0])
+            print("evalValue:",evalValue, evalStr)
+            value = eval(evalStr)
+            code = code.replace("<" + item + ">", str(value))  # replace templated values
+            code = code.replace("{{" + item + "}}", str(value))  # replace templated values
+        elif item in df[(df.Object == 'constants')]['Key'].values.tolist(): #Constants defined by user in excel
             value = dfKey_value(df[(df.Object == 'constants')], item)
             #logger.info(f"   match constants >>> key: {item}, value: {str(value)}")            
             code = code.replace("<" + item + ">", str(value))  # replace templated values
@@ -405,12 +522,22 @@ def updateConstants(df, code):
                 #code = code.replace("<" + item + ">", str(constants[item]))  
                 code = code.replace("<" + item + ">", str(value))  # replace templated values
                 code = code.replace("{{" + item + "}}", str(value))  # replace templated values
-        elif item in variables.keys():  # variables defined by user in excel
+        elif item in variables.keys() or item in df[(df.Object == 'variables')]['Key'].values.tolist():  # variables defined by user in excel
             # or item in df[(df.Object == 'variables')]['Key'].values.tolist(): 
             #logger.info(f"   match variables >>> key: {item}, variables: {variables}")
             if item in variables.keys():
                 value = variables[item]
                 code = code.replace("<" + item + ">", str(value))
+                code = code.replace("{{" + item + "}}", str(value))  # replace templated values
+            else:
+                value = dfKey_value(df[(df.Object == 'variables')], item)
+                # check if value is nan (when not defined in excel).  And if so, patch it as blank
+                import math
+                if math.isnan(value):
+                    #print('dfkey', type(value), value)
+                    value = ''                
+                #logger.info(f"   match constants >>> key: {item}, value: {str(value)}")            
+                code = code.replace("<" + item + ">", str(value))  # replace templated values
                 code = code.replace("{{" + item + "}}", str(value))  # replace templated values
         elif len(re.findall( r'@(.*?)\((.*?)\)', item))>=1:     # formulas
             value = ''

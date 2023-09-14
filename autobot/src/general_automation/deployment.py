@@ -2,13 +2,13 @@
 
 from pathlib import Path, PureWindowsPath
 
-from run import run
 from prefect.deployments import Deployment
 
 import socket
 computername = socket.gethostname()
 
 def workflowDeployment(deploymentname, parametervalue):
+    from run import run
     deployment = Deployment.build_from_flow(
         flow=run.with_options(name=deploymentname),
         name=deploymentname,
@@ -18,7 +18,7 @@ def workflowDeployment(deploymentname, parametervalue):
     )
     #     storage=fs
     deployment.apply()
-    print('Deployed ...', deploymentname, 'Parameter:',parametervalue)
+    print('Deployed flow: ', deploymentname, ' ... with Parameters: ',parametervalue)
 
 if __name__ == "__main__":
     workflowDeployment()

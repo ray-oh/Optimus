@@ -115,7 +115,16 @@ def waitIdentifierExist(identifier, time_seconds = 10, interval = 5, snapPic = T
                     if downloadedFile is not None: return True, idx
                     #renameFile(downloadedFile, targetPath + saveName + '.' + fileExtension)
                 else:
-                    bImageFound = r.present(x)
+                    try:
+                        if not r.timeout():   # There is automatic waiting for an element to appear before timeout happens, and error is returned that the element cannot be found. To change the default timeout of 10 seconds                        
+                            raise ValueError('RPA ERROR')
+                            #exit
+                    except Exception as e:
+                        #print(e)
+                        raise ValueError(str(e))
+                        exit
+                    bImageFound = r.exist(x) #r.present(x) present - is immediate.  exist checks and waits for timeout
+                    r.timeout()                    
                     if bImageFound:
                         elapsed_time = int(time.time() - start_time)
                         #logg('SUCCESS - found: ' + str(elapsed_time) + 's ' + x, level = 'info')
@@ -153,7 +162,17 @@ def waitIdentifierExist(identifier, time_seconds = 10, interval = 5, snapPic = T
                 if downloadedFile is not None: return True
                 #renameFile(downloadedFile, targetPath + saveName + '.' + fileExtension)
             else:
-                bImageFound = r.present(identifier)
+                try:
+                    if not r.timeout():   # There is automatic waiting for an element to appear before timeout happens, and error is returned that the element cannot be found. To change the default timeout of 10 seconds                        
+                        raise ValueError('RPA ERROR')
+                        #exit
+                except Exception as e:
+                    print(e)
+                    raise ValueError(str(e))
+                    exit
+                #r.timeout()
+                bImageFound = r.exist(identifier) #r.present(identifier) present is immediate
+                r.timeout()
                 if bImageFound:
                     elapsed_time = int(time.time() - start_time)
                     #logg('SUCCESS - found: ' + str(elapsed_time) + 's ' + identifier, level = 'info')
