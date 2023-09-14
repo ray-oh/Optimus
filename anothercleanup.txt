@@ -1,0 +1,1 @@
+FORFILES /S /D -10 /C "cmd /c IF @isdir == TRUE rd @path"

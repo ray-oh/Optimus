@@ -1,0 +1,704 @@
+{
+  "language": "english",
+  "target": "\"D:\\Optimus\\autobot\\venv\\Scripts\\python.exe\" -u \".\\src\\general_automation\"",
+  "suppress_gooey_flag": false,
+  "program_name": "Widget Demo",
+  "program_description": "Example application to show Gooey's various widgets",
+  "sidebar_title": "Actions",
+  "default_size": [
+    610,
+    530
+  ],
+  "auto_start": false,
+  "show_advanced": true,
+  "run_validators": true,
+  "encoding": "utf-8",
+  "show_stop_warning": true,
+  "show_success_modal": true,
+  "show_failure_modal": true,
+  "force_stop_is_error": true,
+  "poll_external_updates": false,
+  "return_to_config": false,
+  "show_restart_button": true,
+  "requires_shell": true,
+  "menu": [],
+  "clear_before_run": false,
+  "fullscreen": false,
+  "use_legacy_titles": true,
+  "num_required_cols": 2,
+  "num_optional_cols": 2,
+  "manual_start": false,
+  "monospace_display": false,
+  "image_dir": "::gooey/default",
+  "language_dir": "D:\\Optimus\\autobot\\venv\\lib\\site-packages\\gooey\\languages",
+  "progress_regex": null,
+  "progress_expr": null,
+  "hide_progress_msg": false,
+  "timing_options": {
+    "show_time_remaining": false,
+    "hide_time_remaining_on_complete": true
+  },
+  "disable_progress_bar_animation": false,
+  "disable_stop_button": false,
+  "navigation": "SIDEBAR",
+  "show_sidebar": false,
+  "tabbed_groups": false,
+  "group_by_type": true,
+  "body_bg_color": "#f0f0f0",
+  "header_bg_color": "#ffffff",
+  "header_height": 80,
+  "header_show_title": true,
+  "header_show_subtitle": true,
+  "header_image_center": false,
+  "footer_bg_color": "#f0f0f0",
+  "sidebar_bg_color": "#f2f2f2",
+  "terminal_panel_color": "#F0F0F0",
+  "terminal_font_color": "#000000",
+  "terminal_font_family": null,
+  "terminal_font_weight": 400,
+  "terminal_font_size": null,
+  "richtext_controls": false,
+  "error_color": "#ea7878",
+  "layout": "standard",
+  "widgets": {
+    "general_automation": {
+      "command": "::gooey/default",
+      "name": "general_automation",
+      "help": null,
+      "description": "",
+      "contents": [
+        {
+          "name": "required_args_msg",
+          "items": [
+            {
+              "id": "FileChooser",
+              "type": "FileChooser",
+              "cli_type": "positional",
+              "required": true,
+              "data": {
+                "display_name": "FileChooser",
+                "help": "Name of the file you want to process",
+                "required": true,
+                "nargs": "",
+                "commands": [],
+                "choices": [],
+                "default": null,
+                "dest": "FileChooser"
+              },
+              "options": {
+                "error_color": "#ea7878",
+                "label_color": "#000000",
+                "help_color": "#363636",
+                "full_width": false,
+                "validator": {
+                  "type": "ExpressionValidator",
+                  "test": "user_input and not user_input.isspace()",
+                  "message": "This field is required"
+                },
+                "external_validator": {
+                  "cmd": ""
+                }
+              }
+            },
+            {
+              "id": "DirectoryChooser",
+              "type": "DirChooser",
+              "cli_type": "positional",
+              "required": true,
+              "data": {
+                "display_name": "DirectoryChooser",
+                "help": "Name of the file you want to process",
+                "required": true,
+                "nargs": "",
+                "commands": [],
+                "choices": [],
+                "default": null,
+                "dest": "DirectoryChooser"
+              },
+              "options": {
+                "error_color": "#ea7878",
+                "label_color": "#000000",
+                "help_color": "#363636",
+                "full_width": false,
+                "validator": {
+                  "type": "ExpressionValidator",
+                  "test": "user_input and not user_input.isspace()",
+                  "message": "This field is required"
+                },
+                "external_validator": {
+                  "cmd": ""
+                }
+              }
+            },
+            {
+              "id": "FileSaver",
+              "type": "FileSaver",
+              "cli_type": "positional",
+              "required": true,
+              "data": {
+                "display_name": "FileSaver",
+                "help": "Name of the file you want to process",
+                "required": true,
+                "nargs": "",
+                "commands": [],
+                "choices": [],
+                "default": null,
+                "dest": "FileSaver"
+              },
+              "options": {
+                "error_color": "#ea7878",
+                "label_color": "#000000",
+                "help_color": "#363636",
+                "full_width": false,
+                "validator": {
+                  "type": "ExpressionValidator",
+                  "test": "user_input and not user_input.isspace()",
+                  "message": "This field is required"
+                },
+                "external_validator": {
+                  "cmd": ""
+                }
+              }
+            },
+            {
+              "id": "MultiFileChooser",
+              "type": "MultiFileChooser",
+              "cli_type": "positional",
+              "required": true,
+              "data": {
+                "display_name": "MultiFileChooser",
+                "help": "Name of the file you want to process",
+                "required": true,
+                "nargs": "*",
+                "commands": [],
+                "choices": [],
+                "default": null,
+                "dest": "MultiFileChooser"
+              },
+              "options": {
+                "error_color": "#ea7878",
+                "label_color": "#000000",
+                "help_color": "#363636",
+                "full_width": false,
+                "validator": {
+                  "type": "ExpressionValidator",
+                  "test": "user_input and not user_input.isspace()",
+                  "message": "This field is required"
+                },
+                "external_validator": {
+                  "cmd": ""
+                }
+              }
+            },
+            {
+              "id": "directory",
+              "type": "TextField",
+              "cli_type": "positional",
+              "required": true,
+              "data": {
+                "display_name": "directory",
+                "help": "Directory to store output",
+                "required": true,
+                "nargs": "",
+                "commands": [],
+                "choices": [],
+                "default": null,
+                "dest": "directory"
+              },
+              "options": {
+                "error_color": "#ea7878",
+                "label_color": "#000000",
+                "help_color": "#363636",
+                "full_width": false,
+                "validator": {
+                  "type": "ExpressionValidator",
+                  "test": "user_input and not user_input.isspace()",
+                  "message": "This field is required"
+                },
+                "external_validator": {
+                  "cmd": ""
+                }
+              }
+            }
+          ],
+          "groups": [],
+          "description": null,
+          "options": {
+            "label_color": "#000000",
+            "description_color": "#363636",
+            "legacy": {
+              "required_cols": 2,
+              "optional_cols": 2
+            },
+            "columns": 2,
+            "padding": 10,
+            "show_border": false
+          }
+        },
+        {
+          "name": "options",
+          "items": [
+            {
+              "id": "-d",
+              "type": "TextField",
+              "cli_type": "optional",
+              "required": false,
+              "data": {
+                "display_name": "duration",
+                "help": "Duration (in seconds) of the program output",
+                "required": false,
+                "nargs": "",
+                "commands": [
+                  "-d",
+                  "--duration"
+                ],
+                "choices": [],
+                "default": 2,
+                "dest": "duration"
+              },
+              "options": {
+                "error_color": "#ea7878",
+                "label_color": "#000000",
+                "help_color": "#363636",
+                "full_width": false,
+                "validator": {
+                  "type": "ExpressionValidator",
+                  "test": "True",
+                  "message": ""
+                },
+                "external_validator": {
+                  "cmd": ""
+                }
+              }
+            },
+            {
+              "id": "-s",
+              "type": "DateChooser",
+              "cli_type": "optional",
+              "required": false,
+              "data": {
+                "display_name": "cron_schedule",
+                "help": "datetime when the cron should begin",
+                "required": false,
+                "nargs": "",
+                "commands": [
+                  "-s",
+                  "--cron-schedule"
+                ],
+                "choices": [],
+                "default": null,
+                "dest": "cron_schedule"
+              },
+              "options": {
+                "error_color": "#ea7878",
+                "label_color": "#000000",
+                "help_color": "#363636",
+                "full_width": false,
+                "validator": {
+                  "type": "ExpressionValidator",
+                  "test": "True",
+                  "message": ""
+                },
+                "external_validator": {
+                  "cmd": ""
+                }
+              }
+            },
+            {
+              "id": "--cron-time",
+              "type": "TimeChooser",
+              "cli_type": "optional",
+              "required": false,
+              "data": {
+                "display_name": "cron_time",
+                "help": "datetime when the cron should begin",
+                "required": false,
+                "nargs": "",
+                "commands": [
+                  "--cron-time"
+                ],
+                "choices": [],
+                "default": null,
+                "dest": "cron_time"
+              },
+              "options": {
+                "error_color": "#ea7878",
+                "label_color": "#000000",
+                "help_color": "#363636",
+                "full_width": false,
+                "validator": {
+                  "type": "ExpressionValidator",
+                  "test": "True",
+                  "message": ""
+                },
+                "external_validator": {
+                  "cmd": ""
+                }
+              }
+            },
+            {
+              "id": "-c",
+              "type": "CheckBox",
+              "cli_type": "optional",
+              "required": false,
+              "data": {
+                "display_name": "showtime",
+                "help": "display the countdown timer",
+                "required": false,
+                "nargs": "",
+                "commands": [
+                  "-c",
+                  "--showtime"
+                ],
+                "choices": [],
+                "default": false,
+                "dest": "showtime"
+              },
+              "options": {
+                "error_color": "#ea7878",
+                "label_color": "#000000",
+                "help_color": "#363636",
+                "full_width": false,
+                "validator": {
+                  "type": "ExpressionValidator",
+                  "test": "True",
+                  "message": ""
+                },
+                "external_validator": {
+                  "cmd": ""
+                }
+              }
+            },
+            {
+              "id": "-p",
+              "type": "CheckBox",
+              "cli_type": "optional",
+              "required": false,
+              "data": {
+                "display_name": "pause",
+                "help": "Pause execution",
+                "required": false,
+                "nargs": "",
+                "commands": [
+                  "-p",
+                  "--pause"
+                ],
+                "choices": [],
+                "default": false,
+                "dest": "pause"
+              },
+              "options": {
+                "error_color": "#ea7878",
+                "label_color": "#000000",
+                "help_color": "#363636",
+                "full_width": false,
+                "validator": {
+                  "type": "ExpressionValidator",
+                  "test": "True",
+                  "message": ""
+                },
+                "external_validator": {
+                  "cmd": ""
+                }
+              }
+            },
+            {
+              "id": "-v",
+              "type": "Counter",
+              "cli_type": "optional",
+              "required": false,
+              "data": {
+                "display_name": "verbose",
+                "help": null,
+                "required": false,
+                "nargs": "",
+                "commands": [
+                  "-v",
+                  "--verbose"
+                ],
+                "choices": [
+                  "0",
+                  "1",
+                  "2",
+                  "3",
+                  "4",
+                  "5",
+                  "6",
+                  "7",
+                  "8",
+                  "9",
+                  "10"
+                ],
+                "default": null,
+                "dest": "verbose"
+              },
+              "options": {
+                "error_color": "#ea7878",
+                "label_color": "#000000",
+                "help_color": "#363636",
+                "full_width": false,
+                "validator": {
+                  "type": "ExpressionValidator",
+                  "test": "True",
+                  "message": ""
+                },
+                "external_validator": {
+                  "cmd": ""
+                }
+              }
+            },
+            {
+              "id": "-o",
+              "type": "CheckBox",
+              "cli_type": "optional",
+              "required": false,
+              "data": {
+                "display_name": "overwrite",
+                "help": "Overwrite output file (if present)",
+                "required": false,
+                "nargs": "",
+                "commands": [
+                  "-o",
+                  "--overwrite"
+                ],
+                "choices": [],
+                "default": false,
+                "dest": "overwrite"
+              },
+              "options": {
+                "error_color": "#ea7878",
+                "label_color": "#000000",
+                "help_color": "#363636",
+                "full_width": false,
+                "validator": {
+                  "type": "ExpressionValidator",
+                  "test": "True",
+                  "message": ""
+                },
+                "external_validator": {
+                  "cmd": ""
+                }
+              }
+            },
+            {
+              "id": "-r",
+              "type": "Dropdown",
+              "cli_type": "optional",
+              "required": false,
+              "data": {
+                "display_name": "recursive",
+                "help": "Recurse into subfolders",
+                "required": false,
+                "nargs": "",
+                "commands": [
+                  "-r",
+                  "--recursive"
+                ],
+                "choices": [
+                  "yes",
+                  "no"
+                ],
+                "default": null,
+                "dest": "recursive"
+              },
+              "options": {
+                "error_color": "#ea7878",
+                "label_color": "#000000",
+                "help_color": "#363636",
+                "full_width": false,
+                "validator": {
+                  "type": "ExpressionValidator",
+                  "test": "True",
+                  "message": ""
+                },
+                "external_validator": {
+                  "cmd": ""
+                }
+              }
+            },
+            {
+              "id": "-w",
+              "type": "TextField",
+              "cli_type": "optional",
+              "required": false,
+              "data": {
+                "display_name": "writelog",
+                "help": "Dump output to local file",
+                "required": false,
+                "nargs": "",
+                "commands": [
+                  "-w",
+                  "--writelog"
+                ],
+                "choices": [],
+                "default": "writelogs",
+                "dest": "writelog"
+              },
+              "options": {
+                "error_color": "#ea7878",
+                "label_color": "#000000",
+                "help_color": "#363636",
+                "full_width": false,
+                "validator": {
+                  "type": "ExpressionValidator",
+                  "test": "True",
+                  "message": ""
+                },
+                "external_validator": {
+                  "cmd": ""
+                }
+              }
+            },
+            {
+              "id": "-e",
+              "type": "CheckBox",
+              "cli_type": "optional",
+              "required": false,
+              "data": {
+                "display_name": "error",
+                "help": "Stop process on error (default: No)",
+                "required": false,
+                "nargs": "",
+                "commands": [
+                  "-e",
+                  "--error"
+                ],
+                "choices": [],
+                "default": false,
+                "dest": "error"
+              },
+              "options": {
+                "error_color": "#ea7878",
+                "label_color": "#000000",
+                "help_color": "#363636",
+                "full_width": false,
+                "validator": {
+                  "type": "ExpressionValidator",
+                  "test": "True",
+                  "message": ""
+                },
+                "external_validator": {
+                  "cmd": ""
+                }
+              }
+            },
+            {
+              "id": "18a2a46c-61e9-4c7c-aee5-8d18d2ff33f5",
+              "type": "RadioGroup",
+              "cli_type": "optional",
+              "group_name": "Choose Option",
+              "required": false,
+              "options": {
+                "error_color": "#ea7878",
+                "label_color": "#000000",
+                "help_color": "#363636",
+                "full_width": false,
+                "validator": {
+                  "type": "local",
+                  "test": "lambda x: True",
+                  "message": ""
+                },
+                "external_validator": {
+                  "cmd": ""
+                }
+              },
+              "data": {
+                "commands": [
+                  [
+                    "-t",
+                    "--verbozze"
+                  ],
+                  [
+                    "-q",
+                    "--quiet"
+                  ]
+                ],
+                "widgets": [
+                  {
+                    "id": "-t",
+                    "type": "CheckBox",
+                    "cli_type": "optional",
+                    "required": false,
+                    "data": {
+                      "display_name": "verbose",
+                      "help": "Show more details",
+                      "required": false,
+                      "nargs": "",
+                      "commands": [
+                        "-t",
+                        "--verbozze"
+                      ],
+                      "choices": [],
+                      "default": false,
+                      "dest": "verbose"
+                    },
+                    "options": {
+                      "error_color": "#ea7878",
+                      "label_color": "#000000",
+                      "help_color": "#363636",
+                      "full_width": false,
+                      "validator": {
+                        "type": "ExpressionValidator",
+                        "test": "True",
+                        "message": ""
+                      },
+                      "external_validator": {
+                        "cmd": ""
+                      }
+                    }
+                  },
+                  {
+                    "id": "-q",
+                    "type": "CheckBox",
+                    "cli_type": "optional",
+                    "required": false,
+                    "data": {
+                      "display_name": "quiet",
+                      "help": "Only output on error",
+                      "required": false,
+                      "nargs": "",
+                      "commands": [
+                        "-q",
+                        "--quiet"
+                      ],
+                      "choices": [],
+                      "default": false,
+                      "dest": "quiet"
+                    },
+                    "options": {
+                      "error_color": "#ea7878",
+                      "label_color": "#000000",
+                      "help_color": "#363636",
+                      "full_width": false,
+                      "validator": {
+                        "type": "ExpressionValidator",
+                        "test": "True",
+                        "message": ""
+                      },
+                      "external_validator": {
+                        "cmd": ""
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          ],
+          "groups": [],
+          "description": null,
+          "options": {
+            "label_color": "#000000",
+            "description_color": "#363636",
+            "legacy": {
+              "required_cols": 2,
+              "optional_cols": 2
+            },
+            "columns": 2,
+            "padding": 10,
+            "show_border": false
+          }
+        }
+      ]
+    }
+  }
+}

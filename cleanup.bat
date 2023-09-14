@@ -1,0 +1,1 @@
+forfiles /S /P "C:\Users\svc_supplychain\AppData\Local\Temp" /M "*" /D -180 /C "cmd /c del /q @path"
