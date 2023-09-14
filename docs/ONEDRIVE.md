@@ -25,3 +25,9 @@ De-selecting the folder removes all local files stored on the VM but keeps the f
 ### References
 [Add and Sync Shared Folders to OneDrive](https://support.microsoft.com/en-us/office/add-and-sync-shared-folders-to-onedrive-for-home-8a63cd47-1526-4cd8-bd09-ee3f9bfc1504)  
 [Save disk space with OneDrive files on demand for windows](https://support.microsoft.com/en-us/office/save-disk-space-with-onedrive-files-on-demand-for-windows-0e6860d3-d9f3-4971-b321-7092438fb38e)
+
+## Space saving tips in Windows 10
+[Automatically free up hard drive space with the Disk Cleanup tool on Windows 10](https://www.windowscentral.com/how-automate-disk-cleanup-tool-windows-10)  
+[Delete a user profile in Windows](https://learn.microsoft.com/en-us/troubleshoot/windows-server/user-profiles-and-logon/delete-user-profile)
+
+
