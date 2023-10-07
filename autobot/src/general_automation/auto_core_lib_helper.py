@@ -16,9 +16,11 @@ Versions:
 from prefect import task, flow, get_run_logger, context
 from prefect.task_runners import SequentialTaskRunner
 
-from config import variables, constants, STARTFILE, CWD_DIR, IMAGE_DIR, yesterdayYYYYMMDD, log_space
+from config import variables, constants, STARTFILE, CWD_DIR, IMAGE_DIR, yesterdayYYYYMMDD, log_space, RPABROWSER
 from pathlib import Path, PureWindowsPath
 import rpa as r
+from browser import Browser
+p = Browser()
 
 from auto_helper_lib import dfObjList, dfKey_value, readExcelConfig, updateConstants, CriticalAccessFailure
 from auto_utility_PDF_Image import cropImage, createPDFfromImages, addContentPDF
@@ -123,6 +125,7 @@ def _otherRunCode(df, code, codeID, codeValue, objVar):
     elif codeID.lower() == 'increment'.lower():       _increment(codeValue)             # increment:counter, 1    
     elif codeID.lower() == 'urlcontains'.lower(): _urlcontains(codeValue)   # urlcontains:value_to_search,variable_result_true_false
     elif codeID.lower() == 'keyboard'.lower():  _keyboard(codeValue)        # key press e.g. [home] [end] [insert] [f1] .. [f15] [shift] [ctrl] [alt] [win] [cmd] [enter] [space] [tab] [esc] [backspace] [delete] [clear]
+    elif codeID.lower() == 'type'.lower():      _type(codeValue)            # type
     elif codeID.lower() == 'rclick'.lower():    _rclick(codeValue)          # right click
     elif codeID.lower() == 'present'.lower():   _present(codeID, codeValue) # right click
     elif codeID.lower() == 'exist'.lower():     _exist(codeID, codeValue)   # Waits until the timeout for an element to exist and returns a JavaScript true or false
@@ -134,6 +137,8 @@ def _otherRunCode(df, code, codeID, codeValue, objVar):
     elif codeID.lower() == 'type'.lower():    _type(codeValue)  # type:identifier,value
     elif codeID.lower() == 'snap'.lower():      _snap(codeValue)    # snap:page,saveFile   Snap entire web page
     elif codeID.lower() == 'telegram'.lower():  _telegram(codeValue)
+
+    elif codeID.lower() == 'download'.lower():    _download(codeValue)          # download - selector, file
 
     elif codeID.lower() == 'email'.lower():  _email(codeValue, df)
     elif codeID.lower() == 'waitEmailComplete'.lower():  _waitEmailComplete(codeValue, df)
@@ -468,67 +473,124 @@ def _codeList(codeValue, df, objVar):
 #@task
 import time
 def _wait(codeValue, df, objVar):
-    tmpDict = parseArguments('time_sec,identifier,run_code,run_code_until',codeValue)  #items = 'wait:15:ID:codeA'
-    time_sec = int(tmpDict['time_sec'])
-    if 'identifier' in tmpDict:                 # do while identifier is found - r.exist
-        #logg('identifier', identifier = tmpDict['identifier'])
-        print('wait identifier', tmpDict['identifier'])
-        # identifier is a special object list
-        if tmpDict['identifier'] in df[(df.Type == 'list')]['Object'].dropna().values.tolist():
-            tmpDict['identifier'] = dfObjList(df, tmpDict['identifier'])
+    logger = get_run_logger()
+    #print('*********************************************************', RPABROWSER)    
+    if RPABROWSER==1:
+        if codeValue=="" or codeValue==None:    # no parameters
+            time_sec=1000        
+            time.sleep(time_sec)
+            # r.wait(time_sec)
+            return [], [], []
+        if codeValue[:1]=='{':    # parameters in JSON format
+            if codeValue=="" or codeValue==None:
+                codeValue = "{}"
+            #print('-------------wait_codevalue',codeValue)
+            import json
+            json_object = json.loads(codeValue)
+            if 'time_sec' in json_object:
+                time_sec = json_object["time_sec"]
+                tmpDict = json_object.pop('time_sec')
+            else:
+                time_sec = 15000
+        else:     # parameters not in JSON format
+            tmpDict = parseArguments('time_sec,identifier,run_code,run_code_until',codeValue)  #items = 'wait:15:ID:codeA'
+            time_sec = int(tmpDict['time_sec'])*1000
+            if 'identifier' in tmpDict:                 # do while identifier is found - r.exist
+                #logg('identifier', identifier = tmpDict['identifier'])
+                print('wait identifier', tmpDict['identifier'])
+                # identifier is a special object list
+                if tmpDict['identifier'] in df[(df.Type == 'list')]['Object'].dropna().values.tolist():
+                    tmpDict['identifier'] = dfObjList(df, tmpDict['identifier'])
+                    #print('wait identifier list', tmpDict['identifier'])
+                #logger.debug(f"{log_space}timeout',{time_sec},'selector',{tmpDict['identifier']}")
+                timeoutError = not p.wait(time_sec, selector=tmpDict['identifier'])
+            else:
+                time.sleep(int(time_sec/1000))      # time sec is in milli sec
+                timeoutError = False    #not p.wait(time_sec)
+
+        #p.initialize(**json_object)
+        if timeoutError: #**tmpDict): #int(codeValue)):
             if 'run_code' in tmpDict:                                           #run code if time out
                 tmpDict['run_code'] = dfObjList(df, tmpDict['run_code'])
-            print('wait identifier list', tmpDict['identifier'])
-            print('wait run code list', tmpDict['run_code'])
+                print('wait run code list', tmpDict['run_code'])
+                logger.debug(f"{log_space}Scenario list:{tmpDict['identifier']} Action list:{tmpDict['run_code']}")
 
-            logger = get_run_logger()
-            logger.debug(f"{log_space}Scenario list:{tmpDict['identifier']} Action list:{tmpDict['run_code']}")
+                #logger.debug(f"      Run code from wait: {tmpDict['run_code']}")
 
-            matchBool, index = waitIdentifierExist(tmpDict['identifier'], time_sec, 1, False)         #waitIdentifierExist(identifier, time_seconds, interval) - returns true or false
-            if not matchBool:
-                #logg('      Time out from waiting', level = 'warning')                    #raise CriticalAccessFailure("TXT logon window did not appear")
-                logger.warning(f"Time out from waiting ...")
-                return [], [], []
+                run_code = tmpDict['run_code'] #dfObjList(df, tmpDict['run_code'])
+                #logg('      Run code:', run_code = run_code)
+
+                #runCodelist(CodeObject(df), run_code)
+                n = len(run_code)
+                #logger.debug(f"{log_space}Action:{tmpDict['run_code']}, {n} steps:{run_code} {[objVar] * n}")
+
+                return run_code, [df] * n, [objVar] * n
             else:
+                logger.warning(f"{log_space}Time out from waiting ...")
+                return [], [], []
+        return [], [], []
+    else:
+        tmpDict = parseArguments('time_sec,identifier,run_code,run_code_until',codeValue)  #items = 'wait:15:ID:codeA'
+        time_sec = int(tmpDict['time_sec'])
+        if 'identifier' in tmpDict:                 # do while identifier is found - r.exist
+            #logg('identifier', identifier = tmpDict['identifier'])
+            print('wait identifier', tmpDict['identifier'])
+            # identifier is a special object list
+            if tmpDict['identifier'] in df[(df.Type == 'list')]['Object'].dropna().values.tolist():
+                tmpDict['identifier'] = dfObjList(df, tmpDict['identifier'])
                 if 'run_code' in tmpDict:                                           #run code if time out
-                    print('      Run code from wait:', tmpDict['run_code'][index])
+                    tmpDict['run_code'] = dfObjList(df, tmpDict['run_code'])
+                print('wait identifier list', tmpDict['identifier'])
+                print('wait run code list', tmpDict['run_code'])
 
-                    run_code = dfObjList(df, tmpDict['run_code'][index])
-                    #logg('      Run code:', run_code = run_code)
+                logger = get_run_logger()
+                logger.debug(f"{log_space}Scenario list:{tmpDict['identifier']} Action list:{tmpDict['run_code']}")
 
-                    #runCodelist(CodeObject(df), run_code)
-                    n = len(run_code)
-                    logger.debug(f"{log_space}Action:{tmpDict['run_code'][index]}, {n} steps:{run_code} {[objVar] * n}")
+                matchBool, index = waitIdentifierExist(tmpDict['identifier'], time_sec, 1, False)         #waitIdentifierExist(identifier, time_seconds, interval) - returns true or false
+                if not matchBool:
+                    #logg('      Time out from waiting', level = 'warning')                    #raise CriticalAccessFailure("TXT logon window did not appear")
+                    logger.warning(f"Time out from waiting ...")
+                    return [], [], []
+                else:
+                    if 'run_code' in tmpDict:                                           #run code if time out
+                        print('      Run code from wait:', tmpDict['run_code'][index])
 
-                    return run_code, [df] * n, [objVar] * n
-                    #return run_code, [df], [objVar]
+                        run_code = dfObjList(df, tmpDict['run_code'][index])
+                        #logg('      Run code:', run_code = run_code)
+
+                        #runCodelist(CodeObject(df), run_code)
+                        n = len(run_code)
+                        logger.debug(f"{log_space}Action:{tmpDict['run_code'][index]}, {n} steps:{run_code} {[objVar] * n}")
+
+                        return run_code, [df] * n, [objVar] * n
+                        #return run_code, [df], [objVar]
+                    else:
+                        return [], [], []
+
+            else: # not a special object list
+                if not waitIdentifierExist(tmpDict['identifier'], time_sec, 5, False):         #waitIdentifierExist(identifier, time_seconds, interval) - returns true or false
+                    #logg('      Time out from waiting', level = 'warning')                    #raise CriticalAccessFailure("TXT logon window did not appear")
+                    if 'run_code' in tmpDict:                                           #run code if time out
+                        run_code = dfObjList(df, tmpDict['run_code'])
+                        if 'run_code_until' in tmpDict:
+                            #logg('Time out - run code:', run_code = run_code, run_code_until = tmpDict['run_code_until'], level = 'debug')
+                            #runCodelist(CodeObject(df), run_code, '', tmpDict['run_code_until'])
+                            n = len(run_code)
+                            return run_code, [df] * n, [objVar] * n                        
+                        else:                                                           
+                            #logg('      Time out - run code:', run_code = run_code, level = 'error')
+                            #runCodelist(CodeObject(df), run_code)
+                            n = len(run_code)
+                            return run_code, [df] * n, [objVar] * n
                 else:
                     return [], [], []
 
-        else: # not a special object list
-            if not waitIdentifierExist(tmpDict['identifier'], time_sec, 5, False):         #waitIdentifierExist(identifier, time_seconds, interval) - returns true or false
-                #logg('      Time out from waiting', level = 'warning')                    #raise CriticalAccessFailure("TXT logon window did not appear")
-                if 'run_code' in tmpDict:                                           #run code if time out
-                    run_code = dfObjList(df, tmpDict['run_code'])
-                    if 'run_code_until' in tmpDict:
-                        #logg('Time out - run code:', run_code = run_code, run_code_until = tmpDict['run_code_until'], level = 'debug')
-                        #runCodelist(CodeObject(df), run_code, '', tmpDict['run_code_until'])
-                        n = len(run_code)
-                        return run_code, [df] * n, [objVar] * n                        
-                    else:                                                           
-                        #logg('      Time out - run code:', run_code = run_code, level = 'error')
-                        #runCodelist(CodeObject(df), run_code)
-                        n = len(run_code)
-                        return run_code, [df] * n, [objVar] * n
-            else:
-                return [], [], []
-
-    # no identifier - normal wait
-    else:
-        #logg('wait', time_sec = time_sec)
-        time.sleep(time_sec)
-        # r.wait(time_sec)
-        return [], [], []
+        # no identifier - normal wait
+        else:
+            #logg('wait', time_sec = time_sec)
+            time.sleep(time_sec)
+            # r.wait(time_sec)
+            return [], [], []
 
 #@task
 def _waitDisappear(codeValue, df, objVar):
@@ -1023,6 +1085,35 @@ def copy_excel_cell_range(
                 tgt_cell.alignment = copy(cell.alignment)
     return tgt_ws
 
+#   append_df_to_excel(filename, variables[dataFrameName], sheet_name=_sheet, index=False)
+def append_df_to_excel_old(
+    filename: Union[str, Path],
+    df: pd.DataFrame,
+    sheet_name: str = 'Sheet1',
+    startrow: Optional[int] = None,
+    max_col_width: int = 30,
+    autofilter: bool = False,
+    fmt_int: str = "#,##0",
+    fmt_float: str = "#,##0.00",
+    fmt_date: str = "yyyy-mm-dd",
+    fmt_datetime: str = "yyyy-mm-dd hh:mm",
+    truncate_sheet: bool = False,
+    storage_options: Optional[dict] = None,
+    **to_excel_kwargs
+) -> None:
+    import pandas
+    from openpyxl import load_workbook
+
+    book = load_workbook(filename)
+    writer = pandas.ExcelWriter(filename, engine='openpyxl')
+    writer.book = book
+    writer.sheets = {ws.title: ws for ws in book.worksheets}
+
+    for sheetname in writer.sheets:
+        df.to_excel(writer,sheet_name=sheetname, startrow=writer.sheets[sheetname].max_row, index = False,header= False)
+
+    writer.save()
+
 
 def append_df_to_excel(
         filename: Union[str, Path],
@@ -1433,79 +1524,112 @@ def _initializeRPA(codeValue: str):
     # visual_automation = False, chrome_browser = True, headless_mode = False, turbo_mode = False
     logger = get_run_logger()
 
-    from auto_helper_lib import Window, process_list
-    processResult = process_list(name='', minutes=5)
-    #selectedWindows = windows_getTitle(name='')
-    selectedWindows = Window()  # instantiate windows object with snapshot of existing windows
-    #logger.debug(f'{log_space}Windows: {selectedWindows.title}')
-
-    #if not browserDisable:
-    #r.init()
-    # init(visual_automation = False, chrome_browser = True, headless_mode = False, turbo_mode = False):
-    #instantiatedRPA = r.init(visual_automation = True)
-
-    if variables['headless_mode']==True:
-        visual_automation = False
-        chrome_browser = True
-        headless_mode = True
-        turbo_mode = False
-    else: # variables['headless_mode']==False:
-        visual_automation = True #False
-        chrome_browser = True
-        headless_mode = False
-        turbo_mode = False
-
-    jsonString = codeValue.strip()
-    #jsonString='{"visual_automation":False, "chrome_browser":True, "headless_mode":True, "turbo_mode":False}' # overwrite setting in command
-
-    import json
-    #jsonString = '{"file":"C:\\Users\\roh\\Downloads\\d5c7a4f7-b9a7-4d1e-904e-ce7349e0f27c.xlsx", "country": "All"}'
-    #jsonString = '{"file": "C:/Users/roh/Downloads/d5c7a4f7-b9a7-4d1e-904e-ce7349e0f27c.xlsx", "country": "All"}'
-    if jsonString == '':
-        pass
-    else:
+    if RPABROWSER == 1:
+        if codeValue=="" or codeValue==None:
+            codeValue = "{}"
+        #logger.warning(f'{log_space}InitializeRPA codeValue{codeValue}================')
         try:
-            paramDict = json.loads(jsonString.lower())
-            #logger.info(f"parameter dictionary = {paramDict}")    
-            #print(paramDict['file'])
-            #print(paramDict['country'])
-            #print(jsonString, paramDict)
-            logger.debug(f"{log_space}RPA Initialize Parameters = {jsonString}, {paramDict}")
-            for item in paramDict:
-                if item == "visual_automation": visual_automation=paramDict[item]
-                elif item == "chrome_browser": chrome_browser=paramDict[item]
-                elif item == "headless_mode": headless_mode=paramDict[item]
-                elif item == "turbo_mode": turbo_mode=paramDict[item]
-                #print(item)
-                #print(f"{item}={paramDict[item]}")
-                #exec(f"{item}={paramDict[item]}")  # modify variables
-            print(visual_automation, chrome_browser, headless_mode, turbo_mode, type(visual_automation))
-        except:
-            print("Error json string in _initializeRPA:", jsonString)
+            import json
+            json_object = json.loads(codeValue)
+        except Exception as error:
+            logger.error('{0}Initialization Error: {1} | {2}'.format(log_space, type(error).__name__, error))
+            #logger.debug(log_space+traceback.format_exc())
 
-    instantiatedRPA = r.init(visual_automation = visual_automation, chrome_browser = chrome_browser, headless_mode = headless_mode, turbo_mode = turbo_mode)
-    print(f"r.init(visual_automation = {visual_automation}, chrome_browser = {chrome_browser}, headless_mode = {headless_mode}, turbo_mode = {turbo_mode})")
-    #logg('Initialize RPA', result = instantiatedRPA, level = 'info')
-    logger.debug(f"{log_space}Initialize RPA = {instantiatedRPA}")
+        var_exists = 'p' in globals() #'p' in locals() or 'p' in globals()
+        global p
+        if var_exists:
+            del p
+            p_exists = 'p' in globals() #'p' in locals() or 'p' in globals()            
+            logger.error("Deleted object p exist " + p_exists.__str__())
+        p = Browser()
+        p.initialize(**json_object)
+        p_exists = 'p' in globals() #'p' in locals() or 'p' in globals()            
+        logger.error("initialized object p exist " + p_exists.__str__())
+    else:
 
-    if instantiatedRPA:
-        selectedWindows.getNew()    # get newly opened windows compared to previous snapshot
-        title=r.title()
-        if title=='': title='about:blank'
-        selectedWindows.focus(name=title) #'google chrome') # focus the newly opend window with name of
+        from auto_helper_lib import Window, process_list
+        processResult = process_list(name='', minutes=5)
+        #selectedWindows = windows_getTitle(name='')
+        selectedWindows = Window()  # instantiate windows object with snapshot of existing windows
+        #logger.debug(f'{log_space}Windows: {selectedWindows.title}')
+
+        #if not browserDisable:
+        #r.init()
+        # init(visual_automation = False, chrome_browser = True, headless_mode = False, turbo_mode = False):
+        #instantiatedRPA = r.init(visual_automation = True)
+
+        if variables['headless_mode']==True:
+            visual_automation = False
+            chrome_browser = True
+            headless_mode = True
+            turbo_mode = False
+        else: # variables['headless_mode']==False:
+            visual_automation = True #False
+            chrome_browser = True
+            headless_mode = False
+            turbo_mode = False
+
+        jsonString = codeValue.strip()
+        #jsonString='{"visual_automation":False, "chrome_browser":True, "headless_mode":True, "turbo_mode":False}' # overwrite setting in command
+
+        import json
+        #jsonString = '{"file":"C:\\Users\\roh\\Downloads\\d5c7a4f7-b9a7-4d1e-904e-ce7349e0f27c.xlsx", "country": "All"}'
+        #jsonString = '{"file": "C:/Users/roh/Downloads/d5c7a4f7-b9a7-4d1e-904e-ce7349e0f27c.xlsx", "country": "All"}'
+        if jsonString == '':
+            pass
+        else:
+            try:
+                paramDict = json.loads(jsonString.lower())
+                #logger.info(f"parameter dictionary = {paramDict}")    
+                #print(paramDict['file'])
+                #print(paramDict['country'])
+                #print(jsonString, paramDict)
+                logger.debug(f"{log_space}RPA Initialize Parameters = {jsonString}, {paramDict}")
+                for item in paramDict:
+                    if item == "visual_automation": visual_automation=paramDict[item]
+                    elif item == "chrome_browser": chrome_browser=paramDict[item]
+                    elif item == "headless_mode": headless_mode=paramDict[item]
+                    elif item == "turbo_mode": turbo_mode=paramDict[item]
+                    #print(item)
+                    #print(f"{item}={paramDict[item]}")
+                    #exec(f"{item}={paramDict[item]}")  # modify variables
+                print(visual_automation, chrome_browser, headless_mode, turbo_mode, type(visual_automation))
+            except:
+                print("Error json string in _initializeRPA:", jsonString)
+
+        instantiatedRPA = r.init(visual_automation = visual_automation, chrome_browser = chrome_browser, headless_mode = headless_mode, turbo_mode = turbo_mode)
+        print(f"r.init(visual_automation = {visual_automation}, chrome_browser = {chrome_browser}, headless_mode = {headless_mode}, turbo_mode = {turbo_mode})")
+        #logg('Initialize RPA', result = instantiatedRPA, level = 'info')
+        logger.debug(f"{log_space}Initialize RPA = {instantiatedRPA}")
+
+        if instantiatedRPA:
+            selectedWindows.getNew()    # get newly opened windows compared to previous snapshot
+            title=r.title()
+            if title=='': title='about:blank'
+            selectedWindows.focus(name=title) #'google chrome') # focus the newly opend window with name of
 
 #@task
 def _closeRPA():
     logger = get_run_logger()
     #if not browserDisable:
-    instantiatedRPA = r.close()    
+    if RPABROWSER==0:
+        instantiatedRPA = r.close()    
+    else:
+        p.close_browser()
+        instantiatedRPA = True
     logger.debug(f"{log_space}Close RPA = {instantiatedRPA}")
     #logg('Close RPA ', result = instantiatedRPA, level = 'info')
 
 #@task
 def _url(codeValue, df):
     logger = get_run_logger()
-    key = codeValue.strip()
+
+    tmpDict = parseArguments('key, authentication',codeValue)
+    #print(tmpDict)
+    if tmpDict == {}: return
+
+    if 'key' in tmpDict:
+        key = tmpDict['key'].strip()   #codeValue.strip()
     #print('check key', key)
 
     if isinstance(key, str) and key[:4]=='http':  # value given is a URL value
@@ -1536,20 +1660,29 @@ def _url(codeValue, df):
         #                '''
         #print(consoleOutput(runStatement))
         buffer, old_stdout = redirectConsole()
-        result = r.url(url_value) # true if run is successful
-        consoleOutput = resetConsole(buffer, old_stdout)
+
+        if RPABROWSER == 1:
+            if 'authentication' in tmpDict:
+                p.page_goto(url_value, authentication=1)
+            else:
+                p.page_goto(url_value)
+            result = True
+        else:
+            result = r.url(url_value) # true if run is successful
+            consoleOutput = resetConsole(buffer, old_stdout)
         if not result:
             logger.info(f"      RPA ERROR: {consoleOutput}")
         else:
             #logger.info(f"      Valid URL")
             #pass
-            from auto_helper_lib import Window
-            selectedWindows = Window()  # instantiate windows object with snapshot of existing windows
-            #selectedWindows.getNew()    # get newly opened windows compared to previous snapshot
-            title=r.title()
-            if title=='': title='about:blank'
-            print('title of window to focus', title)
-            selectedWindows.focus(name=title) #'google chrome') # focus the newly opend window with name of
+            if RPABROWSER == 0:
+                from auto_helper_lib import Window
+                selectedWindows = Window()  # instantiate windows object with snapshot of existing windows
+                #selectedWindows.getNew()    # get newly opened windows compared to previous snapshot
+                title=r.title()
+                if title=='': title='about:blank'
+                print('title of window to focus', title)
+                selectedWindows.focus(name=title) #'google chrome') # focus the newly opend window with name of
 
     else:
         logger.info(f"      ERROR: Not http address, url_value = {url_value}, key = {key}, level = 'warning'")
@@ -1567,7 +1700,11 @@ def _read(codeValue):
     key = codeValue.split('=',1)[0]
     value = codeValue.split('=',1)[1]
     #logg('read:', key = key, value = value)
-    variables[key] = r.read(value)  # print('variables(', key, ')=', variables[key])
+    if RPABROWSER == 1:
+        variables[key] = p.read(value)
+        print('    READ', variables[key])
+    else:
+        variables[key] = r.read(value)  # print('variables(', key, ')=', variables[key])
 
 #@task
 def _checkVariable(codeValue):
@@ -1669,9 +1806,12 @@ def _urlcontains(codeValue):
 
 #@task
 def _rclick(codeValue):
-    if codeValue.lower().endswith(('.png', '.jpg', '.jpeg')): codeValue = Path(IMAGE_DIR + '/' + codeValue).absolute().__str__() 
-    r.rclick(codeValue)             # print('rclick',prefix[1])
-    print('      ','rclick',codeValue)
+    if RPABROWSER == 1:
+        p.click(codeValue, button="right")        
+    else:
+        if codeValue.lower().endswith(('.png', '.jpg', '.jpeg')): codeValue = Path(IMAGE_DIR + '/' + codeValue).absolute().__str__() 
+        r.rclick(codeValue)             # print('rclick',prefix[1])
+        print('      ','rclick',codeValue)
 
 #@task
 def _present(codeID, codeValue):
@@ -1702,19 +1842,89 @@ def _title(codeID, codeValue):
 
 #@task
 def _keyboard(codeValue: str):
-    r.keyboard(codeValue)           # print('keyboard',prefix[1])
+    if RPABROWSER == 1:
+        def mapKeyCodes(test_str):
+            # Replace Different characters in String at Once using regex + lambda
+            import re
+            
+            # initializing string
+            #test_str = '[ctrl][alt][shift][esc][esc][esc][enter][shift][enter]'
+            
+            # printing original String
+            print("The original string is : " + str(test_str))
+            
+            # initializing mapping dictionary
+            # key press e.g. [home] [end] [insert] [f1] .. [f15] [shift] [ctrl] [alt] [win] [cmd] [enter] [space] [tab] [esc] [backspace] [delete] [clear]
+            # F1 - F12, Digit0- Digit9, KeyA- KeyZ, Backquote, Minus, Equal, Backslash, Backspace, Tab, Delete, Escape, ArrowDown, End, Enter, Home, Insert, PageDown, PageUp, ArrowRight, ArrowUp, etc.
+            # Following modification shortcuts are also supported: Shift, Control, Alt, Meta, ShiftLeft.
+            '''
+            [shift] [ctrl] [alt] [win] [cmd] [enter]
+            [space] [tab] [esc] [backspace] [delete] [clear]
+            [up] [down] [left] [right] [pageup] [pagedown]
+            [home] [end] [insert] [f1] .. [f15]
+            [printscreen] [scrolllock] [pause] [capslock] [numlock]
+            https://developer.mozilla.org/en-US/docs/Web/API/UI_Events/Keyboard_event_key_values
+            https://tagui.readthedocs.io/en/latest/reference.html
+            https://playwright.dev/docs/api/class-keyboard
+            https://github.com/tebelorg/RPA-Python#core-functions
+            https://www.geeksforgeeks.org/python-replace-different-characters-in-string-at-once/
+            '''
+            map_dict1 = {'\[':'[','\]':']',
+                        '\-':'Minus','\+':'Plus','\=':'Equal',
+                    }
 
-def _type(codeValue: str):
+            map_dict = {'\[':'[','\]':']',
+                        'shift':'Shift+','ctrl':'Control+','alt':'Alt+','win':'Meta','cmd':'Meta','enter':'Enter',
+                        'space':'Space','tab':'Tab','esc':'Escape','backspace':'Backspace','delete':'Delete','clear':'Clear',
+                        'up':'ArrowUp','down':'ArrowDown','left':'ArrowLeft','right':'ArrowRight','pageup':'PageUp','pagedown':'PageDown',
+                        'home':'Home','end':'End','insert':'Insert',
+                    }
+
+            map_dict2 = {'\+\]\[':'+','\]':']',
+                    }
+
+
+            # using lambda and regex functions to achieve task
+            res = re.compile("|".join(map_dict1.keys())).sub(lambda ele: map_dict1[re.escape(ele.group(0))], test_str)
+            res = re.compile("|".join(map_dict.keys())).sub(lambda ele: map_dict[re.escape(ele.group(0))], res) 
+            res = re.compile("|".join(map_dict2.keys())).sub(lambda ele: map_dict2[re.escape(ele.group(0))], res)
+            if res[-2:]=='+]': res=res[:-2]
+            print('Truncate',res[-2:])
+            # printing result
+            print("The converted string : " + str(res))
+            #res.split('][')
+            import re
+            pattern = r'[\[\],;|]'
+            result = re.split(pattern, res)
+            while("" in result): result.remove("")
+            print(result)
+            for i in result:
+                print(i)
+            return result
+
+        for key in mapKeyCodes(codeValue):
+            p.press(key)
+    else:
+        r.keyboard(codeValue)           # print('keyboard',prefix[1])
+
+def _type(codeValue: str):              # type text at element
     identifier = codeValue.split(',',1)[0].strip()
     value = codeValue.split(',',1)[1].strip()
-    r.type(identifier,value)
+    if RPABROWSER == 1: 
+        p.input(identifier,value)
+    else:   
+        r.type(identifier,value)
+
 
 def _select(codeValue: str):
     key = codeValue.split(',',1)[0]
     value = codeValue.split(',',1)[1]
     #print("select", key, value)
     #logg('select:', select = key, option = value)
-    r.select(key,value)             # print('select',prefix[1])
+    if RPABROWSER == 1:
+        p.select_option(key, value)
+    else:
+        r.select(key,value)             # print('select',prefix[1])
     #print("select done")
 
 def _snap(codeValue):
@@ -1727,7 +1937,10 @@ def _snap(codeValue):
     saveFile = codeValue.split(',',1)[1]
     if saveFile=='': saveFile = './Output/Images/' + saveFile
     #logg('######### snap ###########', page = page, saveFile = saveFile, level = 'debug')
-    r.snap(page, saveFile)          
+    if RPABROWSER == 1: 
+        p.snap(path=saveFile, full_page=True)
+    else:
+        r.snap(page, saveFile)          
 
 def _telegram(codeValue):
     id = codeValue.split(',',1)[0].strip()
@@ -1736,6 +1949,13 @@ def _telegram(codeValue):
     from config import flow_run_name 
     r.telegram(int(id),f"{flow_run_name}-{msg}")
 
+def _download(codeValue):
+    download_url = codeValue.split(',',1)[0].strip()
+    filename_to_save = codeValue.split(',',1)[1].strip()
+    if RPABROWSER == 1:
+        p.download(download_url, filename_to_save)
+    else:
+        r.download(download_url, filename_to_save)
 
 def selectTable(codeValue: str, df):
     # Returns a objTableSet (table object) with parameter which is either a table object in the list or a worksheet
@@ -1929,12 +2149,15 @@ def _click(code:str):
         #logg('Not int - code is nan', level = 'error')
         return
     print('click', code)
-    if not waitIdentifierExist(code, 30, 1):        # identifier, time_sec, interval
-            #logg('      Time out - unable to process step', level = 'critical')           #constants['lastCodelist'] = codeList  
-            raise CriticalAccessFailure("Exception critical failure")              
-            return
-    if code.lower().endswith(('.png', '.jpg', '.jpeg')): code = Path(IMAGE_DIR + '/' + code).absolute().__str__() 
-    r.click(code)
+    if RPABROWSER == 1:
+        p.click(code)        
+    else:    
+        if not waitIdentifierExist(code, 30, 1):        # identifier, time_sec, interval
+                #logg('      Time out - unable to process step', level = 'critical')           #constants['lastCodelist'] = codeList  
+                raise CriticalAccessFailure("Exception critical failure")              
+                return
+        if code.lower().endswith(('.png', '.jpg', '.jpeg')): code = Path(IMAGE_DIR + '/' + code).absolute().__str__() 
+        r.click(code)
     print('      ','click',code)
     #logg('click', code = code, level = 'debug')
 

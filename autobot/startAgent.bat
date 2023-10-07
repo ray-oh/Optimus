@@ -13,6 +13,7 @@ rem prefect agent start -q %COMPUTERNAME% --prefetch-seconds 60  --limit 1
 rem prefect agent start --pool default-agent-pool --prefetch-seconds 60  --limit 1
 rem prefect agent start --pool default-agent-pool --work-queue CDAPHKGRPA03 --prefetch-seconds 60  --limit 1
 Set PYTHONUTF8=1
-prefect agent start --pool local-computer --prefetch-seconds 60
+rem prefect agent start --pool local-computer --prefetch-seconds 60
+prefect agent start --pool default-agent-pool --prefetch-seconds 60
 
 popd

@@ -7,6 +7,7 @@ CALL ".\venv\Scripts\activate.bat"
 rem set "http_proxy=<proxyserver1>:80"
 rem set "https_proxy=<proxyserver12>:80"
 rem py start.py
-prefect orion start
+rem prefect orion start
+prefect server start
 
 popd

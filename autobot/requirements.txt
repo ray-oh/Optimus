@@ -1,36 +1,56 @@
 # Requirements file for setup of Optimus
 # https://stackoverflow.com/questions/9159757/can-i-add-comments-to-a-pip-requirements-file
 
-altgraph==0.17.3
-et-xmlfile==1.1.0
-future==0.18.2
-Jinja2==3.1.2
-jupyter_client==7.4.7
-jupyter_core==5.1.0
-numpy==1.23.1
-openpyxl==3.0.10
-pandas==1.4.3
-papermill==2.4.0
-scrapbook==0.5.0
-ipykernel==6.19.4
-pefile==2022.5.30
-Pillow==9.2.0
-pyinstaller==5.4.1
-pyinstaller-hooks-contrib==2022.10
-pyparsing==3.0.9
-PyPDF4==1.27.0
+# Prefect Orchestration - pip install -U "prefect==2.10.4"
+# prefect==2.13.1
+# prefect
+# altgraph==0.17.3
+# et-xmlfile==1.1.0
+# future==0.18.2
+# Jinja2==3.1.2
+Jinja2
+# jupyter_client==7.4.7
+# jupyter_core==5.1.0
+# ipykernel==6.19.4
+# numpy==1.23.1
+numpy
+# openpyxl==3.0.10
+openpyxl
+# pandas==1.4.3
+pandas
+# papermill==2.4.0
+papermill
+# scrapbook==0.5.0
+scrapbook
+# pefile==2022.5.30
+# Pillow==9.2.0
+Pillow
+# pyinstaller==5.4.1
+pyinstaller
+# pyinstaller-hooks-contrib==2022.10
+# pyparsing==3.0.9
+pyparsing
+# PyPDF4==1.27.0
+PyPDF4
 python-dateutil==2.8.2
 python-minifier==2.6.0
 pytz==2022.1
-pywin32==304
-pywin32-ctypes==0.2.0
-reportlab==3.6.11
-rpa==1.48.1
-six==1.16.0
-tagui==1.48.1
-xlwings==0.28.5
-matplotlib==3.6.2
-dataframe-image==0.1.3
+# pywin32==304
+pywin32
+# pywin32-ctypes==0.2.0
+# reportlab==3.6.11
+reportlab
+# rpa==1.48.1
+rpa
+# six==1.16.0
+# tagui==1.48.1
+# tagui
+# xlwings==0.28.5
+xlwings
+# matplotlib==3.6.2
+matplotlib
+# Convert pandas DataFrames as images. Also convert Jupyter Notebooks to PDF and/or Markdown embedding dataframe as image into it.==0.1.3
+dataframe-image
 pygetwindow
 imgkit
 # CLI App to manage window environment variables. 
@@ -62,5 +82,13 @@ Gooey
 pysimplegui
 # Cross-platform clipboard utilities supporting both binary and text data.
 pyclip
+# pyparsing module is an alternative approach to creating and executing simple grammars, vs. the traditional lex/yacc approach, or the use of regular expressions
+pyparsing
 # PyYAML is a YAML parser and emitter for Python
 PyYAML
+# robotframework 6.1.1  ==6.1.1
+robotframework
+# Browser library powered by Playwright  https://robotframework-browser.org/ ==17.4.0
+robotframework-browser
+# Playwright python package https://playwright.dev/python/docs/intro ==0.4.2
+pytest-playwright

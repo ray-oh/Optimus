@@ -68,7 +68,7 @@ RETRIES = ''
 STARTFILE = ''
 STARTCODE = ''
 STARTSHEET = ''
-
+RPABROWSER = 0 # 0 = TagUI (default) 1=playwright
 
 from job_monitor import memoryPath
 MEMORYPATH = "D:\OneDrive-Sync\OneDrive - Christian Dior Couture\Shared Documents - RPA Project-APAC_FIN\Status"

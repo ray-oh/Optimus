@@ -107,6 +107,11 @@ def main_flow(startfile, startsheet, startcode, background, program_dir, update)
     browserDisable = False if dfKey_value(dfmain, 'browserDisable') == None else dfKey_value(dfmain, 'browserDisable')
     instantiatedRPA = False
 
+    import config
+    #global RPABROWSER
+    config.RPABROWSER = 0 if dfKey_value(dfmain, 'RPABROWSER') == None else 1 #dfKey_value(dfmain, 'browserDisable')    
+    print('*********************************************************', config.RPABROWSER)
+
     # run the main code block
     main_code = dfObjList(dfmain, startcode)
 
@@ -362,21 +367,25 @@ def run(file = '', flowrun = 1, deploymentname = '', PROGRAM_DIR = '', update = 
             printscreen(f".\{config.startTime.strftime('%Y%m%d_%H%M%S')}_{config.flow_run_name}_ERROR.jpg")
 
             print('####### FINALLY #########')
-            import rpa as r
-            #if not browserDisable and not instantiatedRPA:
-            instantiatedRPA = r.close()
-            print('Close finally', instantiatedRPA)
+            from config import RPABROWSER
+            if RPABROWSER == 0:
+                import rpa as r
+                #if not browserDisable and not instantiatedRPA:
+                instantiatedRPA = r.close()
+                print('Close finally', instantiatedRPA)
 
-            selectedWindows.getNew()
-            selectedWindows.closeNew()
+                selectedWindows.getNew()
+                selectedWindows.closeNew()
 
             from auto_utility_dates import getDuration
             endTime = getDuration(startTime, datetime.now())
             # logger.info(f"Completed RPA flow. File: {config.STARTFILE} | Sheet: {config.STARTCODE} | Time: {datetime.now().strftime('%m/%d/%Y, %H:%M:%S')} | {endTime}")
             logger.info(f"Completed RPA flow. File: {file} | {flowname} | Sheet: {startsheet} {startcode} | Time: {datetime.now().strftime('%m/%d/%Y, %H:%M:%S')} | {endTime}")
 
-    selectedWindows.getNew()
-    selectedWindows.closeNew()
+    from config import RPABROWSER
+    if RPABROWSER == 0:
+        selectedWindows.getNew()
+        selectedWindows.closeNew()
 
     from auto_utility_dates import getDuration
     endTime = getDuration(startTime, datetime.now())

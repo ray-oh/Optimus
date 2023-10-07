@@ -372,7 +372,17 @@ async def echo2(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 from passwords import returnPassword
 
 #BOT_TOKEN = is stored in chrome browser password manager "5918xxxxxx" #os.environ.get('BOT_TOKEN')
-BOT_TOKEN = returnPassword(username_value="optimusRPA_bot")
+#BOT_TOKEN = returnPassword(username_value="optimusRPA_bot")
+
+#from prefect import flow
+from prefect.blocks.system import Secret
+
+#@flow
+def retrieve_secret(key="optimus-telegram-bot"):
+    pwd = Secret.load(key).get()
+    return pwd
+
+BOT_TOKEN = retrieve_secret(key="optimus-telegram-bot")
 
 #async 
 def main() -> None:
