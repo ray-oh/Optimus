@@ -35,10 +35,11 @@ if exist .\autobot\venv (
 	rmdir .\autobot\venv /S /Q
 )
 PAUSE
-rem python -m venv .\autobot\venv
+rem replace python below with specific version of python if required - use version 3.10.9
+python -m venv .\autobot\venv
 rem https://stackoverflow.com/questions/1534210/use-different-python-version-with-virtualenv
 rem where python
-C:\Python310\python.exe -m venv .\autobot\venv
+rem C:\Python310\python.exe -m venv .\autobot\venv
 .\autobot\venv\Scripts\pip --version
 PAUSE
 @echo ================ INSTALL PREFECT ==========================
