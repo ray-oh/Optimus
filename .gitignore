@@ -135,14 +135,19 @@ dmypy.json
 /autobot/settings*.bak
 /temp
 /deployment
-/scripts
-/scripts/*
-/scripts/*/output
-/scripts/*test*
-/scripts/*main*
-/scripts/sample_notebook/*
+/scripts/[a-zA-Z.]*
+/scripts/_cache/*
 # ignore evertyhing above except the following
+#/scripts  Do not exclude the sub dir if working with ! negation
 !/scripts/OptimusLibPublic.xlsm
+!/scripts/mito.ipynb
+!/scripts/tagui.ipynb
+!/scripts/runJupyterNotebook.bat
+!/scripts/_cache/OptimusLibPublic.pickle
+# /scripts/*/output
+# /scripts/*test*
+# /scripts/*main*
+# /scripts/sample_notebook/*
 *DClickReport*.ipynb
 .vscode
 studio
