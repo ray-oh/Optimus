@@ -142,6 +142,7 @@ dmypy.json
 # ignore evertyhing above except the following
 #/scripts  Do not exclude the sub dir if working with ! negation
 !/scripts/OptimusLibPublic.xlsm
+!/scripts/whatsapp.xlsm
 !/scripts/mito.ipynb
 !/scripts/tagui.ipynb
 !/scripts/runJupyterNotebook.bat
