@@ -129,6 +129,7 @@ dmypy.json
 .pyre/
 
 # Autobot Program exclusions
+/autobot/src/general_automation/temp
 /autobot/venv
 /prefect/venv
 #optimus_package*.zip
