@@ -2143,7 +2143,7 @@ def etest():
     #logger.info(f"   email:{id} msg:{msg}")
     email_sender = EmailsSender()
     #attachment=[r"C:\Users\roh\OneDrive\Personal\TravelPlan\Raymond's KR and SG visit agenda_v3.xlsx"] #"Path to the attachment"
-    #email_sender.send_email(To="tsoh20@gmail.com", Subject="Test", HTMLBody="test", attachment=attachment)
+    #email_sender.send_email(To="@gmail.com", Subject="Test", HTMLBody="test", attachment=attachment)
     #print('Email', email_sender.wait_send_complete())
 
 
