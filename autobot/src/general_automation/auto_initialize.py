@@ -314,9 +314,9 @@ DEFAULTLOGLEVEL = configObj['settings']['DEFAULTLOGLEVEL']      # if level is no
 SRCLOG = configObj['settings']['SRCLOG']
 SRCLOGPATH = configObj['settings']['SRCLOGPATH']
 # whether it is logged depends on above setting of level=logging.INFO etc. under basicConfig.
-#srcLogPath = r'D:\OneDrive-Sync\Christian Dior Couture\APAC Management - Reports - Reports\log\DClick'
-#srcLog = r'D:\OneDrive-Sync\Christian Dior Couture\APAC Management - Reports - Reports\log\DClick\generalAutomation.log'
-#srcLog = "D:\\OneDrive-Sync\\Christian Dior Couture\\APAC Helpdesk - Report\\serviceNow\\log\\generalAutomation.log"
+#srcLogPath = r'D:\OneDrive-Sync\APAC Management - Reports - Reports\log\DClick'
+#srcLog = r'D:\OneDrive-Sync\APAC Management - Reports - Reports\log\DClick\generalAutomation.log'
+#srcLog = "D:\\OneDrive-Sync\\APAC Helpdesk - Report\\serviceNow\\log\\generalAutomation.log"
 CONFIGFILE = configObj['settings']['CONFIGFILE']
 SETTINGS = configObj['settings']['SETTINGS']
 print(STARTFILE, STARTCODE, STARTSHEET)

@@ -69,11 +69,12 @@ STARTFILE = ''
 STARTCODE = ''
 STARTSHEET = ''
 RPABROWSER = 0 # 0 = TagUI (default) 1=playwright
+VERSION = ''
 
-from job_monitor import memoryPath
-# MEMORYPATH = "D:\OneDrive-Sync\OneDrive - Christian Dior Couture\Shared Documents - RPA Project-APAC_FIN\Status"
-MEMORYPATH = r"C:\Users\tsoh2.DESKTOP-313433V\Documents\GitHub\Optimus\memory"
-#D:\OneDrive-Sync\OneDrive - Christian Dior Couture\Shared Documents - RPA Project-APAC_FIN\Status"
+#from job_monitor import memoryPath
+# MEMORYPATH = "D:\OneDrive-Sync\OneDrive\Shared Documents - RPA Project-APAC_FIN\Status"
+MEMORYPATH = ''    #r"\Optimus\memory"
+#D:\OneDrive-Sync\OneDrive\Shared Documents - RPA Project-APAC_FIN\Status"
 
 ##################### Global Functions ###################################
 from job_monitor import touchFile, stateChange, write_yaml, read_yaml, triggerRPA
@@ -273,6 +274,15 @@ else:
 #        PROGRAM_DIR, AUTOBOT_DIR, SCRIPTS_DIR, PREFECT_DIR, IMAGE_PATH, OUTPUT_PATH, LOG_PATH, SRCLOGPATH, ADDON_PATH, INITIALIZE \
 #        = declareConstants(program_args, configObj)
 
+# COMMON for both deployment and manual run
+
+# some global variables from SETTINGS file
+VERSION = configObj['settings']['version']
+if not configObj['settings']['memoryPath'] == '':
+    MEMORYPATH = configObj['settings']['memoryPath']
+if MEMORYPATH == '':
+    MEMORYPATH = rf"{PROGRAM_DIR}\memory"
+
 from pathlib import Path, PureWindowsPath
 import socket
 hostname = str(socket.gethostname())
@@ -314,13 +324,13 @@ if not checkFileValid(Path(STARTFILE)):
         print('####',STARTFILE, Path(STARTFILE).stem)
         if not stateChange(Path(STARTFILE).stem,"start","fail"): 
             state="fail"
-            touchFile(rf"{memoryPath}\{state}\{Path(STARTFILE).stem}.txt")
+            touchFile(rf"{MEMORYPATH}\{state}\{Path(STARTFILE).stem}.txt")
             print(f"#### {STARTFILE}: fail")
     except Exception as e:
         print('#### Fail to touch file in fail')
         pass
     if isDeploymentFlowRun: logger.critical(f"SCRIPT START FILE INVALID - Check file path: {Path(STARTFILE)}")            
-    raise ValueError(f"Start File Error {STARTFILE} PROGRAM DIR {PROGRAM_DIR} {memoryPath} ")
+    raise ValueError(f"Start File Error {STARTFILE} PROGRAM DIR {PROGRAM_DIR} {MEMORYPATH} ")
     exit
 else:
     # setup working directories for script file if they don't exist
@@ -338,6 +348,7 @@ else:
     '''
     ###########
     #print(SCRIPTS_DIR, ASSETS_DIR)
+
 
 #checkSaveSettings(SETTINGS, SETTINGS_PATH, configObj)  # save settings file if SETTINGS parameter = 1
 def configuResultMsg():
@@ -357,6 +368,7 @@ def configuResultMsg():
             {log_space}Log dir    :{LOG_PATH}, \n \
             {log_space}Addon Dir  :{ADDON_PATH}, \n \
             {log_space}SrcLog file:{SRCLOGFILE}, \n \
+            {log_space}Memory path:{MEMORYPATH}, \n \
             {log_space}Others     :Update({UPDATE}) retries({RETRIES}) background({BACKGROUND}) flow run name({flow_run_name}),\n \
             {log_space}Prog Args  :{program_args}" #)
     else:
@@ -377,6 +389,7 @@ def configuResultMsg():
             {log_space}Log dir    :{LOG_PATH}, \n \
             {log_space}Addon Dir  :{ADDON_PATH}, \n \
             {log_space}SrcLog file:{SRCLOGFILE}, \n \
+            {log_space}Memory path:{MEMORYPATH}, \n \
             {log_space}Others     :Update({UPDATE}) retries({RETRIES}) background({BACKGROUND}) flow run name({flow_run_name}),\n \
             {log_space}Prog Args  :{program_args}" #)
     return configResultMsg

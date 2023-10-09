@@ -1,8 +1,10 @@
 # Global variables
 #from config import memoryPath
-# memoryPath = "D:\OneDrive-Sync\OneDrive - Christian Dior Couture\Shared Documents - RPA Project-APAC_FIN\Status"
-memoryPath = r"C:\Users\tsoh2.DESKTOP-313433V\Documents\GitHub\Optimus\memory"
-#D:\OneDrive-Sync\OneDrive - Christian Dior Couture\Shared Documents - RPA Project-APAC_FIN\Status"
+# memoryPath = "D:\OneDrive-Sync\OneDrive\Shared Documents - RPA Project-APAC_FIN\Status"
+
+from config import MEMORYPATH
+memoryPath = MEMORYPATH #r"\Optimus\memory"
+#D:\OneDrive-Sync\OneDrive\Shared Documents - RPA Project-APAC_FIN\Status"
 
 # create or update file
 #memoryPath = MEMORYPATH

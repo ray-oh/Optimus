@@ -27,7 +27,7 @@ initialize seting:  run -i 1 -pd D:\optimus_1.2
 #print("running run.py module start section")
 
 from sys_variables import log_space, codeVersion, startTime
-from job_monitor import touchFile, stateChange, write_yaml, read_yaml, triggerRPA, memoryPath
+from job_monitor import touchFile, stateChange, write_yaml, read_yaml, triggerRPA #, memoryPath
 
 #script_version = '2022.10.27'
 #log_space = "          "
@@ -55,7 +55,7 @@ from prefect.task_runners import SequentialTaskRunner
 
 '''
 # create or update file
-memoryPath = "D:\OneDrive-Sync\OneDrive - Christian Dior Couture\Shared Documents - RPA Project-APAC_FIN\Status"
+memoryPath = "D:\OneDrive-Sync\OneDrive\Shared Documents - RPA Project-APAC_FIN\Status"
 def touchFile(filename):
     from pathlib import Path
     Path(filename).touch()
@@ -317,9 +317,10 @@ def run(file = '', flowrun = 1, deploymentname = '', PROGRAM_DIR = '', update = 
         #logger.info(f"DEBUG run.py/run Current directory {Path('.').resolve().absolute().__str__()}")
         #result = main_flow.with_options(name=flowname, retries=1)(startfile=file, startsheet=config.STARTSHEET, startcode=config.STARTCODE, \
         #    background=config.BACKGROUND, program_dir=config.PROGRAM_DIR)
+        from config import MEMORYPATH
         if not stateChange(Path(file).stem+".txt","start","process"): 
             state="process"
-            touchFile(rf"{memoryPath}\{state}\{Path(file).stem}.txt")
+            touchFile(rf"{MEMORYPATH}\{state}\{Path(file).stem}.txt")
             #exit
         #print(f"#### {file}: process")
         browserDisable, instantiatedRPA, dfmain, main_code = main_flow.with_options(name='OPEN', tags=['OPEN_CLOSE'])(startfile=file, startsheet=startsheet, 

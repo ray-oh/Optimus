@@ -341,7 +341,7 @@ async def echo(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
                 im2 = ImageGrab.grab(bbox = None)
                 #im2.show()
                 # save a image using extension
-                im2 = im2.save("D:\OneDrive-Sync\OneDrive - Christian Dior Couture\Shared Documents - RPA Project-APAC_FIN\screen.jpg")
+                im2 = im2.save("D:\OneDrive-Sync\OneDrive\Shared Documents - RPA Project-APAC_FIN\screen.jpg")
             printscreen()
             await update.message.reply_text('Print screen')
         elif update.message.text.upper() == 'S':

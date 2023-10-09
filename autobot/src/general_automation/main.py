@@ -48,7 +48,7 @@ def main():
 def main3():
     print('#start#')
     # create or update file
-    memoryPath = "D:\OneDrive-Sync\OneDrive - Christian Dior Couture\Shared Documents - RPA Project-APAC_FIN\Status"
+    memoryPath = "D:\OneDrive-Sync\OneDrive\Shared Documents - RPA Project-APAC_FIN\Status"
     def touchFile(filename):
         from pathlib import Path
         Path(filename).touch()

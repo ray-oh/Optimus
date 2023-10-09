@@ -20,6 +20,7 @@ from prefect import task, flow, get_run_logger, context
 from prefect.task_runners import SequentialTaskRunner
 
 import config
+from config import MEMORYPATH
 from pathlib import Path, PureWindowsPath
 
 from auto_helper_lib import *
@@ -45,7 +46,7 @@ def runCodelist(df: pd.DataFrame, codeList: list, run_code_until: str = '', objV
     queueSteps(df, codeList, run_code_until, objVar, file)
     return
 
-from job_monitor import memoryPath, touchFile
+from job_monitor import touchFile
 
 def queueSteps(df: pd.DataFrame, codeList: list, run_code_until: str = '', objVar: str = '', file: str = ''):
     DFlist = [df] * len(codeList)
@@ -97,7 +98,7 @@ def queueSteps(df: pd.DataFrame, codeList: list, run_code_until: str = '', objVa
 
             # touch process file - to indicate process still running
             state='process'
-            touchFile(rf"{memoryPath}\{state}\{Path(file).stem}.txt")
+            touchFile(rf"{MEMORYPATH}\{state}\{Path(file).stem}.txt")
             
             if isinstance(x, list):
                 logger.debug(f"{log_space}click', codeInCodeList = {x[0]}")
