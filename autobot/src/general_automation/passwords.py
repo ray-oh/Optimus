@@ -211,7 +211,7 @@ def retrieveHttpCredentials(url):
     from passwords import returnPassword, retrieveSecret
     _domain = domain(url)
     #BOT_TOKEN = returnPassword(username="optimusRPA_bot", site="telegram")
-    SECRET = retrieveSecret(site=_domain) #"https://qliksense.eu.dior.fashion/")
+    SECRET = retrieveSecret(site=_domain) #"https://qliksense.fashion/")
     if SECRET==None: return {'username': '', 'password': ''}
     http_credentials = {}
     http_credentials['username'] = SECRET['key']

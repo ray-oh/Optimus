@@ -1394,7 +1394,7 @@ def _touchFile(codeValue):
     print('touchFile','file,path', tmpDict)
 
     from pathlib import Path
-    #_path = "D:\OneDrive-Sync\OneDrive - Christian Dior Couture\Shared Documents - RPA Project-APAC_FIN\Daily Report" # "." # path/to/
+    #_path = "D:\OneDrive-Sync\OneDrive\RPA Project-APAC_FIN\Daily Report" # "." # path/to/
     #Path(_path, 'status.txt').touch()
     
     if 'path' in tmpDict:

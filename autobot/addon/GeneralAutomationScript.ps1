@@ -6,7 +6,7 @@ $oneDrive = 'D:\OneDrive-Sync\Christian Dior Couture\RPA Project - Report Automa
 
 $logFile = $oneDrive + $folder +'\ps_script_log.txt' # D:\Click\ps_script.log
 #$logFile = '.\ps_script.log'
-#'D:\OneDrive-Sync\Christian Dior Couture\APAC Management - Reports - Reports\log\DClick\process.txt'
+#'D:\OneDrive-Sync\APAC Management - Reports - Reports\log\DClick\process.txt'
 
 Get-Date >> $logFile
 

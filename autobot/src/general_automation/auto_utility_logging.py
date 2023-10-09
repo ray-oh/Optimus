@@ -16,8 +16,8 @@ import logging
 
 #srcLog = r'.\log\generalAutomation.log'
 
-#srcLogPath = r'D:\OneDrive-Sync\Christian Dior Couture\APAC Management - Reports - Reports\log\DClick'
-#srcLog = r'D:\OneDrive-Sync\Christian Dior Couture\APAC Management - Reports - Reports\log\DClick\generalAutomation.log'
+#srcLogPath = r'D:\OneDrive-Sync\APAC Management - Reports - Reports\log\DClick'
+#srcLog = r'D:\OneDrive-Sync\APAC Management - Reports - Reports\log\DClick\generalAutomation.log'
 
 logging.basicConfig(filename= config.SRCLOG ,  ##"./log/output.log"
     level=logging.INFO, 

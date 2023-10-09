@@ -33,7 +33,7 @@ function cleanProcess {
 
         # logFile name
         # [String] $logFile = 'D:\DClick\log\process.txt',
-        # [String] $logFile = 'D:\OneDrive-Sync\Christian Dior Couture\APAC Management - Reports - Reports\log\DClick\process.txt',
+        # [String] $logFile = 'D:\OneDrive-Sync\APAC Management - Reports - Reports\log\DClick\process.txt',
         [String] $logFile = $oneDrive + $folder + '\log\process.txt',
 
         # msg to log

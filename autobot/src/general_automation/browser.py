@@ -446,7 +446,7 @@ class Browser:
 
 
 def test():
-    url = "https://qliksense.eu.dior.fashion/sense/app/70c92b52-3e94-4802-994c-5cfdec371d4a/sheet/6299ee78-10be-4f89-b8a9-4746ff64f094/state/analysis/bookmark/e702c838-8bc9-40c9-b7bc-6277ac24646e"
+    url = "https://qliksense/sense/app/70c92b52-3e94-4802-994c-5cfdec371d4a/sheet/6299ee78-10be-4f89-b8a9-4746ff64f094/state/analysis/bookmark/e702c838-8bc9-40c9-b7bc-6277ac24646e"
     #r = Browser(headless=False, slow_mo=500)
     r = Browser()
     r.initialize(headless=False, slow_mo=500)
