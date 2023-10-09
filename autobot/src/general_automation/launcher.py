@@ -22,7 +22,8 @@ from pathlib import Path
 from PIL import Image, UnidentifiedImageError
 def resize(image_file, new_size, encode_format='PNG'):
     im = Image.open(image_file)
-    new_im = im.resize(new_size, Image.ANTIALIAS)
+    #new_im = im.resize(new_size, Image.ANTIALIAS)
+    new_im = im.resize((128, 128), Image.Resampling.LANCZOS)
     with BytesIO() as buffer:
         new_im.save(buffer, format=encode_format)
         data = buffer.getvalue()

@@ -109,7 +109,8 @@ def main_flow(startfile, startsheet, startcode, background, program_dir, update)
 
     import config
     #global RPABROWSER
-    config.RPABROWSER = 0 if dfKey_value(dfmain, 'RPABROWSER') == None else 1 #dfKey_value(dfmain, 'browserDisable')    
+    logger.error('RPABROWSER value in main: '+ str(dfKey_value(dfmain, 'RPABROWSER')))
+    config.RPABROWSER = 0 if dfKey_value(dfmain, 'RPABROWSER') == None else int(dfKey_value(dfmain, 'RPABROWSER'))    
     print('*********************************************************', config.RPABROWSER)
 
     # run the main code block

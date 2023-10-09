@@ -71,7 +71,9 @@ STARTSHEET = ''
 RPABROWSER = 0 # 0 = TagUI (default) 1=playwright
 
 from job_monitor import memoryPath
-MEMORYPATH = "D:\OneDrive-Sync\OneDrive - Christian Dior Couture\Shared Documents - RPA Project-APAC_FIN\Status"
+# MEMORYPATH = "D:\OneDrive-Sync\OneDrive - Christian Dior Couture\Shared Documents - RPA Project-APAC_FIN\Status"
+MEMORYPATH = r"C:\Users\tsoh2.DESKTOP-313433V\Documents\GitHub\Optimus\memory"
+#D:\OneDrive-Sync\OneDrive - Christian Dior Couture\Shared Documents - RPA Project-APAC_FIN\Status"
 
 ##################### Global Functions ###################################
 from job_monitor import touchFile, stateChange, write_yaml, read_yaml, triggerRPA

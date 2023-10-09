@@ -475,7 +475,7 @@ import time
 def _wait(codeValue, df, objVar):
     logger = get_run_logger()
     #print('*********************************************************', RPABROWSER)    
-    if RPABROWSER==1:
+    if RPABROWSER == 1 or RPABROWSER == 2:
         if codeValue=="" or codeValue==None:    # no parameters
             time_sec=1000        
             time.sleep(time_sec)
@@ -1524,7 +1524,7 @@ def _initializeRPA(codeValue: str):
     # visual_automation = False, chrome_browser = True, headless_mode = False, turbo_mode = False
     logger = get_run_logger()
 
-    if RPABROWSER == 1:
+    if RPABROWSER == 1 or RPABROWSER == 2:
         if codeValue=="" or codeValue==None:
             codeValue = "{}"
         #logger.warning(f'{log_space}InitializeRPA codeValue{codeValue}================')
@@ -1659,23 +1659,13 @@ def _url(codeValue, df):
         #                result = r.url(url_value) # true if run is successful
         #                '''
         #print(consoleOutput(runStatement))
-        buffer, old_stdout = redirectConsole()
-
-        if RPABROWSER == 1:
-            if 'authentication' in tmpDict:
-                p.page_goto(url_value, authentication=1)
-            else:
-                p.page_goto(url_value)
-            result = True
-        else:
+        if RPABROWSER == 0:
+            buffer, old_stdout = redirectConsole()
             result = r.url(url_value) # true if run is successful
             consoleOutput = resetConsole(buffer, old_stdout)
-        if not result:
-            logger.info(f"      RPA ERROR: {consoleOutput}")
-        else:
-            #logger.info(f"      Valid URL")
-            #pass
-            if RPABROWSER == 0:
+            if not result:
+                logger.info(f"      RPA ERROR: {consoleOutput}")
+            else:
                 from auto_helper_lib import Window
                 selectedWindows = Window()  # instantiate windows object with snapshot of existing windows
                 #selectedWindows.getNew()    # get newly opened windows compared to previous snapshot
@@ -1683,6 +1673,12 @@ def _url(codeValue, df):
                 if title=='': title='about:blank'
                 print('title of window to focus', title)
                 selectedWindows.focus(name=title) #'google chrome') # focus the newly opend window with name of
+        else:  # RPABROWSER == 1 or RPABROWSER == 2:
+            if 'authentication' in tmpDict:
+                p.page_goto(url_value, authentication=1)
+            else:
+                p.page_goto(url_value)
+            result = True
 
     else:
         logger.info(f"      ERROR: Not http address, url_value = {url_value}, key = {key}, level = 'warning'")
@@ -1700,7 +1696,7 @@ def _read(codeValue):
     key = codeValue.split('=',1)[0]
     value = codeValue.split('=',1)[1]
     #logg('read:', key = key, value = value)
-    if RPABROWSER == 1:
+    if RPABROWSER == 1 or RPABROWSER == 2:
         variables[key] = p.read(value)
         print('    READ', variables[key])
     else:
@@ -1806,7 +1802,7 @@ def _urlcontains(codeValue):
 
 #@task
 def _rclick(codeValue):
-    if RPABROWSER == 1:
+    if RPABROWSER == 1 or RPABROWSER == 2:
         p.click(codeValue, button="right")        
     else:
         if codeValue.lower().endswith(('.png', '.jpg', '.jpeg')): codeValue = Path(IMAGE_DIR + '/' + codeValue).absolute().__str__() 
@@ -1842,7 +1838,7 @@ def _title(codeID, codeValue):
 
 #@task
 def _keyboard(codeValue: str):
-    if RPABROWSER == 1:
+    if RPABROWSER == 1 or RPABROWSER == 2:
         def mapKeyCodes(test_str):
             # Replace Different characters in String at Once using regex + lambda
             import re
@@ -1883,7 +1879,6 @@ def _keyboard(codeValue: str):
             map_dict2 = {'\+\]\[':'+','\]':']',
                     }
 
-
             # using lambda and regex functions to achieve task
             res = re.compile("|".join(map_dict1.keys())).sub(lambda ele: map_dict1[re.escape(ele.group(0))], test_str)
             res = re.compile("|".join(map_dict.keys())).sub(lambda ele: map_dict[re.escape(ele.group(0))], res) 
@@ -1903,14 +1898,19 @@ def _keyboard(codeValue: str):
             return result
 
         for key in mapKeyCodes(codeValue):
-            p.press(key)
+            try:
+                print('Press key:' + key)
+                p.press(key)
+            except:
+                print('Error type' + key)
+                p.type(key)
     else:
         r.keyboard(codeValue)           # print('keyboard',prefix[1])
 
 def _type(codeValue: str):              # type text at element
     identifier = codeValue.split(',',1)[0].strip()
     value = codeValue.split(',',1)[1].strip()
-    if RPABROWSER == 1: 
+    if RPABROWSER == 1 or RPABROWSER == 2: 
         p.input(identifier,value)
     else:   
         r.type(identifier,value)
@@ -1921,23 +1921,30 @@ def _select(codeValue: str):
     value = codeValue.split(',',1)[1]
     #print("select", key, value)
     #logg('select:', select = key, option = value)
-    if RPABROWSER == 1:
+    if RPABROWSER == 1 or RPABROWSER == 2:
         p.select_option(key, value)
     else:
         r.select(key,value)             # print('select',prefix[1])
     #print("select done")
 
-def _snap(codeValue):
+def _snap(codeValue):  # snap:page, saveFile
     page = codeValue.split(',',1)[0]        
     if page=='':
         page = 'page'
     elif page =='log':
         snapImage()
         return
-    saveFile = codeValue.split(',',1)[1]
-    if saveFile=='': saveFile = './Output/Images/' + saveFile
+    saveFile = codeValue.split(',',1)[1].strip()
+    from pathlib import Path
+    if saveFile=='':
+        saveFile = './Output/Images/' + saveFile
+    else:
+        if Path(saveFile).parent.exists():
+            saveFile = Path(saveFile).resolve().__str__()
+        else:
+            saveFile = Path('./tmp.png').resolve().__str__()
     #logg('######### snap ###########', page = page, saveFile = saveFile, level = 'debug')
-    if RPABROWSER == 1: 
+    if RPABROWSER == 1 or RPABROWSER == 2: 
         p.snap(path=saveFile, full_page=True)
     else:
         r.snap(page, saveFile)          
@@ -1952,7 +1959,7 @@ def _telegram(codeValue):
 def _download(codeValue):
     download_url = codeValue.split(',',1)[0].strip()
     filename_to_save = codeValue.split(',',1)[1].strip()
-    if RPABROWSER == 1:
+    if RPABROWSER == 1 or RPABROWSER == 2:
         p.download(download_url, filename_to_save)
     else:
         r.download(download_url, filename_to_save)
@@ -2149,7 +2156,7 @@ def _click(code:str):
         #logg('Not int - code is nan', level = 'error')
         return
     print('click', code)
-    if RPABROWSER == 1:
+    if RPABROWSER == 1 or RPABROWSER == 2:
         p.click(code)        
     else:    
         if not waitIdentifierExist(code, 30, 1):        # identifier, time_sec, interval
