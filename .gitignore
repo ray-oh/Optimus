@@ -132,6 +132,7 @@ dmypy.json
 /autobot/src/general_automation/temp
 /autobot/venv
 /autobot/*ERROR.jpg
+/memory/*
 /prefect/venv
 #optimus_package*.zip
 /autobot/settings*.bak
