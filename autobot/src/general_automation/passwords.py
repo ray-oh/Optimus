@@ -79,7 +79,8 @@ def returnPassword(**kwargs):
     # `logins` table has the data we need
     condition = ''
     if "username" in kwargs:
-        condition = f'username_value="{kwargs["username"]}"'
+        if not kwargs['username']=='':
+            condition = f'username_value="{kwargs["username"]}"'
     if "site" in kwargs:
         if condition != '': condition = condition + ' and'
         condition = f'{condition} origin_url like "%{kwargs["site"]}%"'
@@ -147,7 +148,8 @@ def retrieveSecret(**kwargs):
     # `logins` table has the data we need
     condition = ''
     if "username" in kwargs:
-        condition = f'username_value="{kwargs["username"]}"'
+        if not kwargs['username']=='':        
+            condition = f'username_value="{kwargs["username"]}"'
     if "site" in kwargs:
         if condition != '': condition = condition + ' and'
         condition = f'{condition} origin_url like "%{kwargs["site"]}%"'
@@ -207,11 +209,13 @@ def domain(url):
     return domain
 
 
-def retrieveHttpCredentials(url):
+def retrieveHttpCredentials(url, user='', origin=''):
     from passwords import returnPassword, retrieveSecret
+    if not origin=='': url=origin
     _domain = domain(url)
+    print('_domain', _domain.__str__())
     #BOT_TOKEN = returnPassword(username="optimusRPA_bot", site="telegram")
-    SECRET = retrieveSecret(site=_domain) #"https://qliksense.fashion/")
+    SECRET = retrieveSecret(site=_domain, username=user) #"https://qliksense.fashion/")
     if SECRET==None: return {'username': '', 'password': ''}
     http_credentials = {}
     http_credentials['username'] = SECRET['key']

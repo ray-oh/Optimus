@@ -109,9 +109,9 @@ def main_flow(startfile, startsheet, startcode, background, program_dir, update)
 
     import config
     #global RPABROWSER
-    logger.error('RPABROWSER value in main: '+ str(dfKey_value(dfmain, 'RPABROWSER')))
     config.RPABROWSER = 0 if dfKey_value(dfmain, 'RPABROWSER') == None else int(dfKey_value(dfmain, 'RPABROWSER'))    
-    print('*********************************************************', config.RPABROWSER)
+    logger.error(log_space+f'RPABROWSER: {config.RPABROWSER} | Value in main: '+ str(dfKey_value(dfmain, 'RPABROWSER')))
+    #print('*********************************************************', config.RPABROWSER)
 
     # run the main code block
     main_code = dfObjList(dfmain, startcode)
@@ -273,7 +273,7 @@ def run(file = '', flowrun = 1, deploymentname = '', PROGRAM_DIR = '', update = 
 
     # New mode to trigger script using event trigger run.
     if '4' in str(background) or '5' in str(background):
-        print(f"background:{background} | Trigger script: {triggerRPA(file)}")        
+        print(f"background:{background} | Trigger script: {triggerRPA(file, memoryPath=MEMORYPATH)}")        
         '''
         state="pending"
 
@@ -318,7 +318,7 @@ def run(file = '', flowrun = 1, deploymentname = '', PROGRAM_DIR = '', update = 
         #result = main_flow.with_options(name=flowname, retries=1)(startfile=file, startsheet=config.STARTSHEET, startcode=config.STARTCODE, \
         #    background=config.BACKGROUND, program_dir=config.PROGRAM_DIR)
         from config import MEMORYPATH
-        if not stateChange(Path(file).stem+".txt","start","process"): 
+        if not stateChange(Path(file).stem+".txt","start","process",'',MEMORYPATH): 
             state="process"
             touchFile(rf"{MEMORYPATH}\{state}\{Path(file).stem}.txt")
             #exit
@@ -351,7 +351,7 @@ def run(file = '', flowrun = 1, deploymentname = '', PROGRAM_DIR = '', update = 
         try_catch(runCodelist(dfmain, main_code, file=file))
 
         optimus_close.with_options(name='CLOSE', tags=['OPEN_CLOSE'])(browserDisable, instantiatedRPA)
-        if not stateChange(Path(file).stem+".txt","process","complete"):
+        if not stateChange(Path(file).stem+".txt","process","complete",'',MEMORYPATH):
             logger.critical('Error in state change process->complete')
             #exit()
         #print(f"#### {file}: complete")        

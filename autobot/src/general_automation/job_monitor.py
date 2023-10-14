@@ -2,8 +2,8 @@
 #from config import memoryPath
 # memoryPath = "D:\OneDrive-Sync\OneDrive\Shared Documents - RPA Project-APAC_FIN\Status"
 
-from config import MEMORYPATH
-memoryPath = MEMORYPATH #r"\Optimus\memory"
+#from config import MEMORYPATH
+#memoryPath = MEMORYPATH #r"\Optimus\memory"
 #D:\OneDrive-Sync\OneDrive\Shared Documents - RPA Project-APAC_FIN\Status"
 
 # create or update file
@@ -73,7 +73,7 @@ def stateChange(token="test", statefrom="start", stateto="stop"):
 '''
 
 # change state of token
-def stateChange(token="test.txt", statefrom="start", stateto="stop", changeName=''):
+def stateChange(token="test.txt", statefrom="start", stateto="stop", changeName='', memoryPath=''):
     try:
         #script="test"
         #statefrom="start"
@@ -114,7 +114,7 @@ def runRPAscript(script="test", flags=""):
     return False
 
 def tokenCreate():
-    from config import STARTFILE, STARTSHEET, STARTCODE, PROGRAM_DIR, UPDATE, BACKGROUND, RETRIES, MEMORYPATH
+    from config import STARTFILE, STARTSHEET, STARTCODE, PROGRAM_DIR, UPDATE, BACKGROUND #, RETRIES, MEMORYPATH
     token = {}
     token['update']=UPDATE
     token['startfile']=STARTFILE
@@ -125,7 +125,7 @@ def tokenCreate():
     print('Token',token)
     return token
 
-def tokenSave(token, state, file=''):
+def tokenSave(token, state, file='', memoryPath=''):
     from pathlib import Path
     if file=='': file = token['startfile']
     return write_yaml(token, rf"{memoryPath}\{state}\{Path(file).stem}.txt")
@@ -136,8 +136,9 @@ def triggerRPA(file, memoryPath=''):
     from pathlib import Path, PureWindowsPath
     #print(f"background:{background}")
     state="pending"
-    from config import MEMORYPATH    
-    if memoryPath=='': memoryPath=MEMORYPATH
+    #from config import MEMORYPATH    
+    if memoryPath=='': #memoryPath=MEMORYPATH
+        return False
     #write_yaml_to_file(data, 'output.txt')
     token = tokenCreate()
     print('LAUNCH RPA SCRIPT:', Path(file).stem, tokenSave(token,state,file))
@@ -153,7 +154,7 @@ def triggerRPA(file, memoryPath=''):
 # Tokens are queued - first in first out.
 # Prefect/task scheduler to only touch a token in pending to queue for activation.
 # Exception handling for frozen jobs - check age of jobs - if above threshold, delete blocking token, stop/cancel/delete prefect job
-def monitor():
+def monitor(memoryPath=''):
     import time
     print('''
     ##################################################

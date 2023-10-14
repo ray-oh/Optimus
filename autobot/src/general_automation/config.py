@@ -59,6 +59,9 @@ variables['loopCount']=None
 variables['sentEmailCheck_hour']=3  # used by email program to check if email has already been sent (duplicate subject since this cut off time for the day)
 variables['sentEmailCheck_min']=15  # default value can be overwritten in excel script: e.g. set:sentEmailCheck_min=0
 variables['headless_mode']=False # '{"visual_automation":True, "chrome_browser":True, "headless_mode":False, "turbo_mode":False}' # default browser mode
+
+variables['rpaBrowser']=False
+
 codeVersion = 'version 23.8.22'
 #script_version = '2022.10.27'
 flow_run_name = ''
@@ -274,7 +277,10 @@ else:
 #        PROGRAM_DIR, AUTOBOT_DIR, SCRIPTS_DIR, PREFECT_DIR, IMAGE_PATH, OUTPUT_PATH, LOG_PATH, SRCLOGPATH, ADDON_PATH, INITIALIZE \
 #        = declareConstants(program_args, configObj)
 
+
+#==================================================================
 # COMMON for both deployment and manual run
+#==================================================================
 
 # some global variables from SETTINGS file
 VERSION = configObj['settings']['version']
@@ -322,7 +328,7 @@ if not checkFileValid(Path(STARTFILE)):
     try:
         #touchFile(rf"{memoryPath}\fail\sensetime.txt")        
         print('####',STARTFILE, Path(STARTFILE).stem)
-        if not stateChange(Path(STARTFILE).stem,"start","fail"): 
+        if not stateChange(Path(STARTFILE).stem,"start","fail",'',MEMORYPATH): 
             state="fail"
             touchFile(rf"{MEMORYPATH}\{state}\{Path(STARTFILE).stem}.txt")
             print(f"#### {STARTFILE}: fail")

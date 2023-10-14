@@ -24,6 +24,8 @@ class Browser:
         self.browser = None
         self.context = None
         self.page = None
+        self.frame = None
+        self.view = None
         self.domain = None
         self.http_credentials = {'username': '', 'password': ''}
         #if not 'url' in kwargs:
@@ -119,6 +121,8 @@ class Browser:
     def new_page(self):
         #global page
         self.page = self.context.new_page()
+        self.frame = None
+        self.view = self.page
         return self.page
 
     def close_browser(self):
@@ -135,8 +139,8 @@ class Browser:
             logger.warning(log_space+'Close Browser - Playwright ' + str(self.playwright) + ' | Browser Type name:'+ 'Persistent browser' + '| connected:' + 'Persistent browser' + '| context: ' + self.context.__str__())
             self.__init__()
 
-    def page_goto(self, url, authentication=0):
-        http_credentials=retrieveHttpCredentials(url)
+    def page_goto(self, url, authentication=0, user='', origin=''):
+        http_credentials=retrieveHttpCredentials(url, user, origin)
         # launch new context and page if the url domain has changed
         # or if the username has changed
         #from passwords import domain
@@ -179,6 +183,27 @@ class Browser:
             if self.page==None: self.page = self.new_page()
             self.page.goto(url, wait_until="load") #|"domcontentloaded"|
             logger.debug(f'{log_space}loaded page')
+
+    def setView(self, **kwargs):
+        # sets view
+        from prefect import get_run_logger
+        logger = get_run_logger()
+        logger.error('setview' + kwargs.__str__())
+        self.view = self.page
+        self.view = self.frame
+        if 'page' in kwargs['viewType']:
+            self.view = self.page
+            logger.error('setview - page')                            
+        elif 'frame' in kwargs['viewType']:
+            if 'selector' in kwargs.keys():
+                self.frame = self.page.frame_locator(kwargs['selector'])
+                self.view = self.frame
+                logger.error('setview - selector')                
+            elif not self.frame == None:
+                self.view = self.frame
+                logger.error('setview - frame')                
+            else:
+                pass
 
     def _locator(self, selector):
         # determine locator
@@ -225,44 +250,44 @@ class Browser:
                         self.page.wait_for_load_state("networkidle")
 
                 elif i=='implicit_selectors':
-                    if self.page.locator(selector).count() > 0: locator_type = 'xpath_css'
+                    if self.view.locator(selector).count() > 0: locator_type = 'xpath_css'
                 elif i=='title_exact':  # self.page.get_by_title(r"Service Portal - Service Portal ").count()))
-                    if self.page.get_by_title(selector, exact=True).count() > 0: locator_type = 'title_exact'
+                    if self.view.get_by_title(selector, exact=True).count() > 0: locator_type = 'title_exact'
                 elif i=='title_fuzzy':
-                    if self.page.get_by_title(selector).count() > 0: locator_type = 'title_fuzzy'                    
+                    if self.view.get_by_title(selector).count() > 0: locator_type = 'title_fuzzy'                    
                     #if self.page.locator('//title[contains(text(),"{0}")]'.format(selector)).count() > 0: locator_type = 'title_fuzzy'            
                 elif i=='text_content_exact': #self.page.get_by_text(r"Service Portal - Service Portal ").count()))
-                    if self.page.get_by_text(selector, exact=True).count() > 0: locator_type = 'text_content_exact'
+                    if self.view.get_by_text(selector, exact=True).count() > 0: locator_type = 'text_content_exact'
                 elif i=='text_content_fuzzy':
-                    if self.page.get_by_text(re.compile(selector, re.IGNORECASE)).count() > 0: locator_type = 'text_content_fuzzy'
+                    if self.view.get_by_text(re.compile(selector, re.IGNORECASE)).count() > 0: locator_type = 'text_content_fuzzy'
                 elif i=='role':          #page.get_by_role("button", name="Sign in")
-                    if self.page.get_by_role(selector, exact=True).count() > 0: locator_type = 'role'
+                    if self.view.get_by_role(selector, exact=True).count() > 0: locator_type = 'role'
                 elif i=='label':
-                    if self.page.get_by_label(selector, exact=True).count() > 0: locator_type = 'label'
+                    if self.view.get_by_label(selector, exact=True).count() > 0: locator_type = 'label'
                 elif i=='placeholder':
-                    if self.page.get_by_placeholder(selector, exact=True).count() > 0: locator_type = 'placeholder'
+                    if self.view.get_by_placeholder(selector, exact=True).count() > 0: locator_type = 'placeholder'
                 elif i=='id':
-                    if self.page.locator('//*[@id="{0}"]'.format(selector)).count() > 0: locator_type = 'id'            
+                    if self.view.locator('//*[@id="{0}"]'.format(selector)).count() > 0: locator_type = 'id'            
                 elif i=='class':
-                    if self.page.locator('//*[@class="{0}"]'.format(selector)).count() > 0: locator_type = 'class'            
+                    if self.view.locator('//*[@class="{0}"]'.format(selector)).count() > 0: locator_type = 'class'            
                 elif i=='name':
-                    if self.page.locator('//*[@name="{0}"]'.format(selector)).count() > 0: locator_type = 'name'            
+                    if self.view.locator('//*[@name="{0}"]'.format(selector)).count() > 0: locator_type = 'name'            
                 elif i=='attribute':
-                    if self.page.locator('//*[@*="{0}"]'.format(selector)).count() > 0: locator_type = 'attribute'                    
+                    if self.view.locator('//*[@*="{0}"]'.format(selector)).count() > 0: locator_type = 'attribute'                    
                 else: pass
                 if locator_type!=None: break
             except Exception as error:
                 #logger.warning(log_space+'{0}_locator_type error case: {1} | type= {2} | error= {3}'.format(log_space, i,type(error).__name__, error))  #, traceback.format_exc()
                 #locator_type = "error"
                 pass
-        logger.debug(f'{log_space}Locator:{selector}'+ f'| Type:{locator_type}'+ f'| Page:{self.page.title()}')           
+        # logger.debug(f'{log_space}Locator:{selector}'+ f'| Type:{locator_type}'+ f'| Page:{self.page.title()}')           
         return locator_type
 
     def wait(self, millisec=15000, **kwargs):
         from prefect import get_run_logger
         import traceback
         logger = get_run_logger()
-        #logger.debug(f"{log_space}wait keywords', millisec {millisec} | kwargs {kwargs.keys()}")
+        # logger.debug(f"{log_space}wait keywords', millisec {millisec} | kwargs {kwargs.keys()}")
         try:
             if not "selector" in kwargs.keys():
                 #_type = self._locator(kwargs["selector"])
@@ -292,11 +317,21 @@ class Browser:
                     return True
         except Exception as error:
             logger.error(log_space+'WAIT Error: {0} | {1}'.format(type(error).__name__, error))
-            logger.debug(log_space+traceback.format_exc())
+            #logger.debug(log_space+traceback.format_exc())
             return False
 
-    def read(self, xpath, timeout=3000):
+    def read(self, xpath, timeout=30000):
+        from prefect import get_run_logger
+        import traceback
+        logger = get_run_logger()
+        logger.error(log_space+'READ: {0} | {1}'.format(xpath, timeout))        
+        try:
+            expect(self.page.locator(f'xpath={xpath}')).to_have_count(1, timeout=timeout)
+        except Exception as error:
+            logger.error(log_space+'READ Error: {0} | {1}'.format(type(error).__name__, error))
+
         result = self.page.locator(f'xpath={xpath}').inner_text(timeout=timeout)
+        logger.error(log_space + result)
         print(result)
         return result
     
@@ -319,33 +354,33 @@ class Browser:
                 if selector.startswith("\""):    selector = selector.strip('\"')
                 elif selector.startswith("\'"):  selector = selector.strip('\'')
             if _type == 'text_content_exact':
-                locator = self.page.get_by_text(selector, exact=True)
+                locator = self.view.get_by_text(selector, exact=True)
             else:  #elif _type == 'text_content_fuzzy':
-                locator = self.page.get_by_text(re.compile(selector, re.IGNORECASE))
+                locator = self.view.get_by_text(re.compile(selector, re.IGNORECASE))
         elif 'xpath' in _type or 'undefined' in _type or _type=='error':       # xpath or css
-            locator = self.page.locator(selector)  #.wait_for(timeout=millisec)        
+            locator = self.view.locator(selector)  #.wait_for(timeout=millisec)        
         elif _type=='title_exact':
-            locator = self.page.get_by_title(selector, exact=True)        
+            locator = self.view.get_by_title(selector, exact=True)        
         elif _type=='title_fuzzy':
             #locator = self.page.locator('//title[contains(text(),"{0}")]'.format(selector))
-            locator = self.page.get_by_title(selector)            
+            locator = self.view.get_by_title(selector)            
             #count = locator.count()
             #logger.debug(log_space+'==========================TYPE 2 !!!! {0} | {1}'.format(_type, count))
             #logger.debug(log_space+'==========================WAITED !!!! {0} | {1}'.format(_type, locator.is_visible()))
         elif 'role' in _type:
-            locator = self.page.get_by_role(selector, exact=True)        
+            locator = self.view.get_by_role(selector, exact=True)        
         elif 'label' in _type:
-            locator = self.page.get_by_label(selector, exact=True)        
+            locator = self.view.get_by_label(selector, exact=True)        
         elif 'placeholder' in _type:
-            locator = self.page.get_by_placeholder(selector, exact=True)        
+            locator = self.view.get_by_placeholder(selector, exact=True)        
         elif _type == 'id':            
-            locator = self.page.locator('//*[@id="{0}"]'.format(selector))            
+            locator = self.view.locator('//*[@id="{0}"]'.format(selector))            
         elif _type == 'class':
-            locator = self.page.locator('//*[@class="{0}"]'.format(selector))            
+            locator = self.view.locator('//*[@class="{0}"]'.format(selector))            
         elif _type == 'name':
-            locator = self.page.locator('//*[@name="{0}"]'.format(selector))            
+            locator = self.view.locator('//*[@name="{0}"]'.format(selector))            
         elif _type == 'attribute':
-            locator = self.page.locator('//*[@*="{0}"]'.format(selector))            
+            locator = self.view.locator('//*[@*="{0}"]'.format(selector))            
         else:
             locator = None
             #logger.debug(log_space+'==========================WARNING')
@@ -394,22 +429,58 @@ class Browser:
         self.page.locator(selector).select_option(value)        
 
     def download(self, text, save_as):
+        from prefect import get_run_logger
+        import traceback
+        logger = get_run_logger()
+        import traceback
+
         # Start waiting for the download
         from pathlib import Path
-        with self.page.expect_download() as download_info:
-            # Perform the action that initiates download
-            element = self.page.get_by_text(re.compile(f'{text}', re.IGNORECASE))
-            #page.get_by_text("Export")
-            #page.locator('text="Click here to download your data file."') #.get_by_text("Export")
-            element.click()   
-            download = download_info.value
-        # Wait for the download process to complete and save the downloaded file somewhere
-        filePath = Path(save_as)
-        download.save_as(filePath)    
+        try:
+            with self.page.expect_download() as download_info:
+                # Perform the action that initiates download
+                #element = self.view.get_by_text(re.compile(f'{text}', re.IGNORECASE))
+
+                element = self.findElement(text)
+                if element==None:
+                    logger.error(log_space+'Element is None')
+                    return False
+                else:
+                    element.click()
+                    #page.get_by_text("Export")
+                    #page.locator('text="Click here to download your data file."') #.get_by_text("Export")
+                    #element.click()   
+                    download = download_info.value
+                # Wait for the download process to complete and save the downloaded file somewhere
+            filePath = Path(save_as)
+            download.save_as(filePath)    
+            return True
+
+        except Exception as error:
+            #logger.debug('==========================ERROR')
+            logger.error(log_space+'Download Error: {0} | {1}'.format(type(error).__name__, error))
+            logger.debug(log_space+traceback.format_exc())            
+
+    def pause(self):
+        self.page.pause()
+
 
     def press(self, key):
         self.page.keyboard.press(key)  # "Control+A" "Shift+A" "ArrowLeft" "Backspace"
         # F1 - F12, Digit0- Digit9, KeyA- KeyZ, Backquote, Minus, Equal, Backslash, Backspace, Tab, Delete, Escape, ArrowDown, End, Enter, Home, Insert, PageDown, PageUp, ArrowRight, ArrowUp, etc.
+
+    def authenticate(self, username, origin):
+        from prefect import get_run_logger
+        import traceback
+        logger = get_run_logger()
+
+        http_credentials=retrieveHttpCredentials(origin, username)
+        #logger.error(log_space + http_credentials.__str__() + ' | ' + username + ' ' + origin + ' | ' + http_credentials['password'])
+
+        self.input('username',username)
+        self.input('password',http_credentials['password'])
+        self.press('Enter')
+
 
     def input(self, selector, value):
         from prefect import get_run_logger

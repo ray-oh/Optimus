@@ -506,6 +506,9 @@ def updateConstants(df, code):
             code = code.replace("{{" + item + "}}", str(value))  # replace templated values
         elif item in df[(df.Object == 'constants')]['Key'].values.tolist(): #Constants defined by user in excel
             value = dfKey_value(df[(df.Object == 'constants')], item)
+            if value!=value:  # is NAN
+                logger.error(f"{log_space}Updating constants:{item} ->  {value}  isNaN {value!=value}  ")
+                value = ''
             #logger.info(f"   match constants >>> key: {item}, value: {str(value)}")            
             code = code.replace("<" + item + ">", str(value))  # replace templated values
             code = code.replace("{{" + item + "}}", str(value))  # replace templated values
