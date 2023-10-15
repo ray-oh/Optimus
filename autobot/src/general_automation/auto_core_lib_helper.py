@@ -630,7 +630,7 @@ def _waitDisappear(codeValue, df, objVar):
                         return [], [], []  #return False  - but no code to run                      
                 else:
                     time.sleep(1)
-                    logger.error(log_space + 'Check ' + Found.__str__())
+                    #logger.error(log_space + 'Check ' + Found.__str__())
             #return True
             return [], [], []
 
@@ -674,7 +674,8 @@ def _waitFile(codeValue, df, objVar):
 #@task
 def _print(codeValue):
     #logg('print:', codeValue = codeValue, level = 'info')
-    print(codeValue)
+    #print(codeValue)
+    pass
 
 def _log(codeValue):
     #logg('log:', errorMsg = codeValue)

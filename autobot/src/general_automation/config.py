@@ -62,7 +62,15 @@ variables['headless_mode']=False # '{"visual_automation":True, "chrome_browser":
 
 variables['rpaBrowser']=False
 
+#variables['codeVersion']=str(flow_run_name)  #'test-codeVersion'
+#variables['flowrun']='test-flow'
+#variables['arguments']=program_args['arguments']
+#variables['flow_run_name']=flow_run_name
+#variables['flowrun']=flow_run_name
+
 codeVersion = 'version 23.8.22'
+variables['codeVersion']=codeVersion
+
 #script_version = '2022.10.27'
 flow_run_name = ''
 BACKGROUND = ''

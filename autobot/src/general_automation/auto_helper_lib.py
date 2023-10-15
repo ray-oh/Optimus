@@ -497,6 +497,18 @@ def updateConstants(df, code):
     for item in matchConstants:                
         #logger.info(f"    process item {item}")
         evalValue=re.findall( r'[eE][vV][aA][lL]\((.*)\)', item.strip()) # greedy mode without ?, instead of lazy mode
+
+        # handle argument list
+        itemIndex = None
+        if item[-1:]=="]":
+            vlist = item.strip("]").strip().rsplit('[',1)
+            if len(vlist) == 2:
+                if str(vlist[1]).isdigit():
+                    itemIndex = int(vlist[1])
+                    originalItem = item
+                    item = vlist[0]
+                    logger.error(log_space + 'Argument list. index:' + str(itemIndex) + ' argument: ' + item)                
+
         if len(evalValue)>0:                                  #evaluate contents
             from datetime import datetime
             evalStr = str(evalValue[0])
@@ -525,11 +537,19 @@ def updateConstants(df, code):
                 #code = code.replace("<" + item + ">", str(constants[item]))  
                 code = code.replace("<" + item + ">", str(value))  # replace templated values
                 code = code.replace("{{" + item + "}}", str(value))  # replace templated values
-        elif item in variables.keys() or item in df[(df.Object == 'variables')]['Key'].values.tolist():  # variables defined by user in excel
+        elif item in variables or item in df[(df.Object == 'variables')]['Key'].values.tolist():  # variables defined by user in excel  .keys()
             # or item in df[(df.Object == 'variables')]['Key'].values.tolist(): 
             #logger.info(f"   match variables >>> key: {item}, variables: {variables}")
-            if item in variables.keys():
+            if item in variables:       # .keys()
                 value = variables[item]
+                if isinstance(value, list):     # handle argument list
+                    if itemIndex == None:
+                        value = value[0]
+                    elif len(value) > itemIndex:
+                        value = value[itemIndex]
+                        item = originalItem
+                    else:
+                        continue
                 code = code.replace("<" + item + ">", str(value))
                 code = code.replace("{{" + item + "}}", str(value))  # replace templated values
             else:

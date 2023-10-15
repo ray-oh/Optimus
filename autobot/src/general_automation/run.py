@@ -312,6 +312,10 @@ def run(file = '', flowrun = 1, deploymentname = '', PROGRAM_DIR = '', update = 
         {log_space}Others     :update:{config.UPDATE} retries:{config.RETRIES}  background:{config.BACKGROUND}  flow run name:{config.flow_run_name} , \n \
         {log_space}Prog Args  :{config.program_args}")
     '''
+
+    config.variables['flowrun']=config.flow_run_name
+    config.variables['arguments']=config.program_args['arguments'].split('  ,  ')
+
     try:
         #print('Command:',file)
         #logger.info(f"DEBUG run.py/run Current directory {Path('.').resolve().absolute().__str__()}")
