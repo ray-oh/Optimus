@@ -115,17 +115,19 @@ def main_flow(startfile, startsheet, startcode, background, program_dir, update)
 
     # run the main code block
     main_code = dfObjList(dfmain, startcode)
+    setup_code = dfObjList(dfmain, '[Setup]')
+    teardown_code = dfObjList(dfmain, '[Teardown]')
 
     #logger.info(f"DEBUG run.py/main_flow ----- run main sheet ----- main_code = {main_code}")
 
-    return browserDisable, instantiatedRPA, dfmain, main_code
+    return browserDisable, instantiatedRPA, dfmain, main_code, setup_code, teardown_code
 
 #@flow
 @task
 def launch(browserDisable, instantiatedRPA, dfmain, main_code, file):
-    from auto_helper_lib import try_catch
+    from auto_helper_lib import try_catch, dfObjList
     from auto_core_lib import runCodelist
-    print('######################',file)
+    #print('######################',file)
 
     # change working directory to Assets directory - downloads etc will be in that folder
     #if FLOWRUN != 2:
@@ -136,12 +138,19 @@ def launch(browserDisable, instantiatedRPA, dfmain, main_code, file):
     from config import TASK_COUNT
     TASK_COUNT = context.get_run_context().task_run.run_count #context.get("task_run_count")
 
+    setup_code = dfObjList(dfmain, '[Setup]')
+    if setup_code != None:
+        try_catch(runCodelist(dfmain, setup_code, file=file))        
+
     try_catch(runCodelist(dfmain, main_code, file=file))
     return browserDisable, instantiatedRPA
 
 @task
-def optimus_close(browserDisable, instantiatedRPA):
+def optimus_close(browserDisable, instantiatedRPA, dfmain, file):
     import rpa as r
+    from auto_helper_lib import try_catch, dfObjList
+    from auto_core_lib import runCodelist
+
     if not browserDisable and not instantiatedRPA:
         instantiatedRPA = r.close()    
         #logger.info(f"'DEBUG run.py/main_flow Close RPA ', result = {instantiatedRPA}, level = 'info'")
@@ -315,7 +324,8 @@ def run(file = '', flowrun = 1, deploymentname = '', PROGRAM_DIR = '', update = 
 
     config.variables['flowrun']=config.flow_run_name
     config.variables['arguments']=config.program_args['arguments'].split('  ,  ')
-
+    config.variables['error'] = ''
+    
     try:
         #print('Command:',file)
         #logger.info(f"DEBUG run.py/run Current directory {Path('.').resolve().absolute().__str__()}")
@@ -327,7 +337,7 @@ def run(file = '', flowrun = 1, deploymentname = '', PROGRAM_DIR = '', update = 
             touchFile(rf"{MEMORYPATH}\{state}\{Path(file).stem}.txt")
             #exit
         #print(f"#### {file}: process")
-        browserDisable, instantiatedRPA, dfmain, main_code = main_flow.with_options(name='OPEN', tags=['OPEN_CLOSE'])(startfile=file, startsheet=startsheet, 
+        browserDisable, instantiatedRPA, dfmain, main_code, setup_code, teardown_code = main_flow.with_options(name='OPEN', tags=['OPEN_CLOSE'])(startfile=file, startsheet=startsheet, 
             startcode=startcode, background=background, program_dir=PROGRAM_DIR, update=update)
         #print(browserDisable, instantiatedRPA)
         #launch.with_options(name=flowname.split('-')[0] + '_MAIN')(browserDisable, instantiatedRPA, dfmain, main_code, file)
@@ -341,7 +351,7 @@ def run(file = '', flowrun = 1, deploymentname = '', PROGRAM_DIR = '', update = 
 
         from auto_helper_lib import try_catch
         from auto_core_lib import runCodelist
-        print('######################',file)
+        #print('######################',file)
 
         # change working directory to Assets directory - downloads etc will be in that folder
         #if FLOWRUN != 2:
@@ -352,9 +362,16 @@ def run(file = '', flowrun = 1, deploymentname = '', PROGRAM_DIR = '', update = 
         #from config import TASK_COUNT
         #TASK_COUNT = context.get_run_context().task_run.run_count #context.get("task_run_count")
 
+        if setup_code != None:
+            logger.info("======================== SETUP ========================")
+            try_catch(runCodelist(dfmain, setup_code, file=file))
+        logger.info(f"============ RUN SCRIPT: {file} ============")            
         try_catch(runCodelist(dfmain, main_code, file=file))
+        if teardown_code != None: 
+            logger.info("======================== TEARDOWN ========================")            
+            try_catch(runCodelist(dfmain, teardown_code, file=file))        
 
-        optimus_close.with_options(name='CLOSE', tags=['OPEN_CLOSE'])(browserDisable, instantiatedRPA)
+        optimus_close.with_options(name='CLOSE', tags=['OPEN_CLOSE'])(browserDisable, instantiatedRPA, dfmain, file)
         if not stateChange(Path(file).stem+".txt","process","complete",'',MEMORYPATH):
             logger.critical('Error in state change process->complete')
             #exit()
@@ -367,12 +384,18 @@ def run(file = '', flowrun = 1, deploymentname = '', PROGRAM_DIR = '', update = 
         if e.__str__() == "Excel.Application.Workbooks":
             logger.critical(f"kiil process: {killprocess('excel')}")  # kill process with name using powershell
         try:
+            config.variables['error']=e.__str__()
             raise ValueError(f"Software Error: {e}")
         finally:
             from auto_utility_file import printscreen
             printscreen(f".\{config.startTime.strftime('%Y%m%d_%H%M%S')}_{config.flow_run_name}_ERROR.jpg")
 
             print('####### FINALLY #########')
+
+            if teardown_code != None: 
+                logger.info("======================== TEARDOWN ========================")            
+                try_catch(runCodelist(dfmain, teardown_code, file=file))        
+
             from config import RPABROWSER
             if RPABROWSER == 0:
                 import rpa as r

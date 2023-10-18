@@ -1,6 +1,0 @@
-update: 0
-startfile: C:\Users\tsoh2.DESKTOP-313433V\Documents\GitHub\Optimus\scripts\whatsapp.xlsm
-startsheet: main
-startcode: main
-background: '0'
-program_dir: C:\Users\tsoh2.DESKTOP-313433V\Documents\GitHub\Optimus
