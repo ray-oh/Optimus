@@ -177,7 +177,7 @@ class Browser:
                     self.context = self.new_context(http_credentials=http_credentials)
                     self.page = self.new_page()
             self.http_credentials = http_credentials
-            self.page.goto(url, wait_until="load") #|"domcontentloaded"|
+            self.page.goto(url)  #, wait_until="load") #|"domcontentloaded"|
             logger.debug(f'{log_space}loaded page')
         else:  # RPABROWSER == 2
             if self.page==None: self.page = self.new_page()
