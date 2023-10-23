@@ -24,3 +24,15 @@ text to speech generator with clone voice
 https://robotwealth.com/how-to-connect-google-colab-to-a-local-jupyter-runtime/
 
 https://research.google.com/colaboratory/faq.html#usage-limits
+
+My vocal ai
+voice cloning, text to speech
+free
+1 Custom voice quota
+2 Monthly clone training quota
+2,000 Monthly TTS characters
+500 Characters per TTS request
+
+
+https://play.ht/studio/files
+TTS (text to speech), voice cloning
