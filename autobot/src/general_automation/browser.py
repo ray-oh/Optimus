@@ -177,7 +177,7 @@ class Browser:
                     self.context = self.new_context(http_credentials=http_credentials)
                     self.page = self.new_page()
             self.http_credentials = http_credentials
-            self.page.goto(url, wait_until="load") #|"domcontentloaded"|
+            self.page.goto(url)  #, wait_until="load") #|"domcontentloaded"|
             logger.debug(f'{log_space}loaded page')
         else:  # RPABROWSER == 2
             if self.page==None: self.page = self.new_page()
@@ -459,6 +459,32 @@ class Browser:
         except Exception as error:
             #logger.debug('==========================ERROR')
             logger.error(log_space+'Download Error: {0} | {1}'.format(type(error).__name__, error))
+            logger.debug(log_space+traceback.format_exc())            
+
+    def upload(self, selector, file):
+        from prefect import get_run_logger
+        import traceback
+        logger = get_run_logger()
+        import traceback
+
+        # Start waiting for the download
+        from pathlib import Path
+        try:
+            element = self.findElement(selector)
+            if element==None:
+                logger.error(log_space+'Element is None')
+                return False
+            else:
+                with self.page.expect_file_chooser() as fc_info:
+                    element.click()
+                    #element.set_input_files(file)
+                file_chooser = fc_info.value
+                file_chooser.set_files(file)
+                return True
+
+        except Exception as error:
+            #logger.debug('==========================ERROR')
+            logger.error(log_space+'Upload Error: {0} | {1}'.format(type(error).__name__, error))
             logger.debug(log_space+traceback.format_exc())            
 
     def pause(self):

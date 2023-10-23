@@ -72,7 +72,7 @@ def _otherRunCode(df, code, codeID, codeValue, objVar):
     elif codeID.lower() == 'raiseError'.lower():    _raiseError(codeValue)                # exit with an error code e.g. exitError:2
     elif codeID.lower() == 'if'.lower(): return _if(codeValue, df, objVar)                # codeValue = condition : if true block, if false block or if empty then pass
 
-    elif code in df[(df.Type == 'list')]['Object'].dropna().values.tolist(): return _isCodeList(df, code, objVar)          #run Block of Code
+    elif codeID in df[(df.Type == 'list')]['Object'].dropna().values.tolist(): return _isCodeList(df, codeID, codeValue, objVar)          #run Block of Code
     elif codeID.lower() == 'runTask'.lower() and codeValue in df[(df.Type == 'list')]['Object'].dropna().values.tolist(): return _isCodeListTask(df, codeValue, objVar)          #run Block of Code    .with_options(name=codeValue.split(',')[0].strip())    
     elif codeID.lower() == 'runFlow'.lower() and codeValue in df[(df.Type == 'list')]['Object'].dropna().values.tolist(): return _isCodeListFlow(df, codeValue, objVar)          #run Block of Code        
     elif codeID.lower() == 'runModule'.lower(): return _runModule(codeValue, df, objVar)                  #runModule:sheet, codeblock, excelfile
@@ -154,6 +154,7 @@ def _otherRunCode(df, code, codeID, codeValue, objVar):
     elif codeID.lower() == 'telegram'.lower():  _telegram(codeValue)
 
     elif codeID.lower() == 'download'.lower():    _download(codeValue)          # download - selector, file
+    elif codeID.lower() == 'upload'.lower():    _upload(codeValue)          # download - selector, file    
     elif codeID.lower() == 'setview'.lower():    _setView(codeValue)          # setView - page/frame/selector    
     elif codeID.lower() == 'pause'.lower():    _pause(codeValue)          # pause - playwright        
     elif codeID.lower() == 'authenticate'.lower():    _authenticate(codeValue)          # pause - playwright        
@@ -358,9 +359,43 @@ def _isCodeListFlow(df, code, objVar):
     logger.debug(f"{log_space}Steps:{sub_code}")
     return sub_code, [df] * n, [objVar] * n
 
-def _isCodeList(df, code, objVar):
+def _isCodeList(df, codeID, codeValue, objVar):
+    logger = get_run_logger()
+    #logger.error(log_space + 'CodeID ' + codeID + ' codeValue ' + str(codeValue))
     # parameterObjs(df)
-    sub_code = dfObjList(df, code)
+    sub_code = dfObjList(df, codeID)
+    firstElement = sub_code[0]
+    firstElementKey = firstElement.split(':',1)[0].strip()
+    firstElementArguments = firstElement.split(':',1)[1].strip()
+    if firstElementKey == '[Arguments]':
+        #logger.error(log_space + 'sub_code0 ' + firstElement + ' | ' + firstElementKey + ' | ' +  firstElementArguments)
+        sub_code.pop(0) # remove first element of list
+        keyLists = firstElementArguments.split('  ,  ')
+        valueLists = codeValue.strip().split('  ,  ')
+        logger.error(log_space + '[Arguments]:' + str(keyLists) + ' | Values:' +  str(valueLists))
+        import config
+        i=0
+        for item in keyLists:
+            key = item
+            if ' = ' in item:
+                key = item.split(' = ')[0].strip()
+                #config.variables[key] = item.split(' = ')[1].strip()
+            if i < len(valueLists):
+                if ' = ' in valueLists[i]:
+                    key = valueLists[i].split(' = ')[0].strip()
+                    config.variables[key] = valueLists[i].split(' = ')[1].strip()
+                else:
+                    config.variables[key] = valueLists[i]                    
+            else:
+                if ' = ' in item:
+                    key = item.split(' = ')[0].strip()
+                    config.variables[key] = item.split(' = ')[1].strip()
+                else:
+                    logger.error(log_space + 'Argument index not matching function parameters')
+                    raise ValueError(f"Raise Error: Argument index not matching function definition")
+            logger.error(log_space + 'Item: ' + item + ' Key: ' + key + ' Value: ' + config.variables[key])
+            i=i+1
+
     #logg('Run Code Block - user defined objects in sheet - ParameterObjs: ', code = code, sub_code = sub_code, level = 'info')
     #runCodelist.with_options(name=code)(df, sub_code)
     #runCodelist(CodeObject(df), sub_code)
@@ -2028,7 +2063,7 @@ def _telegram(codeValue):
     msg = codeValue.split(',',1)[1].strip()
     #flow_run_name = context.get_run_context().flow_run.dict()['name']  # error if this is not executed in a flow
     from config import flow_run_name 
-    r.telegram(int(id),f"{flow_run_name}-{msg}")
+    r.telegram(int(id),f"{flow_run_name} -{msg}")  #, 'MarkdownV2'
 
 def _download(codeValue):
     download_url = codeValue.split(',',1)[0].strip()
@@ -2037,6 +2072,15 @@ def _download(codeValue):
         p.download(download_url, filename_to_save)
     else:
         r.download(download_url, filename_to_save)
+
+def _upload(codeValue):
+    upload_selector = codeValue.split(',',1)[0].strip()
+    file_to_load = codeValue.split(',',1)[1].strip()
+    if RPABROWSER == 1 or RPABROWSER == 2:
+        p.upload(upload_selector, file_to_load)
+    else:
+        #r.download(download_url, filename_to_save)
+        pass
 
 def _setView(codeValue):
     # set target frame for playwright
