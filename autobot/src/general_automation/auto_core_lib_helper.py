@@ -29,6 +29,21 @@ from auto_utility_browser import chromeZoom, waitIdentifierExist, waitIdentifier
 from auto_utility_parsers import parseArguments, regexSearch
 from auto_utility_email import EmailsSender
 
+import functools
+
+def type_check(func):
+    '''  uses a decorator to validate the type of arguments for specified functions in a module '''
+    @functools.wraps(func)
+    def check(*args, **kwargs):
+        for i in range(len(args)):
+            v = args[i]
+            v_name = list(func.__annotations__.keys())[i]
+            v_type = list(func.__annotations__.values())[i]
+            error_msg = 'Variable `' + str(v_name) + '` should be type (' + str(v_type) + ') but instead is type (' + str(type(v)).split("'")[1] + ')'
+            assert isinstance(v, v_type), error_msg
+        return func(*args, **kwargs)
+    return check
+
 def _otherRunCode(df, code, codeID, codeValue, objVar):
 
     # code for handling block codes - extract parameters if that is defined e.g. command(parameter)
@@ -142,6 +157,7 @@ def _otherRunCode(df, code, codeID, codeValue, objVar):
     elif codeID.lower() == 'setview'.lower():    _setView(codeValue)          # setView - page/frame/selector    
     elif codeID.lower() == 'pause'.lower():    _pause(codeValue)          # pause - playwright        
     elif codeID.lower() == 'authenticate'.lower():    _authenticate(codeValue)          # pause - playwright        
+    elif codeID.lower() == 'get_password'.lower():    _get_password(codeValue)          # pause - playwright       
 
     elif codeID.lower() == 'email'.lower():  _email(codeValue, df)
     elif codeID.lower() == 'waitEmailComplete'.lower():  _waitEmailComplete(codeValue, df)
@@ -2052,6 +2068,23 @@ def _authenticate(codeValue):
     if RPABROWSER == 1 or RPABROWSER == 2:
         p.authenticate(tmpDict['username'], tmpDict['origin'])
 
+@type_check
+def _get_password(codeValue: str):
+    logger = get_run_logger()
+
+    tmpDict = parseArguments('username, origin',codeValue)
+    #print(tmpDict)
+    if tmpDict == {}: return
+
+    from passwords import retrieveHttpCredentials
+    http_credentials=retrieveHttpCredentials(tmpDict['origin'], tmpDict['username'])
+
+    if http_credentials['username'] == '':
+        return
+    else:
+        import config
+        config.variables['username'] = http_credentials['username']
+        config.variables['password'] = http_credentials['password']
 
 def selectTable(codeValue: str, df):
     # Returns a objTableSet (table object) with parameter which is either a table object in the list or a worksheet

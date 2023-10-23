@@ -144,8 +144,10 @@ dmypy.json
 #/scripts  Do not exclude the sub dir if working with ! negation
 !/scripts/OptimusLibPublic.xlsm
 !/scripts/whatsapp.xlsm
+!/scripts/test-sample.xlsm
 !/scripts/mito.ipynb
 !/scripts/tagui.ipynb
+!/scripts/functions.ipynb
 !/scripts/runJupyterNotebook.bat
 !/scripts/_cache/OptimusLibPublic.pickle
 # /scripts/*/output
