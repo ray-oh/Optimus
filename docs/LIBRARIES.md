@@ -54,3 +54,9 @@ keyboard:key string - using tagui RPA.  Needs Intitializing of RPA to work.
 focus: application name     - focus and activate application for RPA.  Uses tagui RPA.
 
 ```
+
+https://robocorp.com/docs/development-guide/robot-framework/how-to-use-custom-python-libraries-in-your-robots
+
+
+
+
