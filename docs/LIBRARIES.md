@@ -57,6 +57,8 @@ focus: application name     - focus and activate application for RPA.  Uses tagu
 
 https://robocorp.com/docs/development-guide/robot-framework/how-to-use-custom-python-libraries-in-your-robots
 
+https://docs.robotframework.org/docs/extending_robot_framework/custom-libraries/python_library
+
 
 
 
